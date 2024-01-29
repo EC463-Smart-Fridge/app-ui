@@ -1,0 +1,28 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-awsomefridge-dev-192218-authRole",
+      "UnauthRoleArn": "arn:aws:iam::532305636260:role/amplify-awsomefridge-dev-192218-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::532305636260:role/amplify-awsomefridge-dev-192218-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-awsomefridge-dev-192218-deployment",
+      "UnauthRoleName": "amplify-awsomefridge-dev-192218-unauthRole",
+      "StackName": "amplify-awsomefridge-dev-192218",
+      "StackId": "arn:aws:cloudformation:us-east-1:532305636260:stack/amplify-awsomefridge-dev-192218/5b557fe0-8e4d-11ee-b1fb-0ed78f1f4303",
+      "AmplifyAppId": "d3fdye453mhkca"
+    },
+    "categories": {
+      "storage": {
+        "fridgebase": {
+          "arn": "arn:aws:dynamodb:us-east-1:532305636260:table/fridgebase",
+          "partitionKeyName": "pk",
+          "partitionKeyType": "S",
+          "region": "us-east-1",
+          "sortKeyName": "sk",
+          "sortKeyType": "S",
+          "tableName": "fridgebase"
+        }
+      }
+    }
+  }
+}

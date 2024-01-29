@@ -1,0 +1,86 @@
+{
+  "api": {
+    "awsomefridge": {
+      "dependsOn": [],
+      "output": {
+        "authConfig": {
+          "additionalAuthenticationProviders": [],
+          "defaultAuthentication": {
+            "apiKeyConfig": {
+              "apiKeyExpirationDays": 7
+            },
+            "authenticationType": "API_KEY"
+          }
+        }
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "AppSync"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_storage_fridgebase_arn": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "fridgebase"
+        }
+      ]
+    },
+    "AMPLIFY_storage_fridgebase_partitionKeyName": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "fridgebase"
+        }
+      ]
+    },
+    "AMPLIFY_storage_fridgebase_partitionKeyType": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "fridgebase"
+        }
+      ]
+    },
+    "AMPLIFY_storage_fridgebase_region": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "fridgebase"
+        }
+      ]
+    },
+    "AMPLIFY_storage_fridgebase_sortKeyName": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "fridgebase"
+        }
+      ]
+    },
+    "AMPLIFY_storage_fridgebase_sortKeyType": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "fridgebase"
+        }
+      ]
+    },
+    "AMPLIFY_storage_fridgebase_tableName": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "fridgebase"
+        }
+      ]
+    }
+  },
+  "storage": {
+    "fridgebase": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB",
+      "serviceType": "imported"
+    }
+  }
+}
