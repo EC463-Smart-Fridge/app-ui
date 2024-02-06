@@ -6,8 +6,11 @@ import { getUserItems } from "../src/graphql/queries";
 import { Amplify } from "aws-amplify";
 import  awsmobile from "../src/aws-exports";
 
+import Item from "../components/Item";
+import NewItem from "../components/NewItem";
+
 export default function Home() {
-    // const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
     interface Food {
         name: string;
         exp: string;
@@ -18,10 +21,10 @@ export default function Home() {
       };
     
     // const [items, setItems] = useState<Food[]>([{name: "text", exp: "test", hasExp: true, category: "test", calories: 100, quantity: 10}]);
-    // const [items, setItems] = useState<Food[]>([]);
-    // const removeItem = (index) => {
-    //     setItems(items.filter((_, i) => i !== index));
-    // };
+    const [items, setItems] = useState<Food[]>([]);
+    const removeItem = (index: number) => {
+        setItems(items.filter((_, i) => i !== index));
+    };
 
     const client = generateClient();
     Amplify.configure(awsmobile);
@@ -62,7 +65,7 @@ export default function Home() {
         }}
     >
         <StatusBar/>
-        {/* {loading ?
+        {loading ?
             <ActivityIndicator size="large" color="#0000ff" animating={loading} />
             :
              <>
@@ -82,7 +85,7 @@ export default function Home() {
 
                 <NewItem items={items} setItems={setItems}/>
              </>
-        } */}
+        }
     </ScrollView>
     )
 }
