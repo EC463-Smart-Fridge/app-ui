@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -6,6 +6,11 @@ import Home from './screens/Home';
 import Scan from './screens/Scan';
 import Recipes from './screens/Recipe';
 import Login from './screens/Login'; 
+import { GraphQLClientProvider } from './contexts/GraphQLClientContext';
+
+// const client = generateClient();
+// Amplify.configure(awsmobile);
+// export default const client;
 
 // Define types for your navigation structure
 type RootStackParamList = {
@@ -36,11 +41,13 @@ function MainTabs() {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Main" component={MainTabs} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <GraphQLClientProvider>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Main" component={MainTabs} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </GraphQLClientProvider>
   );
 }

@@ -1,15 +1,14 @@
 import { useState, useEffect } from "react";
 import { ScrollView, StatusBar, View, ActivityIndicator } from "react-native";
-// import {API, graphqlOperation} from 'aws-amplify';
-import { generateClient } from 'aws-amplify/api';
 import { getUserItems } from "../src/graphql/queries";
-import { Amplify } from "aws-amplify";
-import  awsmobile from "../src/aws-exports";
+
+import { useGraphQLClient } from "../contexts/GraphQLClientContext";
 
 import Item from "../components/Item";
 import NewItem from "../components/NewItem";
 
 export default function Home() {
+    const client = useGraphQLClient();
     const [loading, setLoading] = useState(true);
     interface Food {
         name: string;
@@ -26,8 +25,8 @@ export default function Home() {
         setItems(items.filter((_, i) => i !== index));
     };
 
-    const client = generateClient();
-    Amplify.configure(awsmobile);
+    // const client = generateClient();
+    // Amplify.configure(awsmobile);
 
     const test = async () => {
         const result = await client.graphql({
@@ -49,7 +48,7 @@ export default function Home() {
         //     handler: () => removeItem(i)}
         //     )));
         console.log(result)
-        // setLoading(false)
+        setLoading(false)
     }
 
     useEffect(() => {
