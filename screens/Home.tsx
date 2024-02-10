@@ -11,7 +11,7 @@ import NewItemWidget from "../components/NewItemWidget";
 export default function Home() {
     const client = useGraphQLClient();
     const [loading, setLoading] = useState(true);
-    
+
     const [items, setItems] = useState<Item[]>([]);
     const removeItem = (index: number) => {
         setItems(items.filter((_, i) => i !== index));
@@ -49,7 +49,7 @@ export default function Home() {
     };
 
     useEffect(() => {
-        console.log("testing")
+        test();
     }, [])
 
     return (
