@@ -1,25 +1,23 @@
-import React from 'react'
 import { Text, View, Pressable , StyleSheet} from "react-native"
 import XIcon from '../assets/icons/XIcon';
 
 interface Props {
     name: string;
-    exp: string;
-    hasExp: boolean;
+    exp: number;
     category: string;
     calories: number;
     quantity: number;
     handler: (item:any)=>void;
 }
 
-const Item = ({name, exp, hasExp, category, calories, quantity, handler}: Props) => {
+const ItemWidget = ({name, exp, category, calories, quantity, handler}: Props) => {
     return (
         <View 
             style={styles.container}
         >
             <View style={styles.info}>                
                 <Text style={styles.input}>{name}</Text>
-                {hasExp && <Text style={styles.date}>Expires: {exp}</Text>}
+                {exp != 0 && <Text style={styles.date}>Expires: {new Date(exp).toLocaleDateString("en-US")}</Text>}
                 {category != '' && <Text style={styles.category}>Category: {category}</Text>}
                 {quantity != 0 && <Text style={styles.quantity}>Quantity: {quantity}</Text>}
                 {calories != 0 && <Text style={styles.calories}>Calories: {calories}</Text>}
@@ -82,4 +80,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Item
+export default ItemWidget

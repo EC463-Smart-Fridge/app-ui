@@ -3,14 +3,14 @@ import { ScrollView, StatusBar, View, ActivityIndicator } from "react-native";
 import { getUserItems } from "../src/graphql/queries";
 
 import { useGraphQLClient } from "../contexts/GraphQLClientContext";
+import { Item } from "../src/API";
 
-import Item from "../components/Item";
-import NewItem from "../components/NewItem";
+import ItemWidget from "../components/ItemWidget";
+import NewItemWidget from "../components/NewItemWidget";
 
 interface Food {
     name: string;
-    exp: string;
-    hasExp: boolean;
+    exp: number;
     category: string;
     calories: number;
     quantity: number;
@@ -36,11 +36,10 @@ export default function Home() {
             // await new Promise(resolve => setTimeout(resolve, 3000));
             if (result.data && result.data.getUserItems) {
                 const items: Food[] = result.data.getUserItems
-                    .filter((item: Food) => item.name != null)
-                    .map((item: Food, i: number) => ({
+                    .filter((item: Item) => item.name != null)
+                    .map((item: Item, i: number) => ({
                         name: item.name,
-                        exp: item.exp,
-                        hasExp: Number(item.exp) != 0, 
+                        exp: item.exp_date,
                         category: item.category,
                         calories: item.calories,
                         quantity: item.quantity,
@@ -74,10 +73,9 @@ export default function Home() {
              <>
                 {items.map((item, i) => (
                 <View key={i}>
-                    <Item 
+                    <ItemWidget 
                         name={item.name} 
                         exp={item.exp} 
-                        hasExp={item.hasExp} 
                         category={item.category}
                         calories={item.calories}
                         quantity={item.quantity}
@@ -86,7 +84,7 @@ export default function Home() {
                 </View>
                 ))}
 
-                <NewItem items={items} setItems={setItems}/>
+                <NewItemWidget items={items} setItems={setItems}/>
              </>
         }
     </ScrollView>

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react'
 import {Dispatch, SetStateAction, useState} from 'react'
 import { Text, TextInput, View, Pressable, StyleSheet} from "react-native"
 import { Calendar } from 'react-native-calendars'
@@ -6,8 +6,7 @@ import PlusIcon from '../assets/icons/PlusIcon';
 
 interface Food {
     name: string;
-    exp: string;
-    hasExp: boolean;
+    exp: number;
     category: string;
     calories: number;
     quantity: number;
@@ -16,28 +15,24 @@ interface Food {
 interface Props {
     items: Food[];
     setItems: Dispatch<SetStateAction<Food[]>>;
-
 }
 
-const NewItem = ({items, setItems}: Props) => {
+const NewItemWidget = ({items, setItems}: Props) => {
     const [input, setInput] = useState<string>("");
-    const [date, setDate] = useState<string>("");
-    const [hasDate, setHasDate] = useState<boolean>(false)
-    const [open, setOpen] = useState(false)
-    const [category, setCategory] = useState("")
-    const [calories, setCalories] = useState(0)
-    const [quantity, setQuantity] = useState(1)
+    const [date, setDate] = useState(0);
+    const [category, setCategory] = useState<string>("")
+    const [calories, setCalories] = useState<number>(0)
+    const [quantity, setQuantity] = useState<number>(1)
+    const [open, setOpen] = useState<boolean>(false)
 
     const inputHandler = () => {
         if (input.trim() != "") {
             setItems([...items, ({
                 name: input, 
-                exp: date, 
-                hasExp: hasDate, 
+                exp: date,
                 category: category, 
                 calories: calories, 
                 quantity: quantity,})]);
-            setHasDate(false)
         } 
         setInput("")
     }
@@ -60,7 +55,7 @@ const NewItem = ({items, setItems}: Props) => {
                         </Text>
                         <Pressable onPress={() => setOpen(!open)} style={styles.date}>
                             <Text style={styles.date}>
-                                {hasDate ? date : "Add Date"}
+                                {date != 0 ? new Date(date).toLocaleDateString("en-US") : "Add Date"}
                             </Text>
                         </Pressable>
                     </View>
@@ -113,10 +108,11 @@ const NewItem = ({items, setItems}: Props) => {
             </View>
             {open ? 
                 <Calendar
-                    onDayPress={(e) => {setDate(e.dateString); setOpen(false); setHasDate(true)}}
+                    onDayPress={(e) => {setDate(new Date(e.dateString).getTime()); setOpen(false);}}
                 />
                 :
-                <></>}
+                <></>
+            }
         </Fragment>
     )
 }
@@ -167,4 +163,4 @@ const styles = StyleSheet.create({
     }   
 })
 
-export default NewItem;
+export default NewItemWidget;
