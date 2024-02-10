@@ -231,11 +231,6 @@ input TableStringFilterInput {
 	beginsWith: String
 }
 
-input UpdateFridgebaseInput {
-	pk: String!
-	sk: String!
-}
-
 type User {
 	pk: ID!
 	username: String!
@@ -259,9 +254,18 @@ input deleteItemInput {
 	sk: String!
 }
 
+input updateItemInput {
+	pk: String!
+	sk: String!
+	name: String
+	exp_date: Int
+	quantity: Int
+}
+
 type Mutation {
 	addItem(input: addItemInput!): Fridgebase
-	updateFridgebase(input: UpdateFridgebaseInput!): Fridgebase
+	addItemByUPC(uid: String!, upc: String!): Item
+	updateItem(input: updateItemInput!): Fridgebase
 	deleteItem(input: deleteItemInput!): Fridgebase
 }
 
@@ -275,7 +279,7 @@ type Subscription {
 	onCreateFridgebase(pk: String, sk: String): Fridgebase
 		@aws_subscribe(mutations: ["addItem"])
 	onUpdateFridgebase(pk: String, sk: String): Fridgebase
-		@aws_subscribe(mutations: ["updateFridgebase"])
+		@aws_subscribe(mutations: ["updateItem"])
 	onDeleteFridgebase(pk: String, sk: String): Fridgebase
 		@aws_subscribe(mutations: ["deleteItem"])
 }
