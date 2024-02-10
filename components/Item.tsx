@@ -1,5 +1,7 @@
 import React from 'react'
 import { Text, View, Pressable , StyleSheet} from "react-native"
+import XIcon from '../assets/icons/XIcon';
+
 interface Props {
     name: string;
     exp: string;
@@ -27,25 +29,9 @@ const Item = ({name, exp, hasExp, category, calories, quantity, handler}: Props)
 
             <Pressable 
                 onPress={handler}
-                style={{width: 50,
-                    height: '100%',
-                    borderTopRightRadius: 10,
-                    borderBottomRightRadius: 10,
-                    alignItems: 'center',
-                    paddingVertical: 'auto',
-                    marginVertical: 'auto',
-                }} 
+                style={styles.delete} 
             >
-                <Text
-                    style={{
-                        textAlignVertical: 'center',
-                        marginVertical: 'auto',
-                        paddingVertical: 'auto',
-                        verticalAlign: 'middle',
-                    }}
-                >
-                    X
-                </Text>
+                    <XIcon />
             </Pressable>
         </View>
     )
@@ -91,6 +77,15 @@ const styles = StyleSheet.create({
     },
     label: {
         paddingRight: 8,
+    },
+    delete: {width: 24,
+        height: '100%',
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
+        display: 'flex',
+        justifyContent: 'flex-start',    
+        alignItems: 'flex-start',
+        backgroundColor: 'red'
     }
 })
 
