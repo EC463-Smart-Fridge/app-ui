@@ -1,13 +1,9 @@
 import { Text, View, Pressable , StyleSheet} from "react-native"
 import XIcon from '../assets/icons/XIcon';
+import { Food } from "../interfaces/Food";
 
-interface Props {
-    name: string;
-    exp: number;
-    category: string;
-    calories: number;
-    quantity: number;
-    handler: (item:any)=>void;
+interface Props extends Food {
+    handler: (item:any) => void;
 }
 
 const ItemWidget = ({name, exp, category, calories, quantity, handler}: Props) => {

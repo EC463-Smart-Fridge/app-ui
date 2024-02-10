@@ -3,14 +3,7 @@ import {Dispatch, SetStateAction, useState} from 'react'
 import { Text, TextInput, View, Pressable, StyleSheet} from "react-native"
 import { Calendar } from 'react-native-calendars'
 import PlusIcon from '../assets/icons/PlusIcon';
-
-interface Food {
-    name: string;
-    exp: number;
-    category: string;
-    calories: number;
-    quantity: number;
-};
+import { Food } from '../interfaces/Food';
 
 interface Props {
     items: Food[];
