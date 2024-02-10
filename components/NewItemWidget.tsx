@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     },
     input: {
         height: '100%',
-        textAlignVertical: 'center',
+        verticalAlign: 'middle',
         fontSize: 20,
         flexGrow: 1,       
     },
