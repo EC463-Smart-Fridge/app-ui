@@ -22,6 +22,9 @@
           "sortKeyType": "S",
           "tableName": "fridgebase"
         }
+      },
+      "api": {
+        "awsomefridge": {}
       }
     }
   }
