@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { ScrollView, StatusBar, View, ActivityIndicator } from "react-native";
 import { getUserItems } from "../src/graphql/queries";
-import { deleteItem } from "../src/graphql/mutations";
+import { deleteItem, addItem } from "../src/graphql/mutations";
 
 import { useGraphQLClient } from "../contexts/GraphQLClientContext";
 import { Item } from '../src/API';
@@ -16,7 +16,7 @@ export default function Home() {
     const [items, setItems] = useState<Item[]>([]);
 
     // Remove item handler that removes item from both memory and from DynamoDB
-    const removeItem = async (index: number) => {
+    const deleteItemHandler = async (index: number) => {
         const itemToRemove = items[index];
         if (!itemToRemove) return;
         if (!itemToRemove.pk || !itemToRemove.sk) {
@@ -43,38 +43,61 @@ export default function Home() {
         }
     };
 
-    const test = async () => {
+    const addItemHandler = async (item: Item) => {
+        setItems([...items, item]);
         try {
-            const result = await client.graphql({
-                query: getUserItems,
+            // Run deleteItem GraphQL mutation
+            console.log(item.exp_date)
+            const addResult = await client.graphql({
+                query: addItem,
                 variables: {
-                    pk:'UID1',            
-                }
-            })
-            // await new Promise(resolve => setTimeout(resolve, 3000));
-            if (result.data && result.data.getUserItems) {
-                const items: Item[] = result.data.getUserItems
-                    .filter((item: Item) => item.name != null)
-                    .map((item: Item, i: number) => ({
-                        pk: item.pk,
-                        sk: item.sk,
+                    input: {
+                        pk: 'UID1',
                         name: item.name,
                         exp_date: item.exp_date,
                         category: item.category,
                         calories: item.calories,
                         quantity: item.quantity,
-                        handler: () => removeItem(i)
-                    }));
-                setItems(items);
-            }
+                    }
+                },
+            })
+            console.log('Item added successfully', addResult);
         } catch (error) {
-            console.log('error on fetching items', error);
-        } finally {
-            setLoading(false);
+            console.error('Error adding item', error);
         }
-    };
+    }
 
     useEffect(() => {
+        const test = async () => {
+            try {
+                const result = await client.graphql({
+                    query: getUserItems,
+                    variables: {
+                        pk:'UID1',            
+                    }
+                })
+                // await new Promise(resolve => setTimeout(resolve, 3000));
+                if (result.data && result.data.getUserItems) {
+                    const items: Item[] = result.data.getUserItems
+                        .filter((item: Item) => item.name != null)
+                        .map((item: Item, i: number) => ({
+                            pk: item.pk,
+                            sk: item.sk,
+                            name: item.name,
+                            exp_date: item.exp_date,
+                            category: item.category,
+                            calories: item.calories,
+                            quantity: item.quantity,
+                            handler: () => deleteItemHandler(i)
+                        }));
+                    setItems(items);
+                }
+            } catch (error) {
+                console.log('error on fetching items', error);
+            } finally {
+                setLoading(false);
+            }
+        };
         test();
     }, [])
 
@@ -98,12 +121,12 @@ export default function Home() {
                         category={item.category}
                         calories={item.calories}
                         quantity={item.quantity}
-                        handler={() => removeItem(i)} 
+                        handler={() => deleteItemHandler(i)} 
                     />
                 </View>
                 ))}
 
-                <NewItemWidget items={items} setItems={setItems}/>
+                <NewItemWidget handler={addItemHandler}/>
              </>
         }
     </ScrollView>

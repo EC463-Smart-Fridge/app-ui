@@ -13,7 +13,7 @@ const ItemWidget = ({name, exp_date, category, calories, quantity, handler}: Pro
         >
             <View style={styles.info}>                
                 <Text style={styles.input}>{name}</Text>
-                {exp_date != 0 && exp_date != null && <Text style={styles.date}>Expires: {new Date(exp_date).toLocaleDateString("en-US")}</Text>}
+                {exp_date != 0 && exp_date != null && <Text style={styles.date}>Expires: {new Date(exp_date * 1000).toLocaleDateString("en-US")}</Text>}
                 {category != '' && <Text style={styles.category}>Category: {category}</Text>}
                 {quantity != 0 && <Text style={styles.quantity}>Quantity: {quantity}</Text>}
                 {calories != '0' && <Text style={styles.calories}>Calories: {calories}</Text>}

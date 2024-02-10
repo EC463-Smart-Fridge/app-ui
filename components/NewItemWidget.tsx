@@ -4,13 +4,13 @@ import { Text, TextInput, View, Pressable, StyleSheet} from "react-native"
 import { Calendar } from 'react-native-calendars'
 import PlusIcon from '../assets/icons/PlusIcon';
 import { Item } from '../src/API';
+import { useGraphQLClient } from '../contexts/GraphQLClientContext';
 
 interface Props {
-    items: Item[];
-    setItems: Dispatch<SetStateAction<Item[]>>;
+    handler: (item: Item) => void;
 }
 
-const NewItemWidget = ({items, setItems}: Props) => {
+const NewItemWidget = ({handler}: Props) => {
     const [input, setInput] = useState<string>("");
     const [date, setDate] = useState(0);
     const [category, setCategory] = useState<string>("")
@@ -18,23 +18,9 @@ const NewItemWidget = ({items, setItems}: Props) => {
     const [quantity, setQuantity] = useState<number>(1)
     const [open, setOpen] = useState<boolean>(false)
 
-    const inputHandler = () => {
-        if (input.trim() != "") {
-            setItems([...items, ({
-                __typename: "Item",
-                name: input, 
-                exp_date: date,
-                category: category, 
-                calories: calories, 
-                quantity: quantity,})]);
-        } 
-        setInput("")
-    }
     return (
         <Fragment>
-            <View  
-                style={styles.container}
-            >
+            <View style={styles.container}>
                 <View style={styles.info}>                
                     <TextInput
                         placeholder="Add item"
@@ -47,7 +33,7 @@ const NewItemWidget = ({items, setItems}: Props) => {
                         <Text style={styles.label}>Expiration Date:</Text>
                         <Pressable onPress={() => setOpen(!open)} style={styles.date}>
                             <Text style={styles.date}>
-                                {date != 0 ? new Date(date).toLocaleDateString("en-US") : "Add Date"}
+                                {date != 0 ? new Date(date * 1000).toLocaleDateString("en-US") : "Add Date"}
                             </Text>
                         </Pressable>
                     </View>
@@ -85,14 +71,26 @@ const NewItemWidget = ({items, setItems}: Props) => {
                     </View>
                 </View>
                 
-                <Pressable onPress={inputHandler} style={styles.add}>
+                <Pressable 
+                    onPress={() => {
+                        if (input === "") return;
+                        handler({__typename: "Item", name: input, exp_date: date, category: category, calories: calories, quantity: quantity});
+                        setInput("");
+                        setDate(0);
+                        setCategory("");
+                        setCalories("");
+                        setQuantity(1);
+                    }} 
+                    
+                    style={styles.add}
+                >
                     <PlusIcon />
                 </Pressable>
             </View>
-            {open && <Calendar onDayPress={(e) => {setDate(new Date(e.dateString).getTime()); setOpen(false);}}/>}
+            {open && <Calendar onDayPress={(e) => {setDate(new Date(e.dateString).getTime() / 1000); setOpen(false); }}/>}
         </Fragment>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -116,7 +114,6 @@ const styles = StyleSheet.create({
     date: {
     },
     category: {
-   
     },
     info: {
         display: 'flex',
@@ -138,6 +135,6 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'flex-start',
     }   
-})
+});
 
 export default NewItemWidget;
