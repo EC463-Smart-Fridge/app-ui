@@ -43,7 +43,7 @@ export default function App() {
   return (
     <GraphQLClientProvider>
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Navigator screenOptions={{ headerShown: false, cardStyle: { flex: 1 },} }>
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Main" component={MainTabs} />
         </Stack.Navigator>
