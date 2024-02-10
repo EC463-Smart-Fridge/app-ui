@@ -8,19 +8,11 @@ import { Item } from "../src/API";
 import ItemWidget from "../components/ItemWidget";
 import NewItemWidget from "../components/NewItemWidget";
 
-interface Food {
-    name: string;
-    exp: number;
-    category: string;
-    calories: number;
-    quantity: number;
-};
-
 export default function Home() {
     const client = useGraphQLClient();
     const [loading, setLoading] = useState(true);
     
-    const [items, setItems] = useState<Food[]>([]);
+    const [items, setItems] = useState<Item[]>([]);
     const removeItem = (index: number) => {
         setItems(items.filter((_, i) => i !== index));
     };
@@ -35,11 +27,13 @@ export default function Home() {
             })
             // await new Promise(resolve => setTimeout(resolve, 3000));
             if (result.data && result.data.getUserItems) {
-                const items: Food[] = result.data.getUserItems
+                const items: Item[] = result.data.getUserItems
                     .filter((item: Item) => item.name != null)
                     .map((item: Item, i: number) => ({
+                        pk: item.pk,
+                        sk: item.sk,
                         name: item.name,
-                        exp: item.exp_date,
+                        exp_date: item.exp_date,
                         category: item.category,
                         calories: item.calories,
                         quantity: item.quantity,
@@ -75,7 +69,7 @@ export default function Home() {
                 <View key={i}>
                     <ItemWidget 
                         name={item.name} 
-                        exp={item.exp} 
+                        exp={item.exp_date} 
                         category={item.category}
                         calories={item.calories}
                         quantity={item.quantity}
