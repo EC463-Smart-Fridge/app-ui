@@ -1,22 +1,22 @@
 import { Text, View, Pressable , StyleSheet} from "react-native"
 import XIcon from '../assets/icons/XIcon';
-import { Food } from "../interfaces/Food";
+import { Item } from '../src/models';
 
-interface Props extends Food {
+interface Props extends Item {
     handler: (item:any) => void;
 }
 
-const ItemWidget = ({name, exp, category, calories, quantity, handler}: Props) => {
+const ItemWidget = ({name, exp_date, category, calories, quantity, handler}: Props) => {
     return (
         <View 
             style={styles.container}
         >
             <View style={styles.info}>                
                 <Text style={styles.input}>{name}</Text>
-                {exp != 0 && <Text style={styles.date}>Expires: {new Date(exp).toLocaleDateString("en-US")}</Text>}
+                {exp_date != 0 && exp_date != null && <Text style={styles.date}>Expires: {new Date(exp_date).toLocaleDateString("en-US")}</Text>}
                 {category != '' && <Text style={styles.category}>Category: {category}</Text>}
                 {quantity != 0 && <Text style={styles.quantity}>Quantity: {quantity}</Text>}
-                {calories != 0 && <Text style={styles.calories}>Calories: {calories}</Text>}
+                {calories != '0' && <Text style={styles.calories}>Calories: {calories}</Text>}
             </View>
 
             <Pressable onPress={handler} style={styles.delete}>

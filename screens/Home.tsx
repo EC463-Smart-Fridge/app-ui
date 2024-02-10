@@ -15,6 +15,7 @@ export default function Home() {
     const [items, setItems] = useState<Item[]>([]);
     const removeItem = (index: number) => {
         setItems(items.filter((_, i) => i !== index));
+
     };
 
     const test = async () => {
@@ -69,7 +70,7 @@ export default function Home() {
                 <View key={i}>
                     <ItemWidget 
                         name={item.name} 
-                        exp={item.exp_date} 
+                        exp_date={item.exp_date} 
                         category={item.category}
                         calories={item.calories}
                         quantity={item.quantity}
