@@ -12,7 +12,7 @@ import NewItemWidget from "../components/NewItemWidget";
 export default function Home() {
     const client = useGraphQLClient();
     const [loading, setLoading] = useState(true);
-    
+
     const [items, setItems] = useState<Item[]>([]);
 
     // Remove item handler that removes item from both memory and from DynamoDB
@@ -75,7 +75,7 @@ export default function Home() {
     };
 
     useEffect(() => {
-        console.log("testing")
+        test();
     }, [])
 
     return (
