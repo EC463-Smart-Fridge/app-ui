@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react'
 import {Dispatch, SetStateAction, useState} from 'react'
-import { Text, TextInput, View, TouchableOpacity, StyleSheet} from "react-native"
+import { Text, TextInput, View, Pressable, StyleSheet} from "react-native"
 import { Calendar } from 'react-native-calendars'
+import PlusIcon from '../assets/icons/PlusIcon';
 
 interface Food {
     name: string;
@@ -57,11 +58,11 @@ const NewItem = ({items, setItems}: Props) => {
                         <Text style={styles.label}>
                             Expiration Date: 
                         </Text>
-                        <TouchableOpacity onPress={() => setOpen(!open)} style={styles.date}>
+                        <Pressable onPress={() => setOpen(!open)} style={styles.date}>
                             <Text style={styles.date}>
                                 {hasDate ? date : "Add Date"}
                             </Text>
-                        </TouchableOpacity>
+                        </Pressable>
                     </View>
 
                     <View style={styles.wrapper}>
@@ -103,29 +104,12 @@ const NewItem = ({items, setItems}: Props) => {
                     </View>
                 </View>
                 
-                <TouchableOpacity
+                <Pressable
                     onPress={inputHandler}
-                    style={{
-                        width: 50,
-                        height: '100%',
-                        borderTopRightRadius: 10,
-                        borderBottomRightRadius: 10,
-                        alignItems: 'center',
-                        paddingVertical: 'auto',
-                        marginVertical: 'auto',
-                    }}
+                    style={styles.add}
                 >
-                    <Text
-                        style={{
-                            opacity: 0.75,
-                            fontSize: 24,
-                            marginVertical: 'auto',
-                            paddingVertical: 'auto',
-                        }}
-                    >
-                        +
-                    </Text>
-                </TouchableOpacity>
+                    <PlusIcon />
+                </Pressable>
             </View>
             {open ? 
                 <Calendar
@@ -173,7 +157,14 @@ const styles = StyleSheet.create({
     },
     label: {
         paddingRight: 8,
-    }
+    },
+    add: {
+        width: 24,
+        height: '100%',
+        borderRadius: 10,
+        display: 'flex',
+        justifyContent: 'flex-start',
+    }   
 })
 
 export default NewItem;

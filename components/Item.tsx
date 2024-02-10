@@ -18,20 +18,15 @@ const Item = ({name, exp, hasExp, category, calories, quantity, handler}: Props)
             style={styles.container}
         >
             <View style={styles.info}>                
-                <Text style={styles.input}>
-                    {name}
-                </Text>
+                <Text style={styles.input}>{name}</Text>
                 {hasExp && <Text style={styles.date}>Expires: {exp}</Text>}
                 {category != '' && <Text style={styles.category}>Category: {category}</Text>}
                 {quantity != 0 && <Text style={styles.quantity}>Quantity: {quantity}</Text>}
                 {calories != 0 && <Text style={styles.calories}>Calories: {calories}</Text>}
             </View>
 
-            <Pressable 
-                onPress={handler}
-                style={styles.delete} 
-            >
-                    <XIcon />
+            <Pressable onPress={handler} style={styles.delete}>
+                <XIcon />
             </Pressable>
         </View>
     )
@@ -78,14 +73,12 @@ const styles = StyleSheet.create({
     label: {
         paddingRight: 8,
     },
-    delete: {width: 24,
+    delete: {
+        width: 24,
         height: '100%',
-        borderTopRightRadius: 10,
-        borderBottomRightRadius: 10,
+        borderRadius: 10,
         display: 'flex',
-        justifyContent: 'flex-start',    
-        alignItems: 'flex-start',
-        backgroundColor: 'red'
+        justifyContent: 'flex-start',
     }
 })
 
