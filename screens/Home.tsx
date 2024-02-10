@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { ScrollView, StatusBar, View, ActivityIndicator } from "react-native";
 import { getUserItems } from "../src/graphql/queries";
+import { deleteItem } from "../src/graphql/mutations";
 
 import { useGraphQLClient } from "../contexts/GraphQLClientContext";
-import { Item } from "../src/API";
+import { Item } from '../src/models';
 
 import ItemWidget from "../components/ItemWidget";
 import NewItemWidget from "../components/NewItemWidget";
@@ -13,9 +14,33 @@ export default function Home() {
     const [loading, setLoading] = useState(true);
     
     const [items, setItems] = useState<Item[]>([]);
-    const removeItem = (index: number) => {
-        setItems(items.filter((_, i) => i !== index));
-
+    
+    // Remove item handler that removes item from both memory and from DynamoDB
+    const removeItem = async (index: number) => {
+        const itemToRemove = items[index];
+        if (!itemToRemove) return;
+        if (!itemToRemove.pk || !itemToRemove.sk) {
+            console.log('Error: No Primary or secondary key');
+            return;
+        }
+        try {
+            // Run deleteItem GraphQL mutation
+            const deleteResult = await client.graphql({
+                query: deleteItem,
+                variables: {
+                    input: {
+                        pk: itemToRemove.pk,
+                        sk: itemToRemove.sk,
+                    }
+                },
+            });
+    
+            console.log('Item deleted successfully', deleteResult);
+            // Remove the item from the interface
+            setItems(items.filter((_, i) => i !== index));
+        } catch (error) {
+            console.error('Error deleting item', error);
+        }
     };
 
     const test = async () => {
