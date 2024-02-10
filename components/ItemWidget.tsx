@@ -1,6 +1,6 @@
 import { Text, View, Pressable , StyleSheet} from "react-native"
-import XIcon from '../assets/icons/XIcon';
 import { Item } from '../src/models';
+import XIcon from '../assets/icons/XIcon';
 
 interface Props extends Item {
     handler: (item:any) => void;
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     },
     input: {
         height: '100%',
-        textAlignVertical: 'center',
+        verticalAlign: 'middle',
         fontSize: 20,
         flexGrow: 1,       
     },

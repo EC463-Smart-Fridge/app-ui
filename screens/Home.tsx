@@ -14,7 +14,7 @@ export default function Home() {
     const [loading, setLoading] = useState(true);
     
     const [items, setItems] = useState<Item[]>([]);
-    
+
     // Remove item handler that removes item from both memory and from DynamoDB
     const removeItem = async (index: number) => {
         const itemToRemove = items[index];
@@ -76,7 +76,6 @@ export default function Home() {
 
     useEffect(() => {
         console.log("testing")
-        test();
     }, [])
 
     return (
