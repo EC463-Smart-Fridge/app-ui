@@ -15,7 +15,6 @@ export default function Home() {
     const [items, setItems] = useState<Item[]>([]);
     const removeItem = (index: number) => {
         setItems(items.filter((_, i) => i !== index));
-
     };
 
     const test = async () => {

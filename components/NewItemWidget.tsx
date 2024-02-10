@@ -3,7 +3,7 @@ import {Dispatch, SetStateAction, useState} from 'react'
 import { Text, TextInput, View, Pressable, StyleSheet} from "react-native"
 import { Calendar } from 'react-native-calendars'
 import PlusIcon from '../assets/icons/PlusIcon';
-import { Item } from '../src/models';
+import { Item } from '../src/API';
 
 interface Props {
     items: Item[];
@@ -14,13 +14,14 @@ const NewItemWidget = ({items, setItems}: Props) => {
     const [input, setInput] = useState<string>("");
     const [date, setDate] = useState(0);
     const [category, setCategory] = useState<string>("")
-    const [calories, setCalories] = useState<string>("0")
+    const [calories, setCalories] = useState<string>("")
     const [quantity, setQuantity] = useState<number>(1)
     const [open, setOpen] = useState<boolean>(false)
 
     const inputHandler = () => {
         if (input.trim() != "") {
             setItems([...items, ({
+                __typename: "Item",
                 name: input, 
                 exp_date: date,
                 category: category, 
@@ -85,7 +86,7 @@ const NewItemWidget = ({items, setItems}: Props) => {
                         <TextInput
                             placeholder="0"
                             value={calories.toString()}
-                            onChangeText={(text) => setCalories(Number(text))}
+                            onChangeText={(text) => setCalories(text)}
                             keyboardType="numeric"
                             style={styles.quantity}
                         />
