@@ -4,7 +4,7 @@ import { getUserItems } from "../src/graphql/queries";
 import { deleteItem } from "../src/graphql/mutations";
 
 import { useGraphQLClient } from "../contexts/GraphQLClientContext";
-import { Item } from '../src/models';
+import { Item } from '../src/API';
 
 import ItemWidget from "../components/ItemWidget";
 import NewItemWidget from "../components/NewItemWidget";
