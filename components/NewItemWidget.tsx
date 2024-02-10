@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import {Dispatch, SetStateAction, useState} from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { Text, TextInput, View, Pressable, StyleSheet} from "react-native"
 import { Calendar } from 'react-native-calendars'
 import PlusIcon from '../assets/icons/PlusIcon';
@@ -44,9 +44,7 @@ const NewItemWidget = ({items, setItems}: Props) => {
                     />
 
                     <View style={styles.wrapper}>
-                        <Text style={styles.label}>
-                            Expiration Date: 
-                        </Text>
+                        <Text style={styles.label}>Expiration Date:</Text>
                         <Pressable onPress={() => setOpen(!open)} style={styles.date}>
                             <Text style={styles.date}>
                                 {date != 0 ? new Date(date).toLocaleDateString("en-US") : "Add Date"}
@@ -55,9 +53,7 @@ const NewItemWidget = ({items, setItems}: Props) => {
                     </View>
 
                     <View style={styles.wrapper}>
-                        <Text style={styles.label}>
-                            Category:
-                        </Text>
+                        <Text style={styles.label}>Category:</Text>
                         <TextInput
                             placeholder="Add category"
                             value={category}
@@ -67,46 +63,33 @@ const NewItemWidget = ({items, setItems}: Props) => {
                     </View>
 
                     <View style={styles.wrapper}>
-                        <Text style={styles.label}>
-                            Quantity:
-                        </Text>
+                        <Text style={styles.label}>Quantity:</Text>
                         <TextInput
                             placeholder="1"
                             value={quantity.toString()}
                             onChangeText={(text) => setQuantity(Number(text))}
-                            keyboardType="numeric"
+                            inputMode="numeric"
                             style={styles.quantity}
                         />
                     </View>
 
                     <View style={styles.wrapper}>
-                        <Text style={styles.label}>
-                            Calories:
-                        </Text>
+                        <Text style={styles.label}>Calories:</Text>
                         <TextInput
                             placeholder="0"
                             value={calories.toString()}
                             onChangeText={(text) => setCalories(text)}
-                            keyboardType="numeric"
+                            inputMode="numeric"
                             style={styles.quantity}
                         />
                     </View>
                 </View>
                 
-                <Pressable
-                    onPress={inputHandler}
-                    style={styles.add}
-                >
+                <Pressable onPress={inputHandler} style={styles.add}>
                     <PlusIcon />
                 </Pressable>
             </View>
-            {open ? 
-                <Calendar
-                    onDayPress={(e) => {setDate(new Date(e.dateString).getTime()); setOpen(false);}}
-                />
-                :
-                <></>
-            }
+            {open && <Calendar onDayPress={(e) => {setDate(new Date(e.dateString).getTime()); setOpen(false);}}/>}
         </Fragment>
     )
 }
