@@ -20,7 +20,8 @@ const ItemWidget = ({name, exp_date, category, calories, quantity, handler}: Pro
             </View>
 
             <Pressable onPress={handler} style={styles.delete}>
-                <XIcon />
+                {/* <XIcon /> */}
+                <Text> X </Text>
             </Pressable>
         </View>
     )
@@ -29,6 +30,7 @@ const ItemWidget = ({name, exp_date, category, calories, quantity, handler}: Pro
 const styles = StyleSheet.create({
     container: {
         width: '100%',
+        height: 100,
         backgroundColor: 'lightgray',
         opacity: 0.5, 
         borderRadius: 10,
@@ -39,7 +41,7 @@ const styles = StyleSheet.create({
         marginVertical: 2,
     },
     input: {
-        height: '100%',
+        // height: '100%',
         verticalAlign: 'middle',
         fontSize: 20,
         flexGrow: 1,       
@@ -57,6 +59,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         flexShrink: 1,
+        height: '100%',
     },
     wrapper: {
         display: 'flex',

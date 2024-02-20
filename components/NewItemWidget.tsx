@@ -84,7 +84,8 @@ const NewItemWidget = ({handler}: Props) => {
                     
                     style={styles.add}
                 >
-                    <PlusIcon />
+                    {/* <PlusIcon /> */}
+                    <Text>+</Text>
                 </Pressable>
             </View>
             {open && <Calendar onDayPress={(e) => {setDate(new Date(e.dateString).getTime() / 1000); setOpen(false); }}/>}
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
         padding: 8,
     },
     input: {
-        height: '100%',
+        // height: '100%',
         verticalAlign: 'middle',
         fontSize: 20,
         flexGrow: 1,       
