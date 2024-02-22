@@ -8,7 +8,6 @@ import { Item } from '../src/API';
 
 import ItemWidget from "../components/ItemWidget";
 import NewItemWidget from "../components/NewItemWidget";
-import EditItemWidget from "../components/EditItemWidget";
 
 export default function Home() {
     const client = useGraphQLClient();

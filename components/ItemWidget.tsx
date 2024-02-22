@@ -1,4 +1,4 @@
-import { Text, View, Pressable , TextInput, Button, StyleSheet} from "react-native"
+import { Text, View, Pressable , TextInput, StyleSheet} from "react-native"
 import React, { useState } from 'react'; 
 import { Item } from '../src/models';
 import XIcon from '../assets/icons/XIcon';
