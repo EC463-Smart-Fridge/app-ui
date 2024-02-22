@@ -1,17 +1,19 @@
 import { useState, useEffect } from "react";
-import { ScrollView, StatusBar, View, ActivityIndicator } from "react-native";
+import { Button, ScrollView, StatusBar, View, ActivityIndicator } from "react-native";
 import { getUserItems } from "../src/graphql/queries";
-import { deleteItem, addItem } from "../src/graphql/mutations";
+import { deleteItem, addItem, updateItem } from "../src/graphql/mutations";
 
 import { useGraphQLClient } from "../contexts/GraphQLClientContext";
 import { Item } from '../src/API';
 
 import ItemWidget from "../components/ItemWidget";
 import NewItemWidget from "../components/NewItemWidget";
+import EditItemWidget from "../components/EditItemWidget";
 
 export default function Home() {
     const client = useGraphQLClient();
     const [loading, setLoading] = useState(true);
+    const [editedItems, setEditedItems] = useState({});
 
     const [items, setItems] = useState<Item[]>([]);
 
@@ -67,6 +69,59 @@ export default function Home() {
         }
     }
 
+    interface EditItemInput {
+        pk: string | null | undefined;
+        sk: string | null | undefined;
+        name?: string; // Optional
+        exp_date?: number; // Optional
+        quantity?: number; // Optional
+    }
+
+    // Edit Item handler that handles modifying an existing item
+    const editItemHandler = async (index: number, edits: {name?: string, exp_date?: number, quantity?: number}) => {
+        const itemToEdit = items[index];
+        if (!itemToEdit) return;
+        if (!itemToEdit.pk || !itemToEdit.sk) {
+            console.log('Error: No Primary or secondary key');
+            return;
+        }
+
+        // If none of the values were changed, do nothing
+        if (edits == undefined || (edits.name == itemToEdit.name && edits.exp_date == itemToEdit.exp_date && edits.quantity == itemToEdit.quantity)) {
+            console.log("No changes found, exiting.");
+            return;
+        }
+
+        // Start appending to the input values
+        let input_values : EditItemInput = {
+            pk: items[Number(index)].pk,
+            sk: items[Number(index)].sk,
+            ...edits
+        };
+
+        try {
+            const editResult = await client.graphql({
+                query: updateItem,
+                variables: {
+                    input: input_values
+                },
+            });
+            // Modify the item on the interface
+            console.log('Item edited successfully', editResult);
+
+            const updatedItems = items.map((item, idx) => {
+                if (idx === index) {
+                    return { ...item, ...input_values };
+                }
+                return item;
+            });
+            setItems(updatedItems);
+        }
+        catch (error) {
+            console.error('Error editing item', error);
+        }
+    };
+
     useEffect(() => {
         const test = async () => {
             try {
@@ -121,7 +176,8 @@ export default function Home() {
                         category={item.category}
                         calories={item.calories}
                         quantity={item.quantity}
-                        handler={() => deleteItemHandler(i)} 
+                        delete_handler ={() => deleteItemHandler(i)} 
+                        edit_handler = {(edits) => editItemHandler(i, edits)}
                     />
                 </View>
                 ))}
