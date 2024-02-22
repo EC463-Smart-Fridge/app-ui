@@ -11,8 +11,10 @@ interface Props extends Item {
 const ItemWidget = ({name, exp_date, category, calories, quantity, deleteHandler, editHandler}: Props) => {
     const [editMode, setEditMode] = useState(false);
     const [editedName, setEditedName] = useState(name);
-    const [editedQuantity, setEditedQuantity] = useState(quantity ? quantity.toString() : "");
     const [editedExpDate, setEditedExpDate] = useState(exp_date ? new Date(exp_date * 1000).toISOString().slice(0, 10) : "");
+    const [editedCategory, setEditedCategory] = useState(category ? category : "");
+    const [editedQuantity, setEditedQuantity] = useState(quantity ? quantity.toString() : "");
+    const [editedCalories, setEditedCalories] = useState(calories ? calories : "");
 
     const handleCancel = () => {
         setEditMode(false);
@@ -37,27 +39,49 @@ const ItemWidget = ({name, exp_date, category, calories, quantity, deleteHandler
     
     return (<>
             {editMode ? (
-                <View style={styles.container}>
+                <View style={{...(styles.container), opacity: 0.5}}>
                     <View style={styles.info}>
                         <TextInput
-                            style={styles.editInput}
+                            style={styles.name}
                             onChangeText={setEditedName}
                             value={editedName ? (editedName) : ""}
                             inputMode="text"
                         />
-                        <TextInput
-                            style={styles.editInput}
-                            onChangeText={setEditedQuantity}
-                            value={editedQuantity}
-                            inputMode="numeric"
-                        />
-                        <TextInput
-                            style={styles.editInput}
-                            onChangeText={setEditedExpDate}
-                            value={editedExpDate}
-                            // Assuming the date is in YYYY-MM-DD format
-                            placeholder="YYYY-MM-DD"
-                        />
+                        <View style={styles.wrapper}>
+                            <Text>Expires: </Text>
+                            <TextInput
+                                placeholder="Add Date"
+                                onChangeText={setEditedExpDate}
+                                value={editedExpDate}
+                            />
+                        </View>
+                        <View style={styles.wrapper}>
+                            <Text>Category: </Text>
+                            <TextInput
+                                placeholder="Add Category"
+                                onChangeText={setEditedCategory}
+                                value={editedCategory}
+                                inputMode="text"
+                            />
+                        </View>
+                        <View style={styles.wrapper}>
+                            <Text>Quantity: </Text>
+                            <TextInput
+                                placeholder="1"
+                                onChangeText={setEditedQuantity}
+                                value={editedQuantity}
+                                inputMode="numeric"
+                            />
+                        </View>
+                        <View style={styles.wrapper}>
+                            <Text>Calories: </Text>
+                            <TextInput
+                                placeholder="0"
+                                onChangeText={setEditedCalories}
+                                value={editedCalories}
+                                inputMode="numeric"
+                            />
+                        </View>
                     </View>
                     <View style={styles.buttonsContainer}>
                         <Pressable onPress={handleSave}>
@@ -71,7 +95,7 @@ const ItemWidget = ({name, exp_date, category, calories, quantity, deleteHandler
             ) : (
                 <View style={styles.container}>
                     <View style={styles.info}>                
-                        <Text style={styles.input}>{name}</Text>
+                        <Text numberOfLines={1} style={styles.name}>{name}</Text>
                         {exp_date != 0 && exp_date != null && <Text style={styles.date}>Expires: {new Date(exp_date * 1000).toLocaleDateString("en-US")}</Text>}
                         {category != '' && category != null && <Text style={styles.category}>Category: {category}</Text>}
                         {quantity != 0 && quantity != null && <Text style={styles.quantity}>Quantity: {quantity}</Text>}
@@ -104,24 +128,12 @@ const styles = StyleSheet.create({
         padding: 8,
         marginVertical: 2,
     },
-    // editContainer: {
-    //     width: '100%',
-    //     backgroundColor: 'lightgray',
-    //     borderRadius: 10,
-    //     padding: 8,
-    //     marginVertical: 2,
-    // },
     editInput: {
-        height: 40,
-        marginVertical: 8,
-        padding: 10,
-        backgroundColor: 'white',
-        borderRadius: 5,
     },
-    input: {
+    name: {
         verticalAlign: 'middle',
         fontSize: 20,
-        flexGrow: 1,       
+        width: '100%',
     },
     quantity: {
     },
@@ -132,11 +144,16 @@ const styles = StyleSheet.create({
     },
     calories: {
     },
+    wrapper: {
+        display: 'flex',
+        flexDirection: 'row',
+        fontSize: 18,
+    },
     info: {
         display: 'flex',
         flexDirection: 'column',
         flexShrink: 1,
-        height: '100%',
+        flexGrow: 1,
     },
     delete: {
         width: 24,
