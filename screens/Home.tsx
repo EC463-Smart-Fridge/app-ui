@@ -8,7 +8,6 @@ import { Item } from '../src/API';
 
 import ItemWidget from "../components/ItemWidget";
 import NewItemWidget from "../components/NewItemWidget";
-import EditItemWidget from "../components/EditItemWidget";
 
 export default function Home() {
     const client = useGraphQLClient();
@@ -176,8 +175,8 @@ export default function Home() {
                         category={item.category}
                         calories={item.calories}
                         quantity={item.quantity}
-                        delete_handler ={() => deleteItemHandler(i)} 
-                        edit_handler = {(edits) => editItemHandler(i, edits)}
+                        deleteHandler ={() => deleteItemHandler(i)} 
+                        editHandler = {(edits) => editItemHandler(i, edits)}
                     />
                 </View>
                 ))}
