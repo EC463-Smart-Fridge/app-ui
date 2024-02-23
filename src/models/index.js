@@ -20,14 +20,14 @@ const ModelSortDirection = {
   "DESC": "DESC"
 };
 
-const { Fridgebase, FridgebaseConnection, Item, Items, User } = initSchema(schema);
+const { Item, User, Fridgebase, FridgebaseConnection, Items } = initSchema(schema);
 
 export {
+  Item,
+  User,
   ModelAttributeTypes,
   ModelSortDirection,
   Fridgebase,
   FridgebaseConnection,
-  Item,
-  Items,
-  User
+  Items
 };

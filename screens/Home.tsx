@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { Button, ScrollView, StatusBar, View, ActivityIndicator } from "react-native";
+import { ScrollView, StatusBar, View, ActivityIndicator } from "react-native";
 import { getUserItems } from "../src/graphql/queries";
-import { deleteItem, addItem, updateItem } from "../src/graphql/mutations";
+import { removeItem, addItem, editItem } from "../src/graphql/mutations";
+
+import { DataStore } from '@aws-amplify/datastore';
 
 import { useGraphQLClient } from "../contexts/GraphQLClientContext";
-import { Item } from '../src/API';
+import { Item } from '../src/models/index';
 
 import ItemWidget from "../components/ItemWidget";
 import NewItemWidget from "../components/NewItemWidget";
@@ -27,7 +29,7 @@ export default function Home() {
         try {
             // Run deleteItem GraphQL mutation
             const deleteResult = await client.graphql({
-                query: deleteItem,
+                query: removeItem,
                 variables: {
                     input: {
                         pk: itemToRemove.pk,
@@ -67,6 +69,26 @@ export default function Home() {
             console.error('Error adding item', error);
         }
     }
+    // const addItemHandler = async (item: Item) => {
+    //     try {
+    //         // Run deleteItem GraphQL mutation
+
+    //         const addResult = await DataStore.save(
+    //             new Item({
+    //                 pk: 'UID1',
+    //                 name: item.name,
+    //                 exp_date: item.exp_date,
+    //                 category: item.category,
+    //                 calories: item.calories,
+    //                 quantity: item.quantity,
+    //             })
+    //           );
+    //           setItems([...items, item]);
+    //         console.log('Item added successfully', addResult);
+    //     } catch (error) {
+    //         console.error('Error adding item', error);
+    //     }
+    // }
 
     interface EditItemInput {
         pk: string | null | undefined;
@@ -100,7 +122,7 @@ export default function Home() {
 
         try {
             const editResult = await client.graphql({
-                query: updateItem,
+                query: editItem,
                 variables: {
                     input: input_values
                 },

@@ -8,7 +8,7 @@ type FridgebaseConnection {
 	nextToken: String
 }
 
-type Item @model{
+type Item @model {
 	pk: String
 	sk: String
 	UPC: String
@@ -263,10 +263,7 @@ input updateItemInput {
 }
 
 type Mutation {
-	addItem(input: addItemInput!): Fridgebase
 	addItemByUPC(uid: String!, upc: String!): Item
-	editItem(input: updateItemInput!): Fridgebase
-	removeItem(input: deleteItemInput!): Fridgebase
 }
 
 type Query {
@@ -279,7 +276,7 @@ type Subscription {
 	onCreateFridgebase(pk: String, sk: String): Fridgebase
 		@aws_subscribe(mutations: ["addItem"])
 	onUpdateFridgebase(pk: String, sk: String): Fridgebase
-		@aws_subscribe(mutations: ["editItem"])
+		@aws_subscribe(mutations: ["updateItem"])
 	onDeleteFridgebase(pk: String, sk: String): Fridgebase
-		@aws_subscribe(mutations: ["removeItem"])
+		@aws_subscribe(mutations: ["deleteItem"])
 }

@@ -1,6 +1,6 @@
-import { ModelInit, MutableModel } from "@aws-amplify/datastore";
+import { ModelInit, MutableModel, __modelMeta__, ManagedIdentifier } from "@aws-amplify/datastore";
 // @ts-ignore
-import { LazyLoading, LazyLoadingDisabled } from "@aws-amplify/datastore";
+import { LazyLoading, LazyLoadingDisabled, AsyncCollection } from "@aws-amplify/datastore";
 
 export enum ModelAttributeTypes {
   BINARY = "binary",
@@ -48,34 +48,6 @@ export declare type FridgebaseConnection = LazyLoading extends LazyLoadingDisabl
 
 export declare const FridgebaseConnection: (new (init: ModelInit<FridgebaseConnection>) => FridgebaseConnection)
 
-type EagerItem = {
-  readonly pk?: string | null;
-  readonly sk?: string | null;
-  readonly UPC?: string | null;
-  readonly name?: string | null;
-  readonly category?: string | null;
-  readonly calories?: string | null;
-  readonly img_url?: string | null;
-  readonly exp_date?: number | null;
-  readonly quantity?: number | null;
-}
-
-type LazyItem = {
-  readonly pk?: string | null;
-  readonly sk?: string | null;
-  readonly UPC?: string | null;
-  readonly name?: string | null;
-  readonly category?: string | null;
-  readonly calories?: string | null;
-  readonly img_url?: string | null;
-  readonly exp_date?: number | null;
-  readonly quantity?: number | null;
-}
-
-export declare type Item = LazyLoading extends LazyLoadingDisabled ? EagerItem : LazyItem
-
-export declare const Item: (new (init: ModelInit<Item>) => Item)
-
 type EagerItems = {
   readonly pk: string;
   readonly items?: (Item | null)[] | null;
@@ -83,28 +55,87 @@ type EagerItems = {
 
 type LazyItems = {
   readonly pk: string;
-  readonly items?: (Item | null)[] | null;
+  readonly items: AsyncCollection<Item>;
 }
 
 export declare type Items = LazyLoading extends LazyLoadingDisabled ? EagerItems : LazyItems
 
 export declare const Items: (new (init: ModelInit<Items>) => Items)
 
+type EagerItem = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<Item, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly pk?: string | null;
+  readonly sk?: string | null;
+  readonly UPC?: string | null;
+  readonly name?: string | null;
+  readonly category?: string | null;
+  readonly calories?: string | null;
+  readonly img_url?: string | null;
+  readonly exp_date?: number | null;
+  readonly quantity?: number | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyItem = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<Item, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly pk?: string | null;
+  readonly sk?: string | null;
+  readonly UPC?: string | null;
+  readonly name?: string | null;
+  readonly category?: string | null;
+  readonly calories?: string | null;
+  readonly img_url?: string | null;
+  readonly exp_date?: number | null;
+  readonly quantity?: number | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type Item = LazyLoading extends LazyLoadingDisabled ? EagerItem : LazyItem
+
+export declare const Item: (new (init: ModelInit<Item>) => Item) & {
+  copyOf(source: Item, mutator: (draft: MutableModel<Item>) => MutableModel<Item> | void): Item;
+}
+
 type EagerUser = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<User, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
   readonly pk: string;
   readonly username: string;
   readonly password: string;
   readonly email: string;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
 }
 
 type LazyUser = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<User, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
   readonly pk: string;
   readonly username: string;
   readonly password: string;
   readonly email: string;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
 }
 
 export declare type User = LazyLoading extends LazyLoadingDisabled ? EagerUser : LazyUser
 
-export declare const User: (new (init: ModelInit<User>) => User)
-
+export declare const User: (new (init: ModelInit<User>) => User) & {
+  copyOf(source: User, mutator: (draft: MutableModel<User>) => MutableModel<User> | void): User;
+}

@@ -27,5 +27,34 @@
         "awsomefridge": {}
       }
     }
+  },
+  "devv": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-awsomefridge-devv-164323-authRole",
+      "UnauthRoleArn": "arn:aws:iam::532305636260:role/amplify-awsomefridge-devv-164323-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::532305636260:role/amplify-awsomefridge-devv-164323-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-awsomefridge-devv-164323-deployment",
+      "UnauthRoleName": "amplify-awsomefridge-devv-164323-unauthRole",
+      "StackName": "amplify-awsomefridge-devv-164323",
+      "StackId": "arn:aws:cloudformation:us-east-1:532305636260:stack/amplify-awsomefridge-devv-164323/922dc550-d294-11ee-8ab2-0a89c4e59fdb",
+      "AmplifyAppId": "d3fdye453mhkca"
+    },
+    "categories": {
+      "storage": {
+        "fridgebase": {
+          "tableName": "fridgebase",
+          "region": "us-east-1",
+          "arn": "arn:aws:dynamodb:us-east-1:532305636260:table/fridgebase",
+          "partitionKeyName": "pk",
+          "partitionKeyType": "S",
+          "sortKeyName": "sk",
+          "sortKeyType": "S"
+        }
+      },
+      "api": {
+        "awsomefridge": {}
+      }
+    }
   }
 }

@@ -1,6 +1,6 @@
 import { Text, View, Pressable , TextInput, StyleSheet} from "react-native"
 import React, { useState } from 'react'; 
-import { Item } from '../src/models';
+import { Item } from '../src/models/index';
 import XIcon from '../assets/icons/XIcon';
 
 interface Props extends Item {

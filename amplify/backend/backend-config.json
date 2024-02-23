@@ -7,7 +7,9 @@
           "additionalAuthenticationProviders": [],
           "defaultAuthentication": {
             "apiKeyConfig": {
-              "apiKeyExpirationDays": 7
+              "apiKeyExpirationDate": "2025-02-22T21:59:28.237Z",
+              "apiKeyExpirationDays": 365,
+              "description": ""
             },
             "authenticationType": "API_KEY"
           }
@@ -17,6 +19,7 @@
       "service": "AppSync"
     }
   },
+  "auth": {},
   "parameters": {
     "AMPLIFY_storage_fridgebase_arn": {
       "usedBy": [
