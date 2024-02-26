@@ -1,20 +1,13 @@
+import { Link } from 'expo-router';
 import React from 'react';
 import { View, Pressable, StyleSheet, Text } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
 
-type Props = {
-  navigation: StackNavigationProp<any>;
-};
-
-export default function Login({ navigation }: Props) {
+export default function Login() {
   // Placeholder function for login
   const handleLogin = () => {
     console.log('Login Pressable pressed');
   };
 
-  const continueAsGuest = () => {
-    navigation.navigate('Main');
-  };
 
   return (
     <View style={styles.container}>
@@ -23,11 +16,13 @@ export default function Login({ navigation }: Props) {
           Login
         </Text>
       </Pressable>
-      <Pressable onPress={continueAsGuest} style={styles.button}>
-        <Text>
-          Continue as Guest
-        </Text>
-      </Pressable>
+      <Link href="/home" style={styles.button}>
+        {/* <Pressable style={styles.button}>
+          <Text> */}
+        Continue as Guest
+          {/* </Text>
+        </Pressable> */}
+      </Link>
     </View>
   );
 }
