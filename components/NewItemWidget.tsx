@@ -19,7 +19,7 @@ const NewItemWidget = ({handler}: Props) => {
     const [open, setOpen] = useState<boolean>(false)
 
     return (
-        <Fragment>
+        <>
             <View style={styles.container}>
                 <View style={styles.info}>                
                     <TextInput
@@ -90,12 +90,12 @@ const NewItemWidget = ({handler}: Props) => {
                     
                     style={styles.add}
                 >
-                    {/* <PlusIcon /> */}
-                    <Text>+</Text>
+                    <PlusIcon />
+                    {/* <Text>+</Text> */}
                 </Pressable>
             </View>
             {open && <Calendar onDayPress={(e) => {setDate(new Date(e.dateString).getTime() / 1000); setOpen(false); }}/>}
-        </Fragment>
+        </>
     );
 };
 
@@ -108,7 +108,12 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems: 'flex-start',
         padding: 8,
+    },
+    info: {
+        display: 'flex',
+        flexDirection: 'column',
     },
     input: {
         // height: '100%',
@@ -122,10 +127,6 @@ const styles = StyleSheet.create({
     },
     category: {
     },
-    info: {
-        display: 'flex',
-        flexDirection: 'column',
-    },
     wrapper: {
         display: 'flex',
         flexDirection: 'row',
@@ -137,10 +138,11 @@ const styles = StyleSheet.create({
     },
     add: {
         width: 24,
-        height: '100%',
+        height: 24,
         borderRadius: 10,
-        display: 'flex',
-        justifyContent: 'flex-start',
+        // height: '100%',
+        // display: 'flex',
+        // justifyContent: 'flex-start',
     }   
 });
 

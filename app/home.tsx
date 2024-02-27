@@ -181,10 +181,11 @@ export default function Home() {
     <ScrollView
         style={{
         padding: 10,
-        backgroundColor: 'whitesmoke'
+        backgroundColor: 'whitesmoke',
+        display: 'flex',
+        flexDirection: 'column',
         }}
     >
-        <StatusBar/>
         {loading ?
             <ActivityIndicator size="large" color="#0000ff" animating={loading} />
             :

@@ -36,7 +36,7 @@ const ItemWidget = ({name, exp_date, category, calories, quantity, deleteHandler
         setEditedQuantity(editedQuantity);
         setEditedExpDate(exp_date ? new Date(exp_date * 1000).toISOString().slice(0, 10) : "");
     };
-    
+
     return (<>
             {editMode ? (
                 <View style={{...(styles.container), opacity: 0.5}}>
@@ -103,10 +103,11 @@ const ItemWidget = ({name, exp_date, category, calories, quantity, deleteHandler
                     </View>
 
                     <View style={styles.buttonsContainer}>
-                        <Pressable onPress={deleteHandler} style={styles.delete}>
-                            <XIcon />
+                        <Pressable onPress={deleteHandler} style={styles.button}>
+                            <Text>Delete</Text>
+                            {/* <XIcon /> */}
                         </Pressable>
-                        <Pressable onPress={() => setEditMode(true)}>
+                        <Pressable onPress={() => setEditMode(true)} style={styles.button}>
                             <Text>Edit</Text>
                         </Pressable>
                     </View>
@@ -127,6 +128,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         padding: 8,
         marginVertical: 2,
+        // flexShrink: 1
     },
     editInput: {
     },
@@ -150,27 +152,20 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
     info: {
-        display: 'flex',
-        flexDirection: 'column',
+        // display: 'flex',
+        // flexDirection: 'column',
         flexShrink: 1,
         flexGrow: 1,
     },
-    delete: {
-        width: 24,
-        borderRadius: 10,   
-        display: 'flex',
-        justifyContent: 'flex-start',
-    },
-    edit: {
-        backgroundColor: 'lightblue',
-        marginVertical: 2,
-        marginBottom: 4,
+    button: {
+        // backgroundColor: 'lightblue',
+        borderRadius: 10
     },
     buttonsContainer: {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        height: '100%',
+        // backgroundColor: 'red',
     },
 })
 
