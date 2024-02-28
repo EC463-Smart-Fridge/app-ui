@@ -1,7 +1,7 @@
 import { Text, View, Pressable , TextInput, StyleSheet} from "react-native"
 import React, { useState } from 'react'; 
 import { Item } from '../src/API';
-import XIcon from '../assets/icons/XIcon';
+import DeleteIcon from '../assets/icons/DeleteIcon';
 
 interface Props extends Item {
     deleteHandler: (item:any) => void;
