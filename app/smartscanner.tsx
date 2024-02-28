@@ -46,7 +46,7 @@ export default function SmartScanner() {
   };
   
   const fetchClarifaiAPI = (requestData: string) => {
-    const PAT = 'b0cfb19838e1432e8453961933c40cb5'; // Replace with Clarifai PAT
+    const PAT = 'a82e73fa495c4c44942f78de03e45945'; // Replace with Clarifai PAT
     const MODEL_ID = 'food-item-recognition'; //'ocr-scene-english-paddleocr'; // Replace with Clarifai model ID
     const MODEL_VERSION_ID = '1d5fd481e0cf4826aa72ec3ff049e044'; //'46e99516c2d94f58baf2bcaf5a6a53a9'; // Replace with Clarifai model version ID
   

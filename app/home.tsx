@@ -181,7 +181,6 @@ export default function Home() {
     <ScrollView
         style={{
         padding: 10,
-        backgroundColor: 'whitesmoke',
         display: 'flex',
         flexDirection: 'column',
         }}
