@@ -193,6 +193,7 @@ export default function Home() {
                 {items.map((item, i) => (
                 <View key={i}>
                     <ItemWidget 
+                        __typename="Item"
                         name={item.name} 
                         exp_date={item.exp_date} 
                         category={item.category}

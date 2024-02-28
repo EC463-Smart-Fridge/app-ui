@@ -8,7 +8,7 @@ interface Props extends Item {
     editHandler: (item:any) => void;
 }
 
-const ItemWidget = ({name, exp_date, category, calories, quantity, deleteHandler, editHandler}: Props) => {
+const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, quantity, deleteHandler, editHandler}: Props) => {
     const [editMode, setEditMode] = useState(false);
     const [editedName, setEditedName] = useState(name);
     const [editedExpDate, setEditedExpDate] = useState(exp_date ? new Date(exp_date * 1000).toISOString().slice(0, 10) : "");
