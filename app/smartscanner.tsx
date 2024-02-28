@@ -76,8 +76,8 @@ export default function SmartScanner() {
 
         // Log prediction details to the console
         console.log('Prediction:');
-        console.log('Classes:', data.concepts.map(concept => concept.name).join(', ')); // Assuming concepts contain predicted classes
-        console.log('Probabilities:', data.concepts.map(concept => concept.value).join(', ')); // Assuming concepts contain probabilities
+        console.log('Classes:', data.concepts.map((concept: any) => concept.name).join(', ')); // Assuming concepts contain predicted classes
+        console.log('Probabilities:', data.concepts.map((concept: any) => concept.value).join(', ')); // Assuming concepts contain probabilities
       } else {
         console.log('No prediction outputs found.');
       }
