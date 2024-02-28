@@ -2,23 +2,7 @@ import { ModelInit, MutableModel, __modelMeta__, ManagedIdentifier } from "@aws-
 // @ts-ignore
 import { LazyLoading, LazyLoadingDisabled, AsyncCollection } from "@aws-amplify/datastore";
 
-export enum ModelAttributeTypes {
-  BINARY = "binary",
-  BINARY_SET = "binarySet",
-  BOOL = "bool",
-  LIST = "list",
-  MAP = "map",
-  NUMBER = "number",
-  NUMBER_SET = "numberSet",
-  STRING = "string",
-  STRING_SET = "stringSet",
-  NULL = "_null"
-}
 
-export enum ModelSortDirection {
-  ASC = "ASC",
-  DESC = "DESC"
-}
 
 type EagerFridgebase = {
   readonly pk: string;

@@ -13,32 +13,177 @@ export const getUserItems = /* GraphQL */ `
       img_url
       exp_date
       quantity
+      id
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       __typename
     }
   }
 `;
-export const getFridgebase = /* GraphQL */ `
-  query GetFridgebase($pk: String!, $sk: String!) {
-    getFridgebase(pk: $pk, sk: $sk) {
+export const getItem = /* GraphQL */ `
+  query GetItem($id: ID!) {
+    getItem(id: $id) {
       pk
       sk
+      UPC
+      name
+      category
+      calories
+      img_url
+      exp_date
+      quantity
+      id
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       __typename
     }
   }
 `;
-export const listFridgebases = /* GraphQL */ `
-  query ListFridgebases(
-    $filter: TableFridgebaseFilterInput
+export const listItems = /* GraphQL */ `
+  query ListItems(
+    $filter: ModelItemFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listFridgebases(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listItems(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         pk
         sk
+        UPC
+        name
+        category
+        calories
+        img_url
+        exp_date
+        quantity
+        id
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
         __typename
       }
       nextToken
+      startedAt
+      __typename
+    }
+  }
+`;
+export const syncItems = /* GraphQL */ `
+  query SyncItems(
+    $filter: ModelItemFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncItems(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        pk
+        sk
+        UPC
+        name
+        category
+        calories
+        img_url
+        exp_date
+        quantity
+        id
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+  }
+`;
+export const getUser = /* GraphQL */ `
+  query GetUser($id: ID!) {
+    getUser(id: $id) {
+      pk
+      username
+      password
+      email
+      id
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const listUsers = /* GraphQL */ `
+  query ListUsers(
+    $filter: ModelUserFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        pk
+        username
+        password
+        email
+        id
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+  }
+`;
+export const syncUsers = /* GraphQL */ `
+  query SyncUsers(
+    $filter: ModelUserFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncUsers(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        pk
+        username
+        password
+        email
+        id
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
       __typename
     }
   }

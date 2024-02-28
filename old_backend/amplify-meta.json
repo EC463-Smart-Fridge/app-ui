@@ -1,0 +1,61 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-awsomefridge-devvv-125934-authRole",
+      "UnauthRoleArn": "arn:aws:iam::532305636260:role/amplify-awsomefridge-devvv-125934-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::532305636260:role/amplify-awsomefridge-devvv-125934-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-awsomefridge-devvv-125934-deployment",
+      "UnauthRoleName": "amplify-awsomefridge-devvv-125934-unauthRole",
+      "StackName": "amplify-awsomefridge-devvv-125934",
+      "StackId": "arn:aws:cloudformation:us-east-1:532305636260:stack/amplify-awsomefridge-devvv-125934/a24f9c50-d407-11ee-9ae5-0ebb53651287",
+      "AmplifyAppId": "d3fdye453mhkca"
+    }
+  },
+  "api": {
+    "awsomefridge": {
+      "service": "AppSync",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "output": {
+        "authConfig": {
+          "defaultAuthentication": {
+            "authenticationType": "API_KEY",
+            "apiKeyConfig": {
+              "apiKeyExpirationDays": 7
+            }
+          },
+          "additionalAuthenticationProviders": []
+        },
+        "GraphQLAPIIdOutput": "jtqaavzhjbeg7og2wkttwy2s6a",
+        "GraphQLAPIEndpointOutput": "https://gbunug4o7vfulpjvampe4gprwa.appsync-api.us-east-1.amazonaws.com/graphql",
+        "GraphQLAPIKeyOutput": "da2-hrchg3z77zg7vodewfegyx7h6a"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-awsomefridge-devvv-125934-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+        "logicalId": "apiawsomefridge"
+      },
+      "lastPushTimeStamp": "2024-02-28T01:21:17.651Z",
+      "lastPushDirHash": "EJmse19mzsFlbffLaB1fRB1GcqQ="
+    }
+  },
+  "auth": {},
+  "storage": {
+    "fridgebase": {
+      "service": "DynamoDB",
+      "serviceType": "imported",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "output": {
+        "Name": "fridgebase",
+        "Region": "us-east-1",
+        "Arn": "arn:aws:dynamodb:us-east-1:532305636260:table/fridgebase",
+        "PartitionKeyName": "pk",
+        "PartitionKeyType": "S",
+        "SortKeyName": "sk",
+        "SortKeyType": "S"
+      },
+      "lastPushTimeStamp": "2024-02-25T18:07:05.441Z"
+    }
+  }
+}

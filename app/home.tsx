@@ -6,7 +6,7 @@ import { removeItem, addItem, editItem } from "../src/graphql/mutations";
 import { DataStore } from '@aws-amplify/datastore';
 
 import { useGraphQLClient } from "../contexts/GraphQLClientContext";
-import { Item } from '../src/models/index';
+import { Item } from '../src/API';
 
 import ItemWidget from "../components/ItemWidget";
 import NewItemWidget from "../components/NewItemWidget";

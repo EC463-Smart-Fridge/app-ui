@@ -96,6 +96,22 @@ export const schema = {
                 {
                     "type": "model",
                     "properties": {}
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
                 }
             ]
         },
@@ -160,34 +176,27 @@ export const schema = {
                 {
                     "type": "model",
                     "properties": {}
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
                 }
             ]
         }
     },
-    "enums": {
-        "ModelAttributeTypes": {
-            "name": "ModelAttributeTypes",
-            "values": [
-                "binary",
-                "binarySet",
-                "bool",
-                "list",
-                "map",
-                "number",
-                "numberSet",
-                "string",
-                "stringSet",
-                "_null"
-            ]
-        },
-        "ModelSortDirection": {
-            "name": "ModelSortDirection",
-            "values": [
-                "ASC",
-                "DESC"
-            ]
-        }
-    },
+    "enums": {},
     "nonModels": {
         "Fridgebase": {
             "name": "Fridgebase",

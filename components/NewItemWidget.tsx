@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useState } from 'react'
 import { Text, TextInput, View, Pressable, StyleSheet} from "react-native"
 import { Calendar } from 'react-native-calendars'
 import PlusIcon from '../assets/icons/PlusIcon';
-import { Item } from '../src/models/index';
+import { Item } from '../src/API';
 import { useGraphQLClient } from '../contexts/GraphQLClientContext';
 
 interface Props {
@@ -74,13 +74,14 @@ const NewItemWidget = ({handler}: Props) => {
                 <Pressable 
                     onPress={() => {
                         if (input === "") return;
-                        handler(new Item({
-                            name: input, 
-                            exp_date: date, 
-                            category: category, 
-                            calories: calories, 
-                            quantity: quantity
-                        }));
+                        handler({__typename: "Item", name: input, exp_date: date, category: category, calories: calories, quantity: quantity});
+                        // handler(new Item({
+                        //     name: input, 
+                        //     exp_date: date, 
+                        //     category: category, 
+                        //     calories: calories, 
+                        //     quantity: quantity
+                        // }));
                         setInput("");
                         setDate(0);
                         setCategory("");

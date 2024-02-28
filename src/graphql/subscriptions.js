@@ -28,3 +28,120 @@ export const onDeleteFridgebase = /* GraphQL */ `
     }
   }
 `;
+export const onCreateItem = /* GraphQL */ `
+  subscription OnCreateItem($filter: ModelSubscriptionItemFilterInput) {
+    onCreateItem(filter: $filter) {
+      pk
+      sk
+      UPC
+      name
+      category
+      calories
+      img_url
+      exp_date
+      quantity
+      id
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateItem = /* GraphQL */ `
+  subscription OnUpdateItem($filter: ModelSubscriptionItemFilterInput) {
+    onUpdateItem(filter: $filter) {
+      pk
+      sk
+      UPC
+      name
+      category
+      calories
+      img_url
+      exp_date
+      quantity
+      id
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteItem = /* GraphQL */ `
+  subscription OnDeleteItem($filter: ModelSubscriptionItemFilterInput) {
+    onDeleteItem(filter: $filter) {
+      pk
+      sk
+      UPC
+      name
+      category
+      calories
+      img_url
+      exp_date
+      quantity
+      id
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const onCreateUser = /* GraphQL */ `
+  subscription OnCreateUser($filter: ModelSubscriptionUserFilterInput) {
+    onCreateUser(filter: $filter) {
+      pk
+      username
+      password
+      email
+      id
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateUser = /* GraphQL */ `
+  subscription OnUpdateUser($filter: ModelSubscriptionUserFilterInput) {
+    onUpdateUser(filter: $filter) {
+      pk
+      username
+      password
+      email
+      id
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteUser = /* GraphQL */ `
+  subscription OnDeleteUser($filter: ModelSubscriptionUserFilterInput) {
+    onDeleteUser(filter: $filter) {
+      pk
+      username
+      password
+      email
+      id
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
