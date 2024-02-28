@@ -4,7 +4,7 @@ import { Text, View } from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import { useFocusEffect } from '@react-navigation/native';
 
-export default function Scan() {
+export default function BarcodeScanner() {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState<boolean>(false);
 

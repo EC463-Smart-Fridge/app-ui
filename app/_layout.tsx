@@ -12,19 +12,23 @@ export default function Layout() {
             <Tabs>
                 <Tabs.Screen
                     name="index"
-                    options={{ headerShown: false, href: null,}}
+                    options={{ href: null, headerShown: false}}
                 />
                 <Tabs.Screen
                     name="home"
-                    options={{ headerShown: false}}
+                    options={{ tabBarLabel: "Home", headerShown: false}}
                 />
                 <Tabs.Screen
-                    name="scan"
-                    options={{ headerShown: false}}
+                    name="barcode"
+                    options={{ tabBarLabel: "Barcode", headerShown: false, }}
+                />
+                <Tabs.Screen
+                    name="smartscanner"
+                    options={{ tabBarLabel: "Smart Scan", headerShown: false, }}
                 />
                 <Tabs.Screen
                     name="recipes"
-                    options={{ headerShown: false}}
+                    options={{ tabBarLabel: "Recipes", headerShown: false}}
                 />
             </Tabs>
         </GraphQLClientProvider>
