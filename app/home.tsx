@@ -178,7 +178,7 @@ export default function Home() {
             }
         };
         test();
-    }, [refreshes])
+    }, [refreshes, items.length])
 
     return (
     <ScrollView 
