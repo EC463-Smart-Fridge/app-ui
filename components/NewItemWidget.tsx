@@ -19,7 +19,6 @@ const NewItemWidget = ({handler}: Props) => {
 
     return (
         <>
-        
             <Modal
                 transparent={true}
                 visible={open}
