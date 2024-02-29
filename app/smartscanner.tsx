@@ -3,6 +3,8 @@ import { StyleSheet, Button } from 'react-native';
 import { Text, View } from 'react-native';
 import { Camera } from 'expo-camera';
 import { useFocusEffect } from '@react-navigation/native';
+import { addItemByUPC } from "../src/graphql/mutations";
+import { useGraphQLClient } from "../contexts/GraphQLClientContext";
 
 export default function SmartScanner() {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
@@ -74,6 +76,8 @@ export default function SmartScanner() {
         const prediction = outputs[0]; // Assuming there's only one prediction
         const data = prediction.data;
 
+
+        console.log(data.concepts[0].name);
         // Log prediction details to the console
         console.log('Prediction:');
         console.log('Classes:', data.concepts.map((concept: any) => concept.name).join(', ')); // Assuming concepts contain predicted classes
