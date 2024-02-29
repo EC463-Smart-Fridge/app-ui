@@ -182,7 +182,6 @@ export default function Home() {
 
     return (
     <ScrollView 
-        style={{margin: 10}}
         refreshControl={
             <RefreshControl refreshing={loading} onRefresh={() => {
                 // console.log('Refreshing');

@@ -162,14 +162,15 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
 
 const styles = StyleSheet.create({
     container: {
-        width: '100%',
+        flex: 1,
         backgroundColor: 'lightgray',
         borderRadius: 10,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         padding: 8,
-        marginVertical: 2,
+        marginTop: 5,
+        marginHorizontal: 10,
         // flexShrink: 1
     },
     editInput: {

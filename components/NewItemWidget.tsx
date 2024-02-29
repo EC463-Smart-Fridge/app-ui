@@ -123,7 +123,7 @@ const NewItemWidget = ({handler}: Props) => {
 
 const styles = StyleSheet.create({
     container: {
-        width: '100%',
+        flex: 1,
         backgroundColor: 'lightgray',
         opacity: 0.5, 
         borderRadius: 10,
@@ -132,6 +132,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'flex-start',
         padding: 8,
+        marginVertical: 5,
+        marginHorizontal: 10,
     },
     info: {
     },
