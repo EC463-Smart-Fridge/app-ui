@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ScrollView, StatusBar, View, ActivityIndicator } from "react-native";
+import { ScrollView, StatusBar, View, ActivityIndicator, RefreshControl } from "react-native";
 import { getUserItems } from "../src/graphql/queries";
 import { removeItem, addItem, editItem } from "../src/graphql/mutations";
 
@@ -14,7 +14,8 @@ import NewItemWidget from "../components/NewItemWidget";
 export default function Home() {
     const client = useGraphQLClient();
     const [loading, setLoading] = useState(true);
-    const [editedItems, setEditedItems] = useState({});
+    // const [editedItems, setEditedItems] = useState({});
+    const [refreshes, setRefreshes] = useState(0);
 
     const [items, setItems] = useState<Item[]>([]);
 
@@ -175,10 +176,19 @@ export default function Home() {
             }
         };
         test();
-    }, [])
+    }, [refreshes])
 
     return (
-    <ScrollView style={{margin: 10,}}>
+    <ScrollView 
+        style={{margin: 10,}}
+        refreshControl={
+            <RefreshControl refreshing={loading} onRefresh={() => {
+                // console.log('Refreshing');
+                setRefreshes(refreshes + 1);
+                console.log({refreshes});
+            }} />
+        }
+    >
         {loading ?
             <ActivityIndicator size="large" color="#0000ff" animating={loading} />
             :
