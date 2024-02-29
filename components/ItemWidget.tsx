@@ -37,8 +37,8 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
         editHandler({
             name: editedName,
             quantity: parseInt(editedQuantity, 10),
-            category: editedCategory,
-            calories: editedCalories,
+            // category: editedCategory,
+            // calories: editedCalories,
             exp_date: editedExpDate,
         });
         setEditMode(false);
@@ -96,7 +96,7 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
                                 </Text>
                             </Pressable>
                         </View>
-                        <View style={styles.wrapper}>
+                        {/* <View style={styles.wrapper}>
                             <Text style={styles.label}>Category: </Text>
                             <TextInput
                                 placeholder="Add Category"
@@ -105,7 +105,7 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
                                 inputMode="text"
                                 style={styles.input}
                             />
-                        </View>
+                        </View> */}
                         <View style={styles.wrapper}>
                             <Text style={styles.label}>Quantity: </Text>
                             <TextInput
@@ -116,7 +116,7 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
                                 style={styles.input}
                             />
                         </View>
-                        <View style={styles.wrapper}>
+                        {/* <View style={styles.wrapper}>
                             <Text style={styles.label}>Calories: </Text>
                             <TextInput
                                 placeholder="0"
@@ -125,7 +125,7 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
                                 inputMode="numeric"
                                 style={styles.input}
                             />
-                        </View>
+                        </View> */}
                     </View>
                     <View style={styles.buttonsContainer}>
                         <Pressable onPress={handleSave} style={styles.button}>
