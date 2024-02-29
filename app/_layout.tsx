@@ -21,32 +21,36 @@ export default function Layout() {
                     tabBarStyle: {
                         paddingTop: 4,
                         paddingBottom: 4,
-                    }
+                    },
+                    headerShown: false,
+                    tabBarLabelPosition: 'below-icon',
+                    tabBarActiveTintColor: 'darkturquoise',
+                    
                 }}
             >
                 <Tabs.Screen
-                    name="index"
+                    name="index"    
                     options={{ href: null, headerShown: false}}
                 ></Tabs.Screen>
                 <Tabs.Screen
                     name="home"
-                    options={{ tabBarLabel: "Home", headerShown: false, tabBarIcon: HomeIcon, tabBarLabelPosition: 'below-icon'}}
+                    options={{ tabBarLabel: "Home", tabBarIcon: ({focused}) => <HomeIcon fill={focused ? 'darkturquoise' : 'black'} />}}
                 />
                 <Tabs.Screen
                     name="barcode"
-                    options={{ tabBarLabel: "Barcode", headerShown: false, tabBarIcon: ScanIcon, tabBarLabelPosition: 'below-icon'}}
+                    options={{ tabBarLabel: "Barcode", tabBarIcon: ({focused}) => <ScanIcon fill={focused ? 'darkturquoise' : 'black'}/>}}
                 />
                 <Tabs.Screen
                     name="smartscanner"
-                    options={{ tabBarLabel: "Smart Scan", headerShown: false, tabBarIcon: ScanIcon, tabBarLabelPosition: 'below-icon'}}
+                    options={{ tabBarLabel: "Smart Scan", tabBarIcon: ({focused}) => <ScanIcon fill={focused ? 'darkturquoise' : 'black'}/>}}
                 />
                 <Tabs.Screen
                     name="recipes"
-                    options={{ tabBarLabel: "Recipes", headerShown: false, tabBarIcon: RecipeIcon, tabBarLabelPosition: 'below-icon'}}
+                    options={{ tabBarLabel: "Recipes", tabBarIcon: ({focused}) => <RecipeIcon fill={focused ? 'darkturquoise' : 'black'}/>}}
                 />
                 <Tabs.Screen
                     name="settings"
-                    options={{ tabBarLabel: "Settings", headerShown: false, tabBarIcon: SettingsIcon, tabBarLabelPosition: 'below-icon'}}
+                    options={{ tabBarLabel: "Settings", tabBarIcon: ({focused}) => <SettingsIcon fill={focused ? 'darkturquoise' : 'black'}/>}}
                 />
             </Tabs>
             {/* </View> */}
