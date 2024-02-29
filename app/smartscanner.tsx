@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Button } from 'react-native';
+import { StyleSheet, Pressable, Switch } from 'react-native';
 import { Text, View } from 'react-native';
 import { Camera } from 'expo-camera';
 import { useFocusEffect } from '@react-navigation/native';
@@ -10,6 +10,7 @@ export default function SmartScanner() {
   const client = useGraphQLClient();
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const cameraRef = useRef<Camera>(null);
+  const [isProduce, setIsProduce] = useState<boolean>(false);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -26,7 +27,7 @@ export default function SmartScanner() {
 
   const handleCapture = async () => {
     if (cameraRef.current) {
-      let photo = await cameraRef.current.takePictureAsync({ base64: true, quality: 0.7 }); // adjust quality for efficiency
+      let photo = await cameraRef.current.takePictureAsync({ base64: true, quality: 0.5 }); // adjust quality for efficiency
       // console.log('Photo captured:', photo);
   
       // Prepare the image data to pass to the Clarifai API
@@ -76,15 +77,16 @@ export default function SmartScanner() {
         const prediction = outputs[0]; // Assuming there's only one prediction
         const data = prediction.data;
         const name = String(data.concepts[0].name)
-        console.log(name)
+        console.log(name + `${isProduce ? ' +raw' : ''}`)
         try {
           const addResult = await client.graphql({
               query: addItemByUPC,
               variables: {
                   uid: 'UID1',
-                  upc: name 
+                  upc: name + `${isProduce ? ' +raw' : ''}`
               },
           })
+          
           console.log('Item added successfully', addResult);
       } catch (error) {
           console.error('Error adding item', error);
@@ -113,8 +115,18 @@ export default function SmartScanner() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.toggle}>
+        <Text>Produce</Text>
+        <Switch
+          trackColor={{false: '#767577', true: 'darkturquoise'}}
+          thumbColor='white'
+          // ios_backgroundColor="#3e3e3e"
+          onValueChange={() => {setIsProduce(!isProduce);}}
+          value={isProduce}
+        />
+      </View>
       <Camera style={styles.camera} ref={cameraRef} />
-      <Button title="Capture" onPress={handleCapture} />
+      <Pressable onPress={handleCapture} style={styles.button}><Text>Capture</Text></Pressable>
     </View>
   );
 }
@@ -129,4 +141,15 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
   },
+  toggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  button: {
+    backgroundColor: 'darkturquoise',
+    padding: 10,
+    borderRadius: 5,
+    margin: 8,
+  }
 });
