@@ -4,7 +4,8 @@ import { GraphQLClientProvider } from "../contexts/GraphQLClientContext";
 import { StatusBar } from "expo-status-bar";
 import { LinearGradient } from "expo-linear-gradient";
 import HomeIcon from "../assets/icons/HomeIcon";
-import CakeIcon from "../assets/icons/CakeIcon";
+// import CakeIcon from "../assets/icons/CakeIcon";
+import RecipeIcon from "../assets/icons/RecipeIcon";
 import ScanIcon from "../assets/icons/ScanIcon";
 import SettingsIcon from "../assets/icons/SettingsIcon";
 
@@ -15,7 +16,14 @@ export default function Layout() {
             <View style={{height: 50, width: "100%"}}></View>
             {/* <StatusBar style="auto" /> */}
             {/* <View style={{flex: 1, backgroundColor: 'blue'}}> */}
-            <Tabs>
+            <Tabs
+                screenOptions={{
+                    tabBarStyle: {
+                        paddingTop: 4,
+                        paddingBottom: 4,
+                    }
+                }}
+            >
                 <Tabs.Screen
                     name="index"
                     options={{ href: null, headerShown: false}}
@@ -34,7 +42,7 @@ export default function Layout() {
                 />
                 <Tabs.Screen
                     name="recipes"
-                    options={{ tabBarLabel: "Recipes", headerShown: false, tabBarIcon: CakeIcon, tabBarLabelPosition: 'below-icon'}}
+                    options={{ tabBarLabel: "Recipes", headerShown: false, tabBarIcon: RecipeIcon, tabBarLabelPosition: 'below-icon'}}
                 />
                 <Tabs.Screen
                     name="settings"
