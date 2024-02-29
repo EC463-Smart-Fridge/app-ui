@@ -7,6 +7,7 @@ import { addItemByUPC } from "../src/graphql/mutations";
 import { useGraphQLClient } from "../contexts/GraphQLClientContext";
 
 export default function SmartScanner() {
+  const client = useGraphQLClient();
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const cameraRef = useRef<Camera>(null);
 
@@ -26,7 +27,7 @@ export default function SmartScanner() {
   const handleCapture = async () => {
     if (cameraRef.current) {
       let photo = await cameraRef.current.takePictureAsync({ base64: true, quality: 0.7 }); // adjust quality for efficiency
-      console.log('Photo captured:', photo);
+      // console.log('Photo captured:', photo);
   
       // Prepare the image data to pass to the Clarifai API
       const imageBase64 = photo.base64;
@@ -66,18 +67,29 @@ export default function SmartScanner() {
     .then(result => console.log(result))
     .catch(error => console.log('error', error));
     */
-
     fetch(`https://api.clarifai.com/v2/models/${MODEL_ID}/versions/${MODEL_VERSION_ID}/outputs`, requestOptions)
     .then(response => response.json())
-    .then(result => {
+    .then( async(result) => {
       // Extract prediction data from the response
       const outputs = result.outputs;
       if (outputs && outputs.length > 0) {
         const prediction = outputs[0]; // Assuming there's only one prediction
         const data = prediction.data;
+        const name = String(data.concepts[0].name)
+        console.log(name)
+        try {
+          const addResult = await client.graphql({
+              query: addItemByUPC,
+              variables: {
+                  uid: 'UID1',
+                  upc: name 
+              },
+          })
+          console.log('Item added successfully', addResult);
+      } catch (error) {
+          console.error('Error adding item', error);
+      }
 
-
-        console.log(data.concepts[0].name);
         // Log prediction details to the console
         console.log('Prediction:');
         console.log('Classes:', data.concepts.map((concept: any) => concept.name).join(', ')); // Assuming concepts contain predicted classes

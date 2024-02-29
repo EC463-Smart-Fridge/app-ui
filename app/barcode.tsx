@@ -38,10 +38,8 @@ export default function BarcodeScanner() {
         const addResult = await client.graphql({
             query: addItemByUPC,
             variables: {
-                input: {
-                    pk: 'UID1',
-                    upc: String(data) 
-                }
+                uid: 'UID1',
+                upc: String(data) 
             },
         })
         console.log('Item added successfully', addResult);
@@ -62,7 +60,7 @@ export default function BarcodeScanner() {
     <View style={styles.container}>
       <Camera
         style={styles.camera}
-        type={CameraType.front}
+        type={CameraType.back}
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
       />
       {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
