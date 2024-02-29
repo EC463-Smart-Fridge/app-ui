@@ -95,12 +95,14 @@ export default function Home() {
         pk: string | null | undefined;
         sk: string | null | undefined;
         name?: string; // Optional
+        category?: string; // Optional
         exp_date?: number; // Optional
         quantity?: number; // Optional
+        calories?: string; // Optional
     }
 
     // Edit Item handler that handles modifying an existing item
-    const editItemHandler = async (index: number, edits: {name?: string, exp_date?: number, quantity?: number}) => {
+    const editItemHandler = async (index: number, edits: {name?: string, category?: string, exp_date?: number, quantity?: number, calories?: string}) => {
         const itemToEdit = items[index];
         if (!itemToEdit) return;
         if (!itemToEdit.pk || !itemToEdit.sk) {
@@ -180,7 +182,7 @@ export default function Home() {
 
     return (
     <ScrollView 
-        style={{margin: 10,}}
+        style={{margin: 10}}
         refreshControl={
             <RefreshControl refreshing={loading} onRefresh={() => {
                 // console.log('Refreshing');

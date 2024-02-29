@@ -3,6 +3,9 @@ import React, { useState } from 'react';
 import { Item } from '../src/API';
 import DeleteIcon from '../assets/icons/DeleteIcon';
 import { Calendar } from "react-native-calendars";
+import EditIcon from "../assets/icons/EditIcon";
+import SaveIcon from "../assets/icons/SaveIcon";
+import CancelIcon from "../assets/icons/CancelIcon";
 
 interface Props extends Item {
     deleteHandler: (item:any) => void;
@@ -34,6 +37,8 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
         editHandler({
             name: editedName,
             quantity: parseInt(editedQuantity, 10),
+            category: editedCategory,
+            calories: editedCalories,
             exp_date: editedExpDate,
         });
         setEditMode(false);
@@ -51,6 +56,7 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
                         onRequestClose={() => setCalendarOpen(false)}
                         style={styles.modal}
                     >
+                    <View style={styles.calendarWrapper}>
                         <Calendar
                             style={styles.calendar} 
                             // onDayPress={(e) => {setDate(new Date(e.dateString).getTime() / 1000); setOpen(false); }}
@@ -61,6 +67,7 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
                                 setCalendarOpen(false);
                             }}
                         />
+                    </View>
 
                         <Pressable onPress={() => setCalendarOpen(false)} style={styles.modalBackground}></Pressable>
                     </Modal>
@@ -119,10 +126,12 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
                     </View>
                     <View style={styles.buttonsContainer}>
                         <Pressable onPress={handleSave}>
-                            <Text>Save</Text>
+                            {/* <Text>Save</Text> */}
+                            <SaveIcon />
                         </Pressable>
                         <Pressable onPress={handleCancel}>
-                            <Text>Cancel</Text>
+                            {/* <Text>Cancel</Text> */}
+                            <CancelIcon />
                         </Pressable>
                     </View>
                 </View>
@@ -139,11 +148,12 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
 
                     <View style={styles.buttonsContainer}>
                         <Pressable onPress={deleteHandler} style={styles.button}>
-                            <Text>Delete</Text>
-                            {/* <XIcon /> */}
+                            {/* <Text>Delete</Text> */}
+                            <DeleteIcon />
                         </Pressable>
                         <Pressable onPress={() => setEditMode(true)} style={styles.button}>
-                            <Text>Edit</Text>
+                            {/* <Text>Edit</Text> */}
+                            <EditIcon />
                         </Pressable>
                     </View>
                 </View>
@@ -211,27 +221,35 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
+        width: 20,
         // backgroundColor: 'red',
     },
     modal: {
         margin: 10,
     },
-    modalBackground: {
+    calendarWrapper: {
+        marginTop: 200,
         position: 'absolute',
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        zIndex: 100,
+        top: 0,
+        width: '80%',
+        alignSelf: 'center',
     },
     calendar: {
-        // height: 500,
-        // backgroundColor: 'red',
-        // width: '95%',
-        marginHorizontal: '2.5%',
-        marginTop: '40%',
+        // marginHorizontal: '2.5%',
+        // marginTop: 200,
         zIndex: 100,
         borderRadius: 16,
         padding: 16,
-    }
+    },
+    modalBackground: {
+        position: 'absolute',
+        bottom: 0,
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        zIndex: 50,
+    },
 })
 
-export default ItemWidget
+export default ItemWidget;

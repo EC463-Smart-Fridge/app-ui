@@ -14,6 +14,7 @@ export default function Layout() {
             {/* TEMP TOP BAR */}
             <View style={{height: 50, width: "100%"}}></View>
             {/* <StatusBar style="auto" /> */}
+            {/* <View style={{flex: 1, backgroundColor: 'blue'}}> */}
             <Tabs>
                 <Tabs.Screen
                     name="index"
@@ -40,6 +41,7 @@ export default function Layout() {
                     options={{ tabBarLabel: "Settings", headerShown: false, tabBarIcon: SettingsIcon, tabBarLabelPosition: 'below-icon'}}
                 />
             </Tabs>
+            {/* </View> */}
         </GraphQLClientProvider>
     )
 }

@@ -1,8 +1,8 @@
 import { Svg, Path } from "react-native-svg";
 
 const EditIcon = () => (
-    <Svg fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#000">
-        <Path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+    <Svg  viewBox="0 0 16 16" fill="currentColor">
+    <Path fillRule="evenodd" d="M11.013 2.513a1.75 1.75 0 0 1 2.475 2.474L6.226 12.25a2.751 2.751 0 0 1-.892.596l-2.047.848a.75.75 0 0 1-.98-.98l.848-2.047a2.75 2.75 0 0 1 .596-.892l7.262-7.261Z" clipRule="evenodd" />
     </Svg>
 );
 

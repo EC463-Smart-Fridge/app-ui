@@ -25,6 +25,7 @@ const NewItemWidget = ({handler}: Props) => {
                 onRequestClose={() => setOpen(false)}
                 style={styles.modal}
             >
+                <View style={styles.calendarWrapper}>
                 <Calendar
                     style={styles.calendar} 
                     // onDayPress={(e) => {setDate(new Date(e.dateString).getTime() / 1000); setOpen(false); }}
@@ -35,6 +36,7 @@ const NewItemWidget = ({handler}: Props) => {
                         setOpen(false);
                       }}
                 />
+                </View>
 
                 <Pressable onPress={() => setOpen(false)} style={styles.modalBackground}></Pressable>
             </Modal>
@@ -168,22 +170,29 @@ const styles = StyleSheet.create({
     modal: {
         margin: 10,
     },
-    modalBackground: {
+    calendarWrapper: {
+        marginTop: 200,
         position: 'absolute',
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        zIndex: 100,
+        top: 0,
+        width: '80%',
+        alignSelf: 'center',
     },
     calendar: {
-        // height: 500,
-        // backgroundColor: 'red',
-        // width: '95%',
-        marginHorizontal: '2.5%',
-        marginTop: '40%',
+        // marginHorizontal: '2.5%',
+        // marginTop: 200,
         zIndex: 100,
         borderRadius: 16,
         padding: 16,
-    }
+    },
+    modalBackground: {
+        position: 'absolute',
+        bottom: 0,
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        zIndex: 50,
+    },
 });
 
 export default NewItemWidget;
