@@ -125,11 +125,11 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
                         </View>
                     </View>
                     <View style={styles.buttonsContainer}>
-                        <Pressable onPress={handleSave}>
+                        <Pressable onPress={handleSave} style={styles.button}>
                             {/* <Text>Save</Text> */}
                             <SaveIcon />
                         </Pressable>
-                        <Pressable onPress={handleCancel}>
+                        <Pressable onPress={handleCancel} style={styles.button}>
                             {/* <Text>Cancel</Text> */}
                             <CancelIcon />
                         </Pressable>
@@ -148,11 +148,9 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
 
                     <View style={styles.buttonsContainer}>
                         <Pressable onPress={deleteHandler} style={styles.button}>
-                            {/* <Text>Delete</Text> */}
                             <DeleteIcon />
                         </Pressable>
                         <Pressable onPress={() => setEditMode(true)} style={styles.button}>
-                            {/* <Text>Edit</Text> */}
                             <EditIcon />
                         </Pressable>
                     </View>
@@ -215,13 +213,17 @@ const styles = StyleSheet.create({
     },
     button: {
         // backgroundColor: 'lightblue',
-        borderRadius: 10
+        borderRadius: 10,
+        height: 20,
+        // backgroundColor: 'red'
     },
     buttonsContainer: {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
         width: 20,
+        marginLeft: 10,
+        // height: '100%',
         // backgroundColor: 'red',
     },
     modal: {
