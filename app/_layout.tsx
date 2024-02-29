@@ -18,7 +18,7 @@ export default function Layout() {
                 <Tabs.Screen
                     name="index"
                     options={{ href: null, headerShown: false}}
-                />
+                ></Tabs.Screen>
                 <Tabs.Screen
                     name="home"
                     options={{ tabBarLabel: "Home", headerShown: false, tabBarIcon: HomeIcon, tabBarLabelPosition: 'below-icon'}}

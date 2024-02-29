@@ -178,13 +178,7 @@ export default function Home() {
     }, [])
 
     return (
-    <ScrollView
-        style={{
-        padding: 10,
-        display: 'flex',
-        flexDirection: 'column',
-        }}
-    >
+    <ScrollView style={{margin: 10,}}>
         {loading ?
             <ActivityIndicator size="large" color="#0000ff" animating={loading} />
             :

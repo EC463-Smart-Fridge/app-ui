@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     },
     name: {
         verticalAlign: 'middle',
-        fontSize: 20,
+        fontSize: 24,
         width: '100%',
     },
     quantity: {

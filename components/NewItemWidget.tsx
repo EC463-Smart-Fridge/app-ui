@@ -1,6 +1,5 @@
-import { Fragment } from 'react'
 import { Dispatch, SetStateAction, useState } from 'react'
-import { Text, TextInput, View, Pressable, StyleSheet} from "react-native"
+import { Text, TextInput, View, Pressable, StyleSheet, Modal} from "react-native"
 import { Calendar } from 'react-native-calendars'
 import AddIcon from '../assets/icons/AddIcon';
 import { Item } from '../src/API';
@@ -20,19 +19,40 @@ const NewItemWidget = ({handler}: Props) => {
 
     return (
         <>
+        
+            <Modal
+                transparent={true}
+                visible={open}
+                onRequestClose={() => setOpen(false)}
+                style={styles.modal}
+            >
+                <Calendar
+                    style={styles.calendar} 
+                    // onDayPress={(e) => {setDate(new Date(e.dateString).getTime() / 1000); setOpen(false); }}
+                    onDayPress={(day) => {
+                        const date = new Date(day.year, day.month - 1, day.day);
+                        const timestamp = date.getTime() / 1000; // Convert milliseconds to seconds
+                        setDate(timestamp);
+                        setOpen(false);
+                      }}
+                />
+
+                <Pressable onPress={() => setOpen(false)} style={styles.modalBackground}></Pressable>
+            </Modal>
+        
             <View style={styles.container}>
                 <View style={styles.info}>                
                     <TextInput
                         placeholder="Add item"
                         value={input}
                         onChangeText={setInput}
-                        style={styles.input}
+                        style={styles.name}
                     />
 
                     <View style={styles.wrapper}>
                         <Text style={styles.label}>Expiration Date:</Text>
-                        <Pressable onPress={() => setOpen(!open)} style={styles.date}>
-                            <Text style={styles.date}>
+                        <Pressable onPress={() => setOpen(!open)} >
+                            <Text style={styles.input}>
                                 {date != 0 ? new Date(date * 1000).toLocaleDateString("en-US") : "Add Date"}
                             </Text>
                         </Pressable>
@@ -44,7 +64,8 @@ const NewItemWidget = ({handler}: Props) => {
                             placeholder="Add category"
                             value={category}
                             onChangeText={setCategory}
-                            style={styles.category}
+                            inputMode="text"
+                            style={styles.input}
                         />
                     </View>
 
@@ -55,7 +76,7 @@ const NewItemWidget = ({handler}: Props) => {
                             value={quantity.toString()}
                             onChangeText={(text) => setQuantity(Number(text))}
                             inputMode="numeric"
-                            style={styles.quantity}
+                            style={styles.input}
                         />
                     </View>
 
@@ -66,7 +87,7 @@ const NewItemWidget = ({handler}: Props) => {
                             value={calories.toString()}
                             onChangeText={(text) => setCalories(text)}
                             inputMode="numeric"
-                            style={styles.quantity}
+                            style={styles.input}
                         />
                     </View>
                 </View>
@@ -95,7 +116,6 @@ const NewItemWidget = ({handler}: Props) => {
                     {/* <Text>+</Text> */}
                 </Pressable>
             </View>
-            {open && <Calendar onDayPress={(e) => {setDate(new Date(e.dateString).getTime() / 1000); setOpen(false); }}/>}
         </>
     );
 };
@@ -113,29 +133,30 @@ const styles = StyleSheet.create({
         padding: 8,
     },
     info: {
-        display: 'flex',
-        flexDirection: 'column',
+    },
+    name: {
+        fontSize: 24,
+        // backgroundColor: 'red',
     },
     input: {
         // height: '100%',
-        verticalAlign: 'middle',
-        fontSize: 20,
-        flexGrow: 1,       
-    },
-    quantity: {
-    },
-    date: {
-    },
-    category: {
+        // verticalAlign: 'middle',
+        fontSize: 16,
+        // flexGrow: 1,       
     },
     wrapper: {
         display: 'flex',
         flexDirection: 'row',
-        fontSize: 18,
         marginVertical: 3,
+        // backgroundColor: 'red',
+        verticalAlign: 'middle',
+        height: 24,
     },
     label: {
         paddingRight: 8,
+        verticalAlign: 'middle',
+        // backgroundColor: 'green',
+        fontSize: 16,
     },
     add: {
         width: 24,
@@ -144,7 +165,26 @@ const styles = StyleSheet.create({
         // height: '100%',
         // display: 'flex',
         // justifyContent: 'flex-start',
-    }   
+    },
+    modal: {
+        margin: 10,
+    },
+    modalBackground: {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    calendar: {
+        // height: 500,
+        // backgroundColor: 'red',
+        // width: '95%',
+        marginHorizontal: '2.5%',
+        marginTop: '40%',
+        zIndex: 100,
+        borderRadius: 16,
+        padding: 16,
+    }
 });
 
 export default NewItemWidget;
