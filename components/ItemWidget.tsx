@@ -71,7 +71,7 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
 
                         <Pressable onPress={() => setCalendarOpen(false)} style={styles.modalBackground}></Pressable>
                     </Modal>
-                <View style={{...(styles.container), opacity: 0.5}}>
+                <View style={{...(styles.container), opacity: 0.9}}>
                     <View style={styles.info}>
                         <TextInput
                             style={styles.name}
@@ -97,30 +97,33 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
                             </Pressable>
                         </View>
                         <View style={styles.wrapper}>
-                            <Text>Category: </Text>
+                            <Text style={styles.label}>Category: </Text>
                             <TextInput
                                 placeholder="Add Category"
                                 onChangeText={setEditedCategory}
                                 value={editedCategory}
                                 inputMode="text"
+                                style={styles.input}
                             />
                         </View>
                         <View style={styles.wrapper}>
-                            <Text>Quantity: </Text>
+                            <Text style={styles.label}>Quantity: </Text>
                             <TextInput
                                 placeholder="1"
                                 onChangeText={setEditedQuantity}
                                 value={editedQuantity}
                                 inputMode="numeric"
+                                style={styles.input}
                             />
                         </View>
                         <View style={styles.wrapper}>
-                            <Text>Calories: </Text>
+                            <Text style={styles.label}>Calories: </Text>
                             <TextInput
                                 placeholder="0"
                                 onChangeText={setEditedCalories}
                                 value={editedCalories}
                                 inputMode="numeric"
+                                style={styles.input}
                             />
                         </View>
                     </View>
@@ -163,7 +166,7 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'lightgray',
+        backgroundColor: 'white',
         borderRadius: 10,
         display: 'flex',
         flexDirection: 'row',
@@ -192,7 +195,10 @@ const styles = StyleSheet.create({
     wrapper: {
         display: 'flex',
         flexDirection: 'row',
-        fontSize: 18,
+        marginVertical: 3,
+        // backgroundColor: 'red',
+        verticalAlign: 'middle',
+        height: 24,
     },
     info: {
         // display: 'flex',

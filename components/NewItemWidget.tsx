@@ -124,8 +124,8 @@ const NewItemWidget = ({handler}: Props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'lightgray',
-        opacity: 0.5, 
+        backgroundColor: 'white',
+        opacity: 0.9, 
         borderRadius: 10,
         display: 'flex',
         flexDirection: 'row',

@@ -182,6 +182,7 @@ export default function Home() {
 
     return (
     <ScrollView 
+        style={{backgroundColor: 'paleturquoise'}}
         refreshControl={
             <RefreshControl refreshing={loading} onRefresh={() => {
                 // console.log('Refreshing');
