@@ -3,8 +3,8 @@ import { StyleSheet, Button, Alert } from 'react-native';
 import { Text, View } from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import { useFocusEffect } from '@react-navigation/native';
-import { addItem, addItemByUPC } from '../src/graphql/mutations'; 
-import { useGraphQLClient } from '../contexts/GraphQLClientContext';
+import { addItem, addItemByUPC } from '../../src/graphql/mutations'; 
+import { useGraphQLClient } from '../../contexts/GraphQLClientContext';
 
 export default function BarcodeScanner() {
   const client = useGraphQLClient();

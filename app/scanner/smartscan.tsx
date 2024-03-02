@@ -3,8 +3,8 @@ import { StyleSheet, Pressable, Switch } from 'react-native';
 import { Text, View } from 'react-native';
 import { Camera } from 'expo-camera';
 import { useFocusEffect } from '@react-navigation/native';
-import { addItemByUPC } from "../src/graphql/mutations";
-import { useGraphQLClient } from "../contexts/GraphQLClientContext";
+import { addItemByUPC } from "../../src/graphql/mutations";
+import { useGraphQLClient } from "../../contexts/GraphQLClientContext";
 
 export default function SmartScanner() {
   const client = useGraphQLClient();
@@ -102,9 +102,6 @@ export default function SmartScanner() {
     })
     .catch(error => console.error('Error:', error));
   };
-  
-  
-  
 
   if (hasPermission === null) {
     return <View />;
