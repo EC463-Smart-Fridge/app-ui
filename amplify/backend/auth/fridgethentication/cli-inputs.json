@@ -1,0 +1,75 @@
+{
+  "version": "1",
+  "cognitoConfig": {
+    "identityPoolName": "fridgepool",
+    "allowUnauthenticatedIdentities": false,
+    "resourceNameTruncated": "awsome45db96e6",
+    "userPoolName": "fridgeooglepool",
+    "autoVerifiedAttributes": [
+      "email"
+    ],
+    "mfaConfiguration": "OPTIONAL",
+    "mfaTypes": [
+      "SMS Text Message"
+    ],
+    "smsAuthenticationMessage": "Your authentication code is {####}",
+    "smsVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "FridgeBuddy Email Verification",
+    "emailVerificationMessage": "Your verification code is {####}",
+    "defaultPasswordPolicy": true,
+    "passwordPolicyMinLength": 8,
+    "passwordPolicyCharacters": [
+      "Requires Lowercase",
+      "Requires Uppercase",
+      "Requires Numbers",
+      "Requires Symbols"
+    ],
+    "requiredAttributes": [
+      "email",
+      "name"
+    ],
+    "aliasAttributes": [],
+    "userpoolClientGenerateSecret": false,
+    "userpoolClientRefreshTokenValidity": 30,
+    "userpoolClientWriteAttributes": [
+      "email",
+      "name"
+    ],
+    "userpoolClientReadAttributes": [
+      "email",
+      "name"
+    ],
+    "userpoolClientLambdaRole": "fridge45db96e6_userpoolclient_lambda_role",
+    "userpoolClientSetAttributes": true,
+    "sharedId": "45db96e6",
+    "resourceName": "fridgethentication",
+    "authSelections": "identityPoolAndUserPool",
+    "useDefault": "manual",
+    "thirdPartyAuth": true,
+    "authProviders": [
+      "accounts.google.com"
+    ],
+    "userPoolGroups": true,
+    "adminQueries": true,
+    "triggers": {
+      "CustomMessage": [
+        "verification-link"
+      ]
+    },
+    "hostedUI": true,
+    "hostedUIDomainName": "fridgebuddy",
+    "authProvidersUserPool": [
+      "Google"
+    ],
+    "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"name\":\"name\",\"username\":\"sub\"}}]",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:8081/\"],\"LogoutURLs\":[\"http://localhost:8081/\"]}",
+    "userPoolGroupList": [
+      "fridgepools"
+    ],
+    "adminQueryGroup": "admin",
+    "serviceName": "Cognito",
+    "verificationBucketName": "fridgethenticationverificationbucket",
+    "usernameCaseSensitive": false,
+    "useEnabledMfas": true
+  }
+}

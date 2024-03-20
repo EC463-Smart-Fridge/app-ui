@@ -1,5 +1,27 @@
 {
   "api": {
+    "AdminQueries": {
+      "authorizationType": "AMAZON_COGNITO_USER_POOLS",
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "fridgethentication"
+        },
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "AdminQueries46941b16"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
     "awsomefridge": {
       "dependsOn": [],
       "output": {
@@ -19,8 +41,152 @@
       "service": "AppSync"
     }
   },
-  "auth": {},
+  "auth": {
+    "fridgethentication": {
+      "customAuth": false,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "fridgethenticationCustomMessage",
+          "triggerProvider": "Cognito"
+        }
+      ],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OPTIONAL",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": [
+            "REQUIRES_LOWERCASE",
+            "REQUIRES_UPPERCASE",
+            "REQUIRES_NUMBERS",
+            "REQUIRES_SYMBOLS"
+          ],
+          "passwordPolicyMinLength": 8
+        },
+        "signupAttributes": [
+          "EMAIL",
+          "NAME"
+        ],
+        "socialProviders": [
+          "GOOGLE"
+        ],
+        "usernameAttributes": [],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito"
+    },
+    "userPoolGroups": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId",
+            "AppClientIDWeb",
+            "AppClientID",
+            "IdentityPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "fridgethentication"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito-UserPool-Groups"
+    }
+  },
+  "function": {
+    "AdminQueries46941b16": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "fridgethentication"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "fridgethenticationCustomMessage": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
   "parameters": {
+    "AMPLIFY_auth_fridgethentication_googleClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "fridgethentication"
+        }
+      ]
+    },
+    "AMPLIFY_function_AdminQueries46941b16_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "AdminQueries46941b16"
+        }
+      ]
+    },
+    "AMPLIFY_function_AdminQueries46941b16_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "AdminQueries46941b16"
+        }
+      ]
+    },
+    "AMPLIFY_function_fridgethenticationCustomMessage_EMAILMESSAGE": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "fridgethenticationCustomMessage"
+        }
+      ]
+    },
+    "AMPLIFY_function_fridgethenticationCustomMessage_EMAILSUBJECT": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "fridgethenticationCustomMessage"
+        }
+      ]
+    },
+    "AMPLIFY_function_fridgethenticationCustomMessage_REDIRECTURL": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "fridgethenticationCustomMessage"
+        }
+      ]
+    },
+    "AMPLIFY_function_fridgethenticationCustomMessage_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "fridgethenticationCustomMessage"
+        }
+      ]
+    },
+    "AMPLIFY_function_fridgethenticationCustomMessage_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "fridgethenticationCustomMessage"
+        }
+      ]
+    },
     "AMPLIFY_storage_fridgebase_arn": {
       "usedBy": [
         {

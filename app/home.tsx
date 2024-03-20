@@ -11,6 +11,7 @@ import { Item } from '../src/API';
 import ItemWidget from "../components/ItemWidget";
 import NewItemWidget from "../components/NewItemWidget";
 
+
 export default function Home() {
     const client = useGraphQLClient();
     const [loading, setLoading] = useState(true);
@@ -70,6 +71,8 @@ export default function Home() {
             console.error('Error adding item', error);
         }
     }
+
+
     // const addItemHandler = async (item: Item) => {
     //     try {
     //         // Run deleteItem GraphQL mutation
