@@ -37,12 +37,8 @@ export default function Layout() {
                     options={{ tabBarLabel: "Home", tabBarIcon: ({focused}) => <HomeIcon fill={focused ? 'darkturquoise' : 'black'} />}}
                 />
                 <Tabs.Screen
-                    name="barcode"
-                    options={{ tabBarLabel: "Barcode", tabBarIcon: ({focused}) => <ScanIcon fill={focused ? 'darkturquoise' : 'black'}/>}}
-                />
-                <Tabs.Screen
-                    name="smartscanner"
-                    options={{ tabBarLabel: "Smart Scan", tabBarIcon: ({focused}) => <ScanIcon fill={focused ? 'darkturquoise' : 'black'}/>}}
+                    name="scanner"
+                    options={{ tabBarLabel: "Scan", tabBarIcon: ({focused}) => <ScanIcon fill={focused ? 'darkturquoise' : 'black'}/>}}
                 />
                 <Tabs.Screen
                     name="recipes"
