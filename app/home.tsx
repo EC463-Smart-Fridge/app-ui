@@ -241,6 +241,7 @@ const styles = StyleSheet.create({
     searchInput: {
         backgroundColor: 'paleturquoise',
         padding: 10,
-        borderRadius: 10,
+        paddingLeft: 20,
+        borderRadius: 25,
     }
 });
