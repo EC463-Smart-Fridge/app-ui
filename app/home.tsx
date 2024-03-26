@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ScrollView, StatusBar, View, ActivityIndicator, RefreshControl } from "react-native";
+import { ScrollView, StatusBar, View, ActivityIndicator, RefreshControl, StyleSheet } from "react-native";
 import { getUserItems } from "../src/graphql/queries";
 import { removeItem, addItem, editItem } from "../src/graphql/mutations";
 
@@ -10,11 +10,13 @@ import { Item } from '../src/API';
 
 import ItemWidget from "../components/ItemWidget";
 import NewItemWidget from "../components/NewItemWidget";
+import { TextInput } from "react-native";
 
 
 export default function Home() {
     const client = useGraphQLClient();
     const [loading, setLoading] = useState(true);
+    const [search, setSearch] = useState('');
     // const [editedItems, setEditedItems] = useState({});
     const [refreshes, setRefreshes] = useState(0);
 
@@ -194,11 +196,22 @@ export default function Home() {
             }} />
         }
     >
+        {/* Search Bar */}
+        <View style={styles.search}>
+            <TextInput 
+                style={styles.searchInput}
+                placeholder="Search"
+                value={search}
+                onChangeText={setSearch}
+            />
+        </View>
         {loading ?
             <ActivityIndicator size="large" color="#0000ff" animating={loading} />
             :
              <>
-                {items.map((item, i) => (
+                {/* {items.map((item, i) => ( */}
+                
+                {items.filter((item, i) => search == '' || item.name?.includes(search)).map((item, i) => (
                 <View key={i}>
                     <ItemWidget 
                         __typename="Item"
@@ -219,3 +232,15 @@ export default function Home() {
     </ScrollView>
     )
 }
+
+const styles = StyleSheet.create({
+    search: {
+        backgroundColor: 'white',
+        padding: 10,
+    },
+    searchInput: {
+        backgroundColor: 'paleturquoise',
+        padding: 10,
+        borderRadius: 10,
+    }
+});
