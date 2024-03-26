@@ -226,7 +226,9 @@ export default function Home() {
                 </View>
                 ))}
 
-                <NewItemWidget handler={addItemHandler}/>
+                {
+                    search == '' && <NewItemWidget handler={addItemHandler}/>
+                }
              </>
         }
     </ScrollView>
