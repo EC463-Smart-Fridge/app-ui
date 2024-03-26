@@ -211,7 +211,7 @@ export default function Home() {
              <>
                 {/* {items.map((item, i) => ( */}
                 
-                {items.filter((item, i) => search == '' || item.name?.includes(search)).map((item, i) => (
+                {items.filter((item, i) => search == '' || item.name?.toLowerCase().includes(search.toLowerCase())).map((item, i) => (
                 <View key={i}>
                     <ItemWidget 
                         __typename="Item"
