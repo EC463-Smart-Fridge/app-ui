@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: 'paleturquoise', 
         width: '100%', 
-        paddingTop: 70,
+        marginTop: 68,
     },
     search: {
         backgroundColor: 'white',

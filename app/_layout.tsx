@@ -13,8 +13,8 @@ export default function Layout() {
     return (
         <GraphQLClientProvider>
             {/* TEMP TOP BAR */}
-            <View style={{height: 16, width: "100%"}}></View>
-            {/* <StatusBar style="auto" /> */}
+            {/* <View style={{height: 16, width: "100%"}}></View> */}
+            <StatusBar style="auto" />
             {/* <View style={{flex: 1, backgroundColor: 'blue'}}> */}
             <Tabs
                 screenOptions={{
