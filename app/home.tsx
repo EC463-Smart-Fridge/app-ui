@@ -186,59 +186,71 @@ export default function Home() {
     }, [refreshes, items.length])
 
     return (
-    <ScrollView 
-        style={{backgroundColor: 'paleturquoise'}}
-        refreshControl={
-            <RefreshControl refreshing={loading} onRefresh={() => {
-                // console.log('Refreshing');
-                setRefreshes(refreshes + 1);
-                console.log({refreshes});
-            }} />
-        }
-    >
-        {/* Search Bar */}
-        <View style={styles.search}>
-            <TextInput 
-                style={styles.searchInput}
-                placeholder="Search"
-                value={search}
-                onChangeText={setSearch}
-            />
-        </View>
-        {loading ?
-            <ActivityIndicator size="large" color="#0000ff" animating={loading} />
-            :
-             <>
-                {/* {items.map((item, i) => ( */}
-                
-                {items.filter((item, i) => search == '' || item.name?.toLowerCase().includes(search.toLowerCase())).map((item, i) => (
-                <View key={i}>
-                    <ItemWidget 
-                        __typename="Item"
-                        name={item.name} 
-                        exp_date={item.exp_date} 
-                        category={item.category}
-                        calories={item.calories}
-                        quantity={item.quantity}
-                        deleteHandler ={() => deleteItemHandler(i)} 
-                        editHandler = {(edits) => editItemHandler(i, edits)}
-                    />
-                </View>
-                ))}
-
-                {
-                    search == '' && <NewItemWidget handler={addItemHandler}/>
+        <>
+            {/* Search Bar */}
+            <View style={styles.search}>
+                <TextInput 
+                    style={styles.searchInput}
+                    placeholder="Search"
+                    value={search}
+                    onChangeText={setSearch}
+                />
+            </View>
+            <ScrollView 
+                style={styles.container}
+                refreshControl={
+                    <RefreshControl refreshing={loading} onRefresh={() => {
+                        // console.log('Refreshing');
+                        setRefreshes(refreshes + 1);
+                        console.log({refreshes});
+                    }} />
                 }
-             </>
-        }
-    </ScrollView>
+            >
+
+                {loading ?
+                    <ActivityIndicator size="large" color="#0000ff" animating={loading} />
+                    :
+                    <>
+                        {/* {items.map((item, i) => ( */}
+                        
+                        {items.filter((item, i) => search == '' || item.name?.toLowerCase().includes(search.toLowerCase())).map((item, i) => (
+                        <View key={i}>
+                            <ItemWidget 
+                                __typename="Item"
+                                name={item.name} 
+                                exp_date={item.exp_date} 
+                                category={item.category}
+                                calories={item.calories}
+                                quantity={item.quantity}
+                                deleteHandler ={() => deleteItemHandler(i)} 
+                                editHandler = {(edits) => editItemHandler(i, edits)}
+                            />
+                        </View>
+                        ))}
+
+                        {
+                            search == '' && <NewItemWidget handler={addItemHandler}/>
+                        }
+                    </>
+                }
+            </ScrollView>
+        </>
     )
 }
 
 const styles = StyleSheet.create({
+    container: {
+        backgroundColor: 'paleturquoise', 
+        width: '100%', 
+        paddingTop: 70,
+    },
     search: {
         backgroundColor: 'white',
         padding: 10,
+        position: 'absolute',
+        width: '100%',
+        zIndex: 100,
+        shadowColor: 'black',
     },
     searchInput: {
         backgroundColor: 'paleturquoise',
