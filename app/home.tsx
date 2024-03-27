@@ -206,7 +206,6 @@ export default function Home() {
                     }} />
                 }
             >
-
                 {loading ?
                     <ActivityIndicator size="large" color="#0000ff" animating={loading} />
                     :
@@ -242,14 +241,12 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: 'paleturquoise', 
         width: '100%', 
-        marginTop: 68,
     },
     search: {
         backgroundColor: 'white',
         padding: 10,
-        position: 'absolute',
         width: '100%',
-        zIndex: 100,
+        zIndex: 40,
         shadowColor: 'black',
     },
     searchInput: {

@@ -11,10 +11,12 @@ import SettingsIcon from "../assets/icons/SettingsIcon";
 
 export default function Layout() {
     return (
+        <>
+        {/* <StatusBar style="dark" /> */}
+        <View style={{height: 24, width: "100%", backgroundColor: 'white'}}></View>
+        {/* <View style={{height: 50, width: "100%", backgroundColor: 'white'}}></View> */}
         <GraphQLClientProvider>
             {/* TEMP TOP BAR */}
-            {/* <View style={{height: 16, width: "100%"}}></View> */}
-            <StatusBar style="auto" />
             {/* <View style={{flex: 1, backgroundColor: 'blue'}}> */}
             <Tabs
                 screenOptions={{
@@ -51,5 +53,6 @@ export default function Layout() {
             </Tabs>
             {/* </View> */}
         </GraphQLClientProvider>
+        </>
     )
 }
