@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Pressable, Switch } from 'react-native';
 import { Text, View } from 'react-native';
-import { Camera } from 'expo-camera';
+import { Camera, CameraType } from 'expo-camera';
 import { useFocusEffect } from '@react-navigation/native';
 import { addItemByUPC } from "../../src/graphql/mutations";
 import { useGraphQLClient } from "../../contexts/GraphQLClientContext";
+import SwapIcon from '../../assets/icons/SwapIcon';
 
 export default function SmartScanner() {
   const client = useGraphQLClient();
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const cameraRef = useRef<Camera>(null);
+  const [isFrontCamera, setIsFrontCamera] = useState<boolean>(true);
   const [isProduce, setIsProduce] = useState<boolean>(false);
 
   useFocusEffect(
@@ -122,8 +124,13 @@ export default function SmartScanner() {
           value={isProduce}
         />
       </View>
-      <Camera style={styles.camera} ref={cameraRef} />
-      <Pressable onPress={handleCapture} style={styles.button}><Text>Capture</Text></Pressable>
+      <Camera style={styles.camera} ref={cameraRef} type={isFrontCamera ? CameraType.front : CameraType.back} />
+      <View style={styles.buttonContainer}>
+        <Pressable onPress={() => setIsFrontCamera(!isFrontCamera)} style={styles.swap}><SwapIcon /></Pressable>
+        <Pressable onPress={handleCapture} style={styles.capture}><Text>Capture</Text></Pressable>
+        {/* <View style={{flexGrow: 1}}></View> */}
+        <View style={{width: 40}}></View>
+      </View>
     </View>
   );
 }
@@ -143,10 +150,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  button: {
+  buttonContainer: {
+    flexDirection: 'row',
+    padding: 8,
+    justifyContent: 'space-between',
+    // backgroundColor: 'red',
+    width: '100%',
+  },
+  swap: {
+    height: 40,
+    aspectRatio: 1,
+    backgroundColor: 'darkturquoise',
+    borderRadius: 20,
+    padding: 4,
+  },
+  capture: {
     backgroundColor: 'darkturquoise',
     padding: 10,
     borderRadius: 5,
-    margin: 8,
   }
 });
