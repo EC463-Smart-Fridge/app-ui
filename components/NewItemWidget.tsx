@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useState } from 'react'
-import { Text, TextInput, View, Pressable, StyleSheet, Modal} from "react-native"
+import { Text, TextInput, View, TouchableHighlight, StyleSheet, Modal} from "react-native"
 import { Calendar } from 'react-native-calendars'
 import AddIcon from '../assets/icons/AddIcon';
 import { Item } from '../src/API';
@@ -38,7 +38,7 @@ const NewItemWidget = ({handler}: Props) => {
                 />
                 </View>
 
-                <Pressable onPress={() => setOpen(false)} style={styles.modalBackground}></Pressable>
+                <TouchableHighlight onPress={() => setOpen(false)} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.modalBackground}></TouchableHighlight>
             </Modal>
         
             <View style={styles.container}>
@@ -52,11 +52,11 @@ const NewItemWidget = ({handler}: Props) => {
 
                     <View style={styles.wrapper}>
                         <Text style={styles.label}>Expiration Date:</Text>
-                        <Pressable onPress={() => setOpen(!open)} >
+                        <TouchableHighlight onPress={() => setOpen(!open)} activeOpacity={0.6} underlayColor="#DDDDDD" >
                             <Text style={styles.input}>
                                 {date != 0 ? new Date(date * 1000).toLocaleDateString("en-US") : "Add Date"}
                             </Text>
-                        </Pressable>
+                        </TouchableHighlight>
                     </View>
 
                     <View style={styles.wrapper}>
@@ -93,7 +93,7 @@ const NewItemWidget = ({handler}: Props) => {
                     </View>
                 </View>
                 
-                <Pressable 
+                <TouchableHighlight 
                     onPress={() => {
                         if (input === "") return;
                         handler({__typename: "Item", name: input, exp_date: date, category: category, calories: calories, quantity: quantity});
@@ -110,12 +110,13 @@ const NewItemWidget = ({handler}: Props) => {
                         setCalories("");
                         setQuantity(1);
                     }} 
-                    
+                    activeOpacity={0.6} 
+                    underlayColor="#DDDDDD"
                     style={styles.add}
                 >
                     <AddIcon />
                     {/* <Text>+</Text> */}
-                </Pressable>
+                </TouchableHighlight>
             </View>
         </>
     );

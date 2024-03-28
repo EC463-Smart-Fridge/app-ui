@@ -1,4 +1,4 @@
-import { Text, View, Pressable , TextInput, StyleSheet, Modal} from "react-native"
+import { Text, View, TouchableHighlight, TextInput, StyleSheet, Modal} from "react-native"
 import React, { useState } from 'react'; 
 import { Item } from '../src/API';
 import DeleteIcon from '../assets/icons/DeleteIcon';
@@ -69,7 +69,7 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
                         />
                     </View>
 
-                        <Pressable onPress={() => setCalendarOpen(false)} style={styles.modalBackground}></Pressable>
+                        <TouchableHighlight onPress={() => setCalendarOpen(false)} activeOpacity={0.6} underlayColor="#DDDDDD"style={styles.modalBackground}></TouchableHighlight>
                     </Modal>
                 <View style={{...(styles.container), opacity: 0.9}}>
                     <View style={styles.info}>
@@ -89,12 +89,12 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
                         </View> */}
                         <View style={styles.wrapper}>
                             <Text style={styles.label}>Expiration Date:</Text>
-                            <Pressable onPress={() => setCalendarOpen(!calendarOpen)} >
+                            <TouchableHighlight onPress={() => setCalendarOpen(!calendarOpen)} activeOpacity={0.6} underlayColor="#DDDDDD">
                                 <Text style={styles.input}>
                                     {/* {date != 0 ? new Date(date * 1000).toLocaleDateString("en-US") : "Add Date"} */}
                                     {editedExpDate != 0 ? new Date(editedExpDate * 1000).toLocaleDateString("en-US") : "Add Date"}
                                 </Text>
-                            </Pressable>
+                            </TouchableHighlight>
                         </View>
                         {/* <View style={styles.wrapper}>
                             <Text style={styles.label}>Category: </Text>
@@ -128,14 +128,14 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
                         </View> */}
                     </View>
                     <View style={styles.buttonsContainer}>
-                        <Pressable onPress={handleSave} style={styles.button}>
+                        <TouchableHighlight onPress={handleSave} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.button}>
                             {/* <Text>Save</Text> */}
                             <SaveIcon />
-                        </Pressable>
-                        <Pressable onPress={handleCancel} style={styles.button}>
+                        </TouchableHighlight>
+                        <TouchableHighlight onPress={handleCancel} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.button}>
                             {/* <Text>Cancel</Text> */}
                             <CancelIcon />
-                        </Pressable>
+                        </TouchableHighlight>
                     </View>
                 </View>
                 </>
@@ -150,12 +150,12 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
                     </View>
 
                     <View style={styles.buttonsContainer}>
-                        <Pressable onPress={deleteHandler} style={styles.button}>
+                        <TouchableHighlight onPress={deleteHandler} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.button}>
                             <DeleteIcon />
-                        </Pressable>
-                        <Pressable onPress={() => setEditMode(true)} style={styles.button}>
+                        </TouchableHighlight>
+                        <TouchableHighlight onPress={() => setEditMode(true)} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.button}>
                             <EditIcon />
-                        </Pressable>
+                        </TouchableHighlight>
                     </View>
                 </View>
             )}
@@ -222,6 +222,7 @@ const styles = StyleSheet.create({
         // backgroundColor: 'lightblue',
         borderRadius: 10,
         height: 20,
+        padding: 0,
         // backgroundColor: 'red'
     },
     buttonsContainer: {
