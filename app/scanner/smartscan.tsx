@@ -114,22 +114,27 @@ export default function SmartScanner() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.toggle}>
-        <Text>Produce</Text>
-        <Switch
-          trackColor={{false: '#767577', true: 'darkturquoise'}}
-          thumbColor='white'
-          // ios_backgroundColor="#3e3e3e"
-          onValueChange={() => {setIsProduce(!isProduce);}}
-          value={isProduce}
-        />
-      </View>
       <Camera style={styles.camera} ref={cameraRef} type={isFrontCamera ? CameraType.front : CameraType.back} />
       <View style={styles.buttonContainer}>
-        <Pressable onPress={() => setIsFrontCamera(!isFrontCamera)} style={styles.swap}><SwapIcon /></Pressable>
-        <Pressable onPress={handleCapture} style={styles.capture}><Text>Capture</Text></Pressable>
-        {/* <View style={{flexGrow: 1}}></View> */}
-        <View style={{width: 40}}></View>
+        <View style={styles.leftButtons}>
+          <Pressable onPress={() => setIsFrontCamera(!isFrontCamera)} style={styles.swap}><SwapIcon /></Pressable>
+          {/* <Pressable onPress={() => setIsFrontCamera(!isFrontCamera)} style={styles.swap}><SwapIcon /></Pressable> */}
+        </View>
+        
+        <View style={styles.captureContainer}>
+          <Pressable onPress={handleCapture} style={styles.capture}><Text>Capture</Text></Pressable>
+        </View>
+
+        <View style={styles.toggle}>
+          <Text>Produce</Text>
+          <Switch
+            trackColor={{false: '#767577', true: 'darkturquoise'}}
+            thumbColor='white'
+            // ios_backgroundColor="#3e3e3e"
+            onValueChange={() => {setIsProduce(!isProduce);}}
+            value={isProduce}
+          />
+        </View>
       </View>
     </View>
   );
@@ -145,10 +150,27 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
   },
+  leftButtons: {
+    flexDirection: 'row',
+    columnGap: 8,
+  },
   toggle: {
+    backgroundColor: 'lightgray',
+    padding: 10,
+    height: 40,
+    borderRadius: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  captureContainer: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 40,
+    margin: 8,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -160,13 +182,14 @@ const styles = StyleSheet.create({
   swap: {
     height: 40,
     aspectRatio: 1,
-    backgroundColor: 'darkturquoise',
+    backgroundColor: 'lightgray',
     borderRadius: 20,
     padding: 4,
   },
   capture: {
     backgroundColor: 'darkturquoise',
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 20,
+    height: 40,
   }
 });

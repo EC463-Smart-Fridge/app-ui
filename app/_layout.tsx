@@ -12,12 +12,15 @@ import SettingsIcon from "../assets/icons/SettingsIcon";
 export default function Layout() {
     return (
         <>
-        {/* <StatusBar style="dark" /> */}
-        <View style={{height: 24, width: "100%", backgroundColor: 'white'}}></View>
-        {/* <View style={{height: 50, width: "100%", backgroundColor: 'white'}}></View> */}
+        {/* NATIVE TOP BAR */}
+        <StatusBar style="light" />
+
+        {/* TEMP TABLET TOP BAR */}
+        {/* <View style={{height: 24, width: "100%", backgroundColor: 'white'}}></View> */}
+
+        {/* TEMP MOBILE TOP BAR */}
+        <View style={{height: 50, width: "100%", backgroundColor: 'white'}}></View>
         <GraphQLClientProvider>
-            {/* TEMP TOP BAR */}
-            {/* <View style={{flex: 1, backgroundColor: 'blue'}}> */}
             <Tabs
                 screenOptions={{
                     tabBarStyle: {
