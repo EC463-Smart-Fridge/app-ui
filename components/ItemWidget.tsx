@@ -1,4 +1,4 @@
-import { Text, View, TouchableHighlight, TextInput, StyleSheet, Modal} from "react-native"
+import { Text, View, TouchableHighlight, TextInput, StyleSheet, Modal, Pressable} from "react-native"
 import React, { useState } from 'react'; 
 import { Item } from '../src/API';
 import DeleteIcon from '../assets/icons/DeleteIcon';
@@ -69,7 +69,7 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
                         />
                     </View>
 
-                        <TouchableHighlight onPress={() => setCalendarOpen(false)} activeOpacity={0.6} underlayColor="#DDDDDD"style={styles.modalBackground}></TouchableHighlight>
+                        <Pressable onPress={() => setCalendarOpen(false)} style={styles.modalBackground}></Pressable>
                     </Modal>
                 <View style={{...(styles.container), opacity: 0.9}}>
                     <View style={styles.info}>

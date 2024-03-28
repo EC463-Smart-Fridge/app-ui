@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useState } from 'react'
-import { Text, TextInput, View, TouchableHighlight, StyleSheet, Modal} from "react-native"
+import { Text, TextInput, View, TouchableHighlight, StyleSheet, Modal, Pressable} from "react-native"
 import { Calendar } from 'react-native-calendars'
 import AddIcon from '../assets/icons/AddIcon';
 import { Item } from '../src/API';
@@ -38,7 +38,7 @@ const NewItemWidget = ({handler}: Props) => {
                 />
                 </View>
 
-                <TouchableHighlight onPress={() => setOpen(false)} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.modalBackground}></TouchableHighlight>
+                <Pressable onPress={() => setOpen(false)} style={styles.modalBackground}></Pressable>
             </Modal>
         
             <View style={styles.container}>
