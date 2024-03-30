@@ -240,7 +240,7 @@ export default function Home() {
             }
         };
         test();
-    }, [refreshes, items.length])
+    }, [refreshes, items.length, user])
 
     return (
         <>
