@@ -28,8 +28,8 @@ type Items {
 type User @model @auth(rules: [{ allow: public }]){
 	pk: ID!
 	username: String!
-	password: String!
 	email: String!
+	name2: String!
 }
 
 input addItemInput {
@@ -56,15 +56,24 @@ input updateItemInput {
 	quantity: Int
 }
 
+input addUserInput {
+	pk: ID!
+	username: String
+	email: String
+	name: String
+}
+
 type Mutation {
 	addItem(input: addItemInput!): Fridgebase
 	addItemByUPC(uid: String!, upc: String!): Item
 	editItem(input: updateItemInput!): Fridgebase
 	removeItem(input: deleteItemInput!): Fridgebase
+	addUser(input: addUserInput): User
 }
 
 type Query {
 	getUserItems(pk: String!): [Item]
+	getFridgeUser(pk: String!): User
 }
 
 type Subscription {

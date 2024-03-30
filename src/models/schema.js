@@ -139,15 +139,15 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "password": {
-                    "name": "password",
+                "email": {
+                    "name": "email",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
                     "attributes": []
                 },
-                "email": {
-                    "name": "email",
+                "name2": {
+                    "name": "name2",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
@@ -263,5 +263,5 @@ export const schema = {
         }
     },
     "codegenVersion": "3.4.4",
-    "version": "7ff351dc0c6d4c697c5d85cf2e0303c6"
+    "version": "ba3979fbb9d5e89b7973531c02757198"
 };

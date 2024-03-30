@@ -13,13 +13,16 @@ export const getUserItems = /* GraphQL */ `
       img_url
       exp_date
       quantity
-      id
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      __typename
+    }
+  }
+`;
+export const getFridgeUser = /* GraphQL */ `
+  query GetFridgeUser($pk: String!) {
+    getFridgeUser(pk: $pk) {
+      pk
+      username
+      email
+      name2
     }
   }
 `;
@@ -118,8 +121,8 @@ export const getUser = /* GraphQL */ `
     getUser(id: $id) {
       pk
       username
-      password
       email
+      name2
       id
       createdAt
       updatedAt
@@ -140,8 +143,8 @@ export const listUsers = /* GraphQL */ `
       items {
         pk
         username
-        password
         email
+        name2
         id
         createdAt
         updatedAt
@@ -172,8 +175,8 @@ export const syncUsers = /* GraphQL */ `
       items {
         pk
         username
-        password
         email
+        name2
         id
         createdAt
         updatedAt

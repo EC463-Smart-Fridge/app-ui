@@ -50,6 +50,16 @@ export const removeItem = /* GraphQL */ `
     }
   }
 `;
+export const addUser = /* GraphQL */ `
+  mutation AddUser($input: addUserInput) {
+    addUser(input: $input) {
+      pk
+      username
+      email
+      name2
+    }
+  }
+`;
 export const createItem = /* GraphQL */ `
   mutation CreateItem(
     $input: CreateItemInput!
@@ -133,8 +143,8 @@ export const createUser = /* GraphQL */ `
     createUser(input: $input, condition: $condition) {
       pk
       username
-      password
       email
+      name2
       id
       createdAt
       updatedAt
@@ -153,8 +163,8 @@ export const updateUser = /* GraphQL */ `
     updateUser(input: $input, condition: $condition) {
       pk
       username
-      password
       email
+      name2
       id
       createdAt
       updatedAt
@@ -173,8 +183,8 @@ export const deleteUser = /* GraphQL */ `
     deleteUser(input: $input, condition: $condition) {
       pk
       username
-      password
       email
+      name2
       id
       createdAt
       updatedAt

@@ -99,8 +99,8 @@ export const onCreateUser = /* GraphQL */ `
     onCreateUser(filter: $filter) {
       pk
       username
-      password
       email
+      name2
       id
       createdAt
       updatedAt
@@ -116,8 +116,8 @@ export const onUpdateUser = /* GraphQL */ `
     onUpdateUser(filter: $filter) {
       pk
       username
-      password
       email
+      name2
       id
       createdAt
       updatedAt
@@ -133,8 +133,8 @@ export const onDeleteUser = /* GraphQL */ `
     onDeleteUser(filter: $filter) {
       pk
       username
-      password
       email
+      name2
       id
       createdAt
       updatedAt
