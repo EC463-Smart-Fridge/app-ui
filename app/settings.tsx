@@ -1,7 +1,7 @@
 import { View, Pressable, TextInput, Text, StyleSheet, Modal } from "react-native";
 import { signInWithRedirect, AuthUser, signUp, confirmSignUp, type ConfirmSignUpInput, autoSignIn, signIn, type SignInInput, getCurrentUser, signOut } from "aws-amplify/auth";
 import { useGraphQLClient } from "../contexts/GraphQLClientContext";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Hub } from "aws-amplify/utils";
 import { addUser } from "../src/graphql/mutations";
 import { getFridgeUser } from "../src/graphql/queries";
@@ -221,13 +221,12 @@ export default function Settings() {
         });
     }
     
+    useEffect(() => {
+        getCurrUser();
+    }, [user])
 
     return (
         <View>
-            <Pressable onPress={() => getCurrUser()}>
-                <Text style={styles.loginBtn}>Get User</Text>
-            </Pressable>
-
             {user.isLoggedIn? (
                 <>
                     <Text>Current User</Text>
