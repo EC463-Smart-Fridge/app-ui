@@ -35,13 +35,6 @@
         "userPoolGroups": {}
       },
       "function": {
-        "fridgethenticationCustomMessage": {
-          "REDIRECTURL": "http://localhost:8081/",
-          "EMAILSUBJECT": "FridgeBuddy Confirmation Email",
-          "EMAILMESSAGE": "Verify your FridgeBuddy Email below:",
-          "deploymentBucketName": "amplify-awsomefridge-prototypo-203308-deployment",
-          "s3Key": "amplify-builds/fridgethenticationCustomMessage-35794c6f32735973596f-build.zip"
-        },
         "AdminQueries46941b16": {
           "deploymentBucketName": "amplify-awsomefridge-prototypo-203308-deployment",
           "s3Key": "amplify-builds/AdminQueries46941b16-61664b61346374524855-build.zip"
