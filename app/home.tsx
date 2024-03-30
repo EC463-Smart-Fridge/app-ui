@@ -175,7 +175,7 @@ export default function Home() {
                             userId: userId,
                             username: result.data.getFridgeUser.username,
                             email: result.data.getFridgeUser.email,
-                            name: result.data.getFridgeUser.name
+                            name: result.data.getFridgeUser.name2
                         })
                     }
                     else {
@@ -241,7 +241,7 @@ export default function Home() {
         };
         test();
         getCurrUser();
-    }, [refreshes, items.length])
+    }, [refreshes, items.length, user])
 
     return (
         <>
