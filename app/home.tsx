@@ -294,7 +294,7 @@ export default function Home() {
                             </>
                         ) : (
                             <>
-                                <h1>No Current User</h1>
+                                <Text>No Current User</Text>
                             </>
                         )}
                     </View>
