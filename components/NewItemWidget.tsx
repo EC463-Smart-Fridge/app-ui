@@ -1,9 +1,13 @@
 import { Dispatch, SetStateAction, useState } from 'react'
 import { Text, TextInput, View, TouchableHighlight, StyleSheet, Modal, Pressable} from "react-native"
 import { Calendar } from 'react-native-calendars'
-import AddIcon from '../assets/icons/AddIcon';
 import { Item } from '../src/API';
 import { useGraphQLClient } from '../contexts/GraphQLClientContext';
+import AddIcon from '../assets/icons/AddIcon';
+import CategoryIcon from '../assets/icons/CategoryIcon';
+import CaloriesIcon from '../assets/icons/CaloriesIcon';
+import QuantityIcon from '../assets/icons/QuantityIcon';
+import ExpirationIcon from '../assets/icons/ExpirationIcon';
 
 interface Props {
     handler: (item: Item) => void;
@@ -51,16 +55,20 @@ const NewItemWidget = ({handler}: Props) => {
                     />
 
                     <View style={styles.wrapper}>
-                        <Text style={styles.label}>Expiration Date:</Text>
-                        <TouchableHighlight onPress={() => setOpen(!open)} activeOpacity={0.6} underlayColor="#DDDDDD" >
-                            <Text style={styles.input}>
+                        <View style={styles.label}>
+                            <ExpirationIcon fill="lightgray" />
+                        </View>
+                        <TouchableHighlight onPress={() => setOpen(!open)} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.input} >
+                            <Text style={{color: "gray"}}>
                                 {date != 0 ? new Date(date * 1000).toLocaleDateString("en-US") : "Add Date"}
                             </Text>
                         </TouchableHighlight>
                     </View>
 
                     <View style={styles.wrapper}>
-                        <Text style={styles.label}>Category:</Text>
+                        <View style={styles.label}>
+                            <CategoryIcon fill="lightgray" />    
+                        </View>
                         <TextInput
                             placeholder="Add category"
                             value={category}
@@ -71,9 +79,11 @@ const NewItemWidget = ({handler}: Props) => {
                     </View>
 
                     <View style={styles.wrapper}>
-                        <Text style={styles.label}>Quantity:</Text>
+                        <View style={styles.label}>
+                            <CaloriesIcon fill="lightgray" />
+                        </View>
                         <TextInput
-                            placeholder="1"
+                            placeholder="Calories"
                             value={quantity.toString()}
                             onChangeText={(text) => setQuantity(Number(text))}
                             inputMode="numeric"
@@ -82,9 +92,11 @@ const NewItemWidget = ({handler}: Props) => {
                     </View>
 
                     <View style={styles.wrapper}>
-                        <Text style={styles.label}>Calories:</Text>
+                        <View style={styles.label}>
+                            <QuantityIcon fill="lightgray" />
+                        </View>
                         <TextInput
-                            placeholder="0"
+                            placeholder="Quantity"
                             value={calories.toString()}
                             onChangeText={(text) => setCalories(text)}
                             inputMode="numeric"
@@ -135,18 +147,13 @@ const styles = StyleSheet.create({
         padding: 8,
         marginVertical: 5,
         marginHorizontal: 10,
+        elevation: 2,
     },
     info: {
     },
     name: {
         fontSize: 24,
         // backgroundColor: 'red',
-    },
-    input: {
-        // height: '100%',
-        // verticalAlign: 'middle',
-        fontSize: 16,
-        // flexGrow: 1,       
     },
     wrapper: {
         display: 'flex',
@@ -156,11 +163,25 @@ const styles = StyleSheet.create({
         verticalAlign: 'middle',
         height: 24,
     },
+    input: {
+        // height: '100%',
+        // verticalAlign: 'middle',
+        // fontSize: 16,
+        // flexGrow: 1,    
+        borderWidth: 1,
+        borderRadius: 10,
+        borderColor: 'lightgray',   
+        paddingHorizontal: 8,
+        paddingVertical: 2,
+        
+    },
     label: {
-        paddingRight: 8,
-        verticalAlign: 'middle',
-        // backgroundColor: 'green',
-        fontSize: 16,
+        // paddingRight: 8,
+        // verticalAlign: 'middle',
+        // fontSize: 16,
+        width: 24,
+        height: 24,
+        borderRadius: 10,
     },
     add: {
         width: 24,

@@ -6,6 +6,10 @@ import { Calendar } from "react-native-calendars";
 import EditIcon from "../assets/icons/EditIcon";
 import SaveIcon from "../assets/icons/SaveIcon";
 import CancelIcon from "../assets/icons/CancelIcon";
+import CategoryIcon from '../assets/icons/CategoryIcon';
+import CaloriesIcon from '../assets/icons/CaloriesIcon';
+import QuantityIcon from '../assets/icons/QuantityIcon';
+import ExpirationIcon from '../assets/icons/ExpirationIcon';
 
 interface Props extends Item {
     deleteHandler: (item:any) => void;
@@ -88,7 +92,9 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
                             />
                         </View> */}
                         <View style={styles.wrapper}>
-                            <Text style={styles.label}>Expiration Date:</Text>
+                            <View style={styles.label}>
+                                <ExpirationIcon />
+                            </View>
                             <TouchableHighlight onPress={() => setCalendarOpen(!calendarOpen)} activeOpacity={0.6} underlayColor="#DDDDDD">
                                 <Text style={styles.input}>
                                     {/* {date != 0 ? new Date(date * 1000).toLocaleDateString("en-US") : "Add Date"} */}
@@ -107,7 +113,9 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
                             />
                         </View> */}
                         <View style={styles.wrapper}>
-                            <Text style={styles.label}>Quantity: </Text>
+                            <View style={styles.label}>
+                                <QuantityIcon />
+                            </View>
                             <TextInput
                                 placeholder="1"
                                 onChangeText={setEditedQuantity}
@@ -143,10 +151,41 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
                 <View style={styles.container}>
                     <View style={styles.info}>                
                         <Text numberOfLines={1} style={styles.name}>{name}</Text>
-                        {exp_date != 0 && exp_date != null && <Text style={styles.date}>Expires: {new Date(exp_date * 1000).toLocaleDateString("en-US")}</Text>}
-                        {category != '' && category != null && <Text style={styles.category}>Category: {category}</Text>}
-                        {quantity != 0 && quantity != null && <Text style={styles.quantity}>Quantity: {quantity}</Text>}
-                        {calories != '' && calories != null &&  <Text style={styles.calories}>Calories: {calories}</Text>}
+                        {exp_date != 0 && exp_date != null && 
+                            <View style={styles.wrapper}>
+                                <View style={styles.label}>
+                                    <ExpirationIcon />
+                                </View>
+                                <Text>{new Date(exp_date * 1000).toLocaleDateString("en-US")}</Text>
+                            </View>
+                        }
+
+                        {category != '' && category != null && 
+                            <View style={styles.wrapper}>
+                                <View style={styles.label}>
+                                    <CategoryIcon />
+                                </View>
+                                <Text>{category}</Text>
+                            </View>
+                        }
+
+                        {quantity != 0 && quantity != null &&
+                            <View style={styles.wrapper}>
+                                <View style={styles.label}>
+                                    <QuantityIcon />
+                                </View>
+                                <Text>{quantity}</Text>
+                            </View>
+                        }
+
+                        {calories != '' && calories != null &&
+                            <View style={styles.wrapper}>
+                                <View style={styles.label}>
+                                    <CaloriesIcon />
+                                </View>
+                                <Text>{calories}</Text>
+                            </View>
+                        }
                     </View>
 
                     <View style={styles.buttonsContainer}>
@@ -174,7 +213,7 @@ const styles = StyleSheet.create({
         padding: 8,
         marginTop: 5,
         marginHorizontal: 10,
-        // flexShrink: 1
+        elevation: 2,
     },
     editInput: {
     },
@@ -182,15 +221,6 @@ const styles = StyleSheet.create({
         verticalAlign: 'middle',
         fontSize: 24,
         width: '100%',
-    },
-    quantity: {
-    },
-    date: {
-    },
-    category: {
-   
-    },
-    calories: {
     },
     wrapper: {
         display: 'flex',
@@ -213,10 +243,8 @@ const styles = StyleSheet.create({
         // flexGrow: 1,       
     },
     label: {
-        paddingRight: 8,
-        verticalAlign: 'middle',
-        // backgroundColor: 'green',
-        fontSize: 16,
+        width: 24,
+        height: 24,
     },
     button: {
         // backgroundColor: 'lightblue',
