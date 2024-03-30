@@ -254,9 +254,6 @@ export default function Home() {
                     onChangeText={setSearch}
                 />
             </View>
-            <Pressable onPress={() => getCurrUser()}>
-                <Text>Get User</Text>
-            </Pressable>
             <ScrollView 
                 style={styles.container}
                 refreshControl={
