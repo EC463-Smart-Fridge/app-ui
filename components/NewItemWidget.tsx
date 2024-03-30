@@ -56,7 +56,7 @@ const NewItemWidget = ({handler}: Props) => {
 
                     <View style={styles.wrapper}>
                         <View style={styles.label}>
-                            <ExpirationIcon fill="lightgray" />
+                            <ExpirationIcon fill="gray" />
                         </View>
                         <TouchableHighlight onPress={() => setOpen(!open)} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.input} >
                             <Text style={{color: "gray"}}>
@@ -67,7 +67,7 @@ const NewItemWidget = ({handler}: Props) => {
 
                     <View style={styles.wrapper}>
                         <View style={styles.label}>
-                            <CategoryIcon fill="lightgray" />    
+                            <CategoryIcon fill="gray" />    
                         </View>
                         <TextInput
                             placeholder="Add category"
@@ -79,9 +79,9 @@ const NewItemWidget = ({handler}: Props) => {
                     </View>
 
                     <View style={styles.wrapper}>
-                        <View style={styles.label}>
-                            <CaloriesIcon fill="lightgray" />
-                        </View>
+                        <Text style={styles.label}>
+                            Cal
+                        </Text>
                         <TextInput
                             placeholder="Calories"
                             value={quantity.toString()}
@@ -92,9 +92,12 @@ const NewItemWidget = ({handler}: Props) => {
                     </View>
 
                     <View style={styles.wrapper}>
-                        <View style={styles.label}>
-                            <QuantityIcon fill="lightgray" />
-                        </View>
+                        {/* <View style={styles.label}>
+                            <QuantityIcon fill="gray" />
+                        </View> */}
+                        <Text style={styles.label}>
+                            Qty
+                        </Text>
                         <TextInput
                             placeholder="Quantity"
                             value={calories.toString()}
@@ -170,7 +173,7 @@ const styles = StyleSheet.create({
         // flexGrow: 1,    
         borderWidth: 1,
         borderRadius: 10,
-        borderColor: 'lightgray',   
+        borderColor: 'gray',   
         paddingHorizontal: 8,
         paddingVertical: 2,
         
@@ -179,9 +182,13 @@ const styles = StyleSheet.create({
         // paddingRight: 8,
         // verticalAlign: 'middle',
         // fontSize: 16,
-        width: 24,
+        width: 32,
         height: 24,
         borderRadius: 10,
+        color: 'gray',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontSize: 16,
     },
     add: {
         width: 24,

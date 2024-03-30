@@ -154,7 +154,7 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
                         {exp_date != 0 && exp_date != null && 
                             <View style={styles.wrapper}>
                                 <View style={styles.label}>
-                                    <ExpirationIcon />
+                                    <ExpirationIcon fill={"paleturqoise"} />
                                 </View>
                                 <Text>{new Date(exp_date * 1000).toLocaleDateString("en-US")}</Text>
                             </View>
@@ -163,7 +163,7 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
                         {category != '' && category != null && 
                             <View style={styles.wrapper}>
                                 <View style={styles.label}>
-                                    <CategoryIcon />
+                                    <CategoryIcon fill={"paleturqoise"}/>
                                 </View>
                                 <Text>{category}</Text>
                             </View>
@@ -171,18 +171,18 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
 
                         {quantity != 0 && quantity != null &&
                             <View style={styles.wrapper}>
-                                <View style={styles.label}>
-                                    <QuantityIcon />
-                                </View>
+                                <Text style={styles.label}>
+                                    Qty
+                                </Text>
                                 <Text>{quantity}</Text>
                             </View>
                         }
 
                         {calories != '' && calories != null &&
                             <View style={styles.wrapper}>
-                                <View style={styles.label}>
-                                    <CaloriesIcon />
-                                </View>
+                                <Text style={styles.label}>
+                                    Cal
+                                </Text>
                                 <Text>{calories}</Text>
                             </View>
                         }
@@ -243,8 +243,13 @@ const styles = StyleSheet.create({
         // flexGrow: 1,       
     },
     label: {
-        width: 24,
+        width: 32,
         height: 24,
+        borderRadius: 10,
+        color: 'paleturqoise',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        // fontSize: 16,
     },
     button: {
         // backgroundColor: 'lightblue',
