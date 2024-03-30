@@ -230,7 +230,7 @@ export default function Settings() {
 
             {user.isLoggedIn? (
                 <>
-                    <h2>Current User</h2>
+                    <Text>Current User</Text>
                     <Text>Username: {user.username}</Text>
                     <Text>Name: {user.name}</Text>
                     <Text>Email: {user.email}</Text>

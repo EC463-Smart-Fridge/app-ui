@@ -240,6 +240,7 @@ export default function Home() {
             }
         };
         test();
+        getCurrUser();
     }, [refreshes, items.length])
 
     return (
@@ -254,8 +255,8 @@ export default function Home() {
                 />
             </View>
             <Pressable onPress={() => getCurrUser()}>
-                                    <Text>Get User</Text>
-                                </Pressable>
+                <Text>Get User</Text>
+            </Pressable>
             <ScrollView 
                 style={styles.container}
                 refreshControl={
@@ -294,7 +295,7 @@ export default function Home() {
                             </>
                         ) : (
                             <>
-                                <h1>No Current User</h1>
+                                <Text>No Current User</Text>
                             </>
                         )}
                     </View>
