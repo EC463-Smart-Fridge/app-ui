@@ -154,7 +154,7 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
                         {exp_date != 0 && exp_date != null && 
                             <View style={styles.wrapper}>
                                 <View style={styles.label}>
-                                    <ExpirationIcon fill={"paleturqoise"} />
+                                    <ExpirationIcon fill={"paleturquoise"} />
                                 </View>
                                 <Text>{new Date(exp_date * 1000).toLocaleDateString("en-US")}</Text>
                             </View>
@@ -163,7 +163,7 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
                         {category != '' && category != null && 
                             <View style={styles.wrapper}>
                                 <View style={styles.label}>
-                                    <CategoryIcon fill={"paleturqoise"}/>
+                                    <CategoryIcon fill={"paleturquoise"}/>
                                 </View>
                                 <Text>{category}</Text>
                             </View>
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
         width: 32,
         height: 24,
         borderRadius: 10,
-        color: 'paleturqoise',
+        color: 'paleturquoise',
         fontWeight: 'bold',
         textAlign: 'center',
         // fontSize: 16,
