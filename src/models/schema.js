@@ -260,8 +260,71 @@ export const schema = {
                     "isArrayNullable": true
                 }
             }
+        },
+        "Recipe": {
+            "name": "Recipe",
+            "fields": {
+                "name": {
+                    "name": "name",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "img": {
+                    "name": "img",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "steps": {
+                    "name": "steps",
+                    "isArray": true,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
+                "ingredients": {
+                    "name": "ingredients",
+                    "isArray": true,
+                    "type": {
+                        "nonModel": "ingredient"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
+                "calories": {
+                    "name": "calories",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            }
+        },
+        "ingredient": {
+            "name": "ingredient",
+            "fields": {
+                "name": {
+                    "name": "name",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "amt": {
+                    "name": "amt",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            }
         }
     },
     "codegenVersion": "3.4.4",
-    "version": "ba3979fbb9d5e89b7973531c02757198"
+    "version": "38ad51821073c84188b81c98e780e141"
 };

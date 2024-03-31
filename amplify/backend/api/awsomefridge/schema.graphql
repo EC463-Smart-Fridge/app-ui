@@ -63,6 +63,23 @@ input addUserInput {
 	name: String
 }
 
+input getRecipesInput {
+	ingredients: [String]!
+}
+
+type Recipe {
+	name: String!
+	img: String
+	steps: [String]
+	ingredients: [ingredient]
+	calories: String
+}
+
+type ingredient {
+	name: String
+	amt: String
+}
+
 type Mutation {
 	addItem(input: addItemInput!): Fridgebase
 	addItemByUPC(uid: String!, upc: String!): Item
@@ -74,6 +91,7 @@ type Mutation {
 type Query {
 	getUserItems(pk: String!): [Item]
 	getFridgeUser(pk: String!): User
+	getRecipes(input: getRecipesInput!): [Recipe]
 }
 
 type Subscription {

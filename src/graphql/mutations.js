@@ -22,13 +22,6 @@ export const addItemByUPC = /* GraphQL */ `
       img_url
       exp_date
       quantity
-      id
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      __typename
     }
   }
 `;

@@ -26,6 +26,22 @@ export const getFridgeUser = /* GraphQL */ `
     }
   }
 `;
+export const getRecipes = /* GraphQL */ `
+  query GetRecipes($input: getRecipesInput!) {
+    getRecipes(input: $input) {
+      name
+      img
+      steps
+      ingredients {
+        name
+        amt
+        __typename
+      }
+      calories
+      __typename
+    }
+  }
+`;
 export const getItem = /* GraphQL */ `
   query GetItem($id: ID!) {
     getItem(id: $id) {

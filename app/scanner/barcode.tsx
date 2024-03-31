@@ -4,10 +4,11 @@ import { Text, View } from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import { useFocusEffect } from '@react-navigation/native';
 import { addItem, addItemByUPC } from '../../src/graphql/mutations'; 
-import { useGraphQLClient } from '../../contexts/GraphQLClientContext';
+import { useGraphQLClient, useUser } from '../../contexts/GraphQLClientContext';
 
 export default function BarcodeScanner() {
   const client = useGraphQLClient();
+  const [user, setUser] = useUser();
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState<boolean>(false);
 
@@ -34,17 +35,22 @@ export default function BarcodeScanner() {
       [{ text: 'OK', onPress: () => setScanned(false) }]
     );
 
-    try {
-        const addResult = await client.graphql({
-            query: addItemByUPC,
-            variables: {
-                uid: 'UID1',
-                upc: String(data) 
-            },
-        })
-        console.log('Item added successfully', addResult);
-    } catch (error) {
-        console.error('Error adding item', error);
+    if (user.isLoggedIn) {
+      try {
+          const addResult = await client.graphql({
+              query: addItemByUPC,
+              variables: {
+                  uid: user.userId,
+                  upc: String(data) 
+              },
+          })
+          console.log('Item added successfully', addResult);
+      } catch (error) {
+          console.error('Error adding item', error);
+      }
+    }
+    else {
+      console.log("No user logged in")
     }
     
   };

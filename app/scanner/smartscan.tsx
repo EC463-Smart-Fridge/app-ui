@@ -4,11 +4,12 @@ import { Text, View } from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import { useFocusEffect } from '@react-navigation/native';
 import { addItemByUPC } from "../../src/graphql/mutations";
-import { useGraphQLClient } from "../../contexts/GraphQLClientContext";
+import { useGraphQLClient, useUser } from "../../contexts/GraphQLClientContext";
 import SwapIcon from '../../assets/icons/SwapIcon';
 
 export default function SmartScanner() {
   const client = useGraphQLClient();
+  const [user, setUser] = useUser();
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const cameraRef = useRef<Camera>(null);
   const [isFrontCamera, setIsFrontCamera] = useState<boolean>(true);
@@ -56,53 +57,58 @@ export default function SmartScanner() {
     const MODEL_ID = 'food-item-recognition'; //'ocr-scene-english-paddleocr'; // Replace with Clarifai model ID
     const MODEL_VERSION_ID = '1d5fd481e0cf4826aa72ec3ff049e044'; //'46e99516c2d94f58baf2bcaf5a6a53a9'; // Replace with Clarifai model version ID
   
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': 'Key ' + PAT
-      },
-      body: requestData
-    };
-  
-    /*fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/versions/" + MODEL_VERSION_ID + "/outputs", requestOptions)
-    .then(response => response.text())
-    .then(result => console.log(result))
-    .catch(error => console.log('error', error));
-    */
-    fetch(`https://api.clarifai.com/v2/models/${MODEL_ID}/versions/${MODEL_VERSION_ID}/outputs`, requestOptions)
-    .then(response => response.json())
-    .then( async(result) => {
-      // Extract prediction data from the response
-      const outputs = result.outputs;
-      if (outputs && outputs.length > 0) {
-        const prediction = outputs[0]; // Assuming there's only one prediction
-        const data = prediction.data;
-        const name = String(data.concepts[0].name)
-        console.log(name + `${isProduce ? ' +raw' : ''}`)
-        try {
-          const addResult = await client.graphql({
-              query: addItemByUPC,
-              variables: {
-                  uid: 'UID1',
-                  upc: name + `${isProduce ? ' +raw' : ''}`
-              },
-          })
-          
-          console.log('Item added successfully', addResult);
-      } catch (error) {
-          console.error('Error adding item', error);
-      }
+    if (user.isLoggedIn) {
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Key ' + PAT
+        },
+        body: requestData
+      };
+    
+      /*fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/versions/" + MODEL_VERSION_ID + "/outputs", requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+      */
+      fetch(`https://api.clarifai.com/v2/models/${MODEL_ID}/versions/${MODEL_VERSION_ID}/outputs`, requestOptions)
+      .then(response => response.json())
+      .then( async(result) => {
+        // Extract prediction data from the response
+        const outputs = result.outputs;
+        if (outputs && outputs.length > 0) {
+          const prediction = outputs[0]; // Assuming there's only one prediction
+          const data = prediction.data;
+          const name = String(data.concepts[0].name)
+          console.log(name + `${isProduce ? ' +raw' : ''}`)
+          try {
+            const addResult = await client.graphql({
+                query: addItemByUPC,
+                variables: {
+                    uid: user.userId,
+                    upc: name + `${isProduce ? ' +raw' : ''}`
+                },
+            })
+            
+            console.log('Item added successfully', addResult);
+        } catch (error) {
+            console.error('Error adding item', error);
+        }
 
-        // Log prediction details to the console
-        console.log('Prediction:');
-        console.log('Classes:', data.concepts.map((concept: any) => concept.name).join(', ')); // Assuming concepts contain predicted classes
-        console.log('Probabilities:', data.concepts.map((concept: any) => concept.value).join(', ')); // Assuming concepts contain probabilities
-      } else {
-        console.log('No prediction outputs found.');
-      }
-    })
-    .catch(error => console.error('Error:', error));
+          // Log prediction details to the console
+          console.log('Prediction:');
+          console.log('Classes:', data.concepts.map((concept: any) => concept.name).join(', ')); // Assuming concepts contain predicted classes
+          console.log('Probabilities:', data.concepts.map((concept: any) => concept.value).join(', ')); // Assuming concepts contain probabilities
+        } else {
+          console.log('No prediction outputs found.');
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
+    else {
+      console.log("No user logged in")
+    }
   };
 
   if (hasPermission === null) {

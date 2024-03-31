@@ -4,12 +4,14 @@ import { schema } from './schema';
 
 
 
-const { Item, User, Fridgebase, FridgebaseConnection, Items } = initSchema(schema);
+const { Item, User, Fridgebase, FridgebaseConnection, Items, Recipe, ingredient } = initSchema(schema);
 
 export {
   Item,
   User,
   Fridgebase,
   FridgebaseConnection,
-  Items
+  Items,
+  Recipe,
+  ingredient
 };

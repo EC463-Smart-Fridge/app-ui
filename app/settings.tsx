@@ -102,7 +102,6 @@ export default function Settings() {
     const handleSignIn = async({username, password}: SignInInput) => {
         try {
             const { isSignedIn, nextStep } = await signIn({username, password});
-            getCurrUser();
             console.log(isSignedIn);
             console.log(nextStep);
             // Handle signing in the user and storing the userID
@@ -110,6 +109,7 @@ export default function Settings() {
         catch (error) {
             console.log("Error signing in", error);
         }
+        getCurrUser();
     }
 
     const getCurrUser = async() => {
@@ -342,15 +342,53 @@ export default function Settings() {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        borderRadius: 10,
+        justifyContent: 'center',
+        padding: 8,
+        marginTop: 5,
+        marginHorizontal: 10,
+        // flexShrink: 1
     },
     title: {
+        fontWeight: "bold",
+        fontSize: 50,
+        color: 'black',
+        marginBottom: 40,
     },
     inputView:{
+        width:"80%",
+        backgroundColor:"#3AB4BA",
+        borderRadius:25,
+        height:50,
+        marginBottom:20,
+        justifyContent:"center",
+        padding:20
     },
     inputText:{
+        height:50,
+        color:"white"
     },
     loginBtn:{
+        width:100,
+        backgroundColor:"#fb5b5a",
+        borderRadius:25,
+        height:50,
+        alignItems:"center",
+        justifyContent:"center",
+        marginTop:40,
+        marginBottom:10,
     },
     signupBtn:{
+        width:100,
+        backgroundColor:"#d3d3d3",
+        borderRadius:25,
+        height:50,
+        alignItems:"center",
+        justifyContent:"center",
+        marginTop:40,
+        marginBottom:10,
     },
 })
