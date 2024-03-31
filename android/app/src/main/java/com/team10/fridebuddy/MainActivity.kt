@@ -1,4 +1,4 @@
-package com.team10.FridgeBuddy
+package com.team10.fridebuddy
 
 import android.os.Build
 import android.os.Bundle

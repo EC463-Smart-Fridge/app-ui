@@ -47,7 +47,11 @@ export declare type Items = LazyLoading extends LazyLoadingDisabled ? EagerItems
 export declare const Items: (new (init: ModelInit<Items>) => Items)
 
 type EagerItem = {
-
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<Item, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
   readonly pk?: string | null;
   readonly sk?: string | null;
   readonly UPC?: string | null;
@@ -62,7 +66,11 @@ type EagerItem = {
 }
 
 type LazyItem = {
-
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<Item, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
   readonly pk?: string | null;
   readonly sk?: string | null;
   readonly UPC?: string | null;
