@@ -7,7 +7,7 @@ import { addItemByUPC } from "../../../src/graphql/mutations";
 import { useGraphQLClient, useUser } from "../../../contexts/GraphQLClientContext";
 import SwapIcon from '../../../assets/icons/SwapIcon';
 
-export default function SmartScanner() {
+export default function SmartScan() {
   const client = useGraphQLClient();
   const {user, setUser} = useUser();
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
@@ -118,7 +118,7 @@ export default function SmartScanner() {
     return <Text>No access to camera</Text>;
   }
 
-  return (user.isLoggedin ?
+  return (user.isLoggedIn ?
     <View style={styles.container}>
       <Camera style={styles.camera} ref={cameraRef} type={isFrontCamera ? CameraType.front : CameraType.back} />
       <View style={styles.buttonContainer}>
@@ -134,7 +134,7 @@ export default function SmartScanner() {
         <View style={styles.toggle}>
           <Text>Produce</Text>
           <Switch
-            trackColor={{false: '#767577', true: 'darkturquoise'}}
+            trackColor={{false: 'darkgray', true: 'darkturquoise'}}
             thumbColor='white'
             // ios_backgroundColor="#3e3e3e"
             onValueChange={() => {setIsProduce(!isProduce);}}

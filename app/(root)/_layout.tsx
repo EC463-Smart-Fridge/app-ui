@@ -41,7 +41,7 @@ export default function Layout() {
                 }}
             >
                 <Tabs.Screen
-                    name="auth"    
+                    name="index"    
                     options={{ href: null, headerShown: false}}
                 ></Tabs.Screen>
                 <Tabs.Screen
@@ -59,10 +59,6 @@ export default function Layout() {
                 <Tabs.Screen
                     name="settings"
                     options={{ tabBarLabel: "Settings", tabBarIcon: ({focused}) => <SettingsIcon fill={focused ? 'darkturquoise' : 'black'}/>}}
-                />
-                <Tabs.Screen
-                    name="barcode"
-                    options={{ tabBarLabel: "barcode", tabBarIcon: ({focused}) => <SettingsIcon fill={focused ? 'darkturquoise' : 'black'}/>}}
                 />
             </Tabs>
         </> : 

@@ -1,7 +1,7 @@
 import { Link, Stack } from "expo-router";
 import { View, StyleSheet } from "react-native";
 import { usePathname } from 'expo-router';
-
+import { GraphQLClientProvider, UserProvider} from "../../../contexts/GraphQLClientContext";
 
 export default function Layout() {
     let path = usePathname();
@@ -9,8 +9,8 @@ export default function Layout() {
     return (
         <>
             <View style={styles.nav}>
-                <Link href="scanner/barcode" style={[styles.link, (path==="/scanner/barcode" || path==="/scanner") && styles.active]}>Barcode Scanner</Link>
-                <Link href="scanner/smartscan" style={[styles.link, path==="/scanner/smartscan" && styles.active]}>Smart Scanner</Link>
+                <Link href="/scanner/barcode" style={[styles.link, (path==="/scanner/barcode" || path==="/scanner") && styles.active]}>Barcode Scanner</Link>
+                <Link href="/scanner/smartscan" style={[styles.link, path==="/scanner/smartscan" && styles.active]}>Smart Scanner</Link>
             </View>
             <Stack
                 screenOptions={
@@ -18,7 +18,10 @@ export default function Layout() {
                         headerShown: false,
                     }
                 }
-            />
+            >
+                <Stack.Screen name="barcode"></Stack.Screen>
+                <Stack.Screen name="smartscan"></Stack.Screen>
+            </Stack>
         </>
     )
 }
