@@ -2,6 +2,7 @@ import { Link, Stack } from "expo-router";
 import { View, StyleSheet } from "react-native";
 import { usePathname } from 'expo-router';
 
+
 export default function Layout() {
     let path = usePathname();
     // console.log(path)

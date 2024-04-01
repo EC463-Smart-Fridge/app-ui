@@ -3,13 +3,13 @@ import { StyleSheet, Pressable, Switch } from 'react-native';
 import { Text, View } from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import { useFocusEffect } from '@react-navigation/native';
-import { addItemByUPC } from "../../src/graphql/mutations";
-import { useGraphQLClient, useUser } from "../../contexts/GraphQLClientContext";
-import SwapIcon from '../../assets/icons/SwapIcon';
+import { addItemByUPC } from "../../../src/graphql/mutations";
+import { useGraphQLClient, useUser } from "../../../contexts/GraphQLClientContext";
+import SwapIcon from '../../../assets/icons/SwapIcon';
 
 export default function SmartScanner() {
   const client = useGraphQLClient();
-  const [user, setUser] = useUser();
+  const {user, setUser} = useUser();
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const cameraRef = useRef<Camera>(null);
   const [isFrontCamera, setIsFrontCamera] = useState<boolean>(true);
@@ -118,8 +118,7 @@ export default function SmartScanner() {
     return <Text>No access to camera</Text>;
   }
 
-  return (
-    user.isLoggedin ?
+  return (user.isLoggedin ?
     <View style={styles.container}>
       <Camera style={styles.camera} ref={cameraRef} type={isFrontCamera ? CameraType.front : CameraType.back} />
       <View style={styles.buttonContainer}>
@@ -143,7 +142,8 @@ export default function SmartScanner() {
           />
         </View>
       </View>
-    </View> :
+    </View>
+    :
     <View>
       <Text>Not logged in</Text>
     </View>

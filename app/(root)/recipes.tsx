@@ -1,10 +1,10 @@
 import { View, Pressable, Text } from "react-native";
-import { useGraphQLClient, useUser } from "../contexts/GraphQLClientContext";
-import { getRecipes } from "../src/graphql/queries";
+import { useGraphQLClient, useUser } from "../../contexts/GraphQLClientContext";
+import { getRecipes } from "../../src/graphql/queries";
 
 export default function Recipes() {
     const client = useGraphQLClient();
-    const [user, setUser] = useUser();
+    const {user, setUser} = useUser();
 
     const getUserRecipes = async() => {
         try {
@@ -23,10 +23,14 @@ export default function Recipes() {
     }
     
     return (
-        <View>
-            <Pressable onPress={getUserRecipes}>
-                <Text>Test</Text>
-            </Pressable>
-        </View>
+        user.isLoggedIn ? (
+            <View>
+                <Text>Recipes</Text>
+            </View>
+        ) : (
+            <View>
+                <Text>You are not logged in</Text>
+            </View>
+        )
     )
 }

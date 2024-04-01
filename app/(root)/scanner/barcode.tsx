@@ -3,12 +3,12 @@ import { StyleSheet, Button, Alert } from 'react-native';
 import { Text, View } from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import { useFocusEffect } from '@react-navigation/native';
-import { addItem, addItemByUPC } from '../../src/graphql/mutations'; 
-import { useGraphQLClient, useUser } from '../../contexts/GraphQLClientContext';
+import { addItem, addItemByUPC } from '../../../src/graphql/mutations'; 
+import { useGraphQLClient, useUser } from '../../../contexts/GraphQLClientContext';
 
 export default function BarcodeScanner() {
   const client = useGraphQLClient();
-  const [user, setUser] = useUser();
+  const {user, setUser} = useUser();
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState<boolean>(false);
 
@@ -62,7 +62,7 @@ export default function BarcodeScanner() {
     return <Text>No access to camera</Text>;
   }
 
-  return (
+  return (user.isLoggedIn ?
     <View style={styles.container}>
       <Camera
         style={styles.camera}
@@ -70,6 +70,10 @@ export default function BarcodeScanner() {
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
       />
       {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+    </View>
+    :
+    <View>
+      <Text>You are not logged in</Text>
     </View>
   );
 }

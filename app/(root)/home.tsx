@@ -1,22 +1,22 @@
 import { useState, useEffect } from "react";
 import { ScrollView, StatusBar, View, ActivityIndicator, RefreshControl, StyleSheet, Pressable, Text } from "react-native";
-import { getUserItems, getFridgeUser } from "../src/graphql/queries";
-import { removeItem, addItem, editItem } from "../src/graphql/mutations";
+import { getUserItems, getFridgeUser } from "../../src/graphql/queries";
+import { removeItem, addItem, editItem } from "../../src/graphql/mutations";
 
 import { DataStore } from '@aws-amplify/datastore';
 
-import { useGraphQLClient, useUser } from "../contexts/GraphQLClientContext";
-import { Item } from '../src/API';
+import { useGraphQLClient, useUser } from "../../contexts/GraphQLClientContext";
+import { Item } from '../../src/API';
 
-import ItemWidget from "../components/ItemWidget";
-import NewItemWidget from "../components/NewItemWidget";
+import ItemWidget from "../../components/ItemWidget";
+import NewItemWidget from "../../components/NewItemWidget";
 import { TextInput } from "react-native";
 import { getCurrentUser } from "aws-amplify/auth";
 
 
 export default function Home() {
     const client = useGraphQLClient();
-    const [user, setUser] = useUser();
+    const {user, setUser} = useUser();
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
     // const [editedItems, setEditedItems] = useState({});
@@ -81,28 +81,6 @@ export default function Home() {
         }
     }
 
-
-    // const addItemHandler = async (item: Item) => {
-    //     try {
-    //         // Run deleteItem GraphQL mutation
-
-    //         const addResult = await DataStore.save(
-    //             new Item({
-    //                 pk: 'UID1',
-    //                 name: item.name,
-    //                 exp_date: item.exp_date,
-    //                 category: item.category,
-    //                 calories: item.calories,
-    //                 quantity: item.quantity,
-    //             })
-    //           );
-    //           setItems([...items, item]);
-    //         console.log('Item added successfully', addResult);
-    //     } catch (error) {
-    //         console.error('Error adding item', error);
-    //     }
-    // }
-
     interface EditItemInput {
         pk: string | null | undefined;
         sk: string | null | undefined;
@@ -157,54 +135,6 @@ export default function Home() {
             console.error('Error editing item', error);
         }
     };
-
-    const getCurrUser = async() => {
-        if (!user.isLoggedIn) {
-            try {
-                const { username, userId, signInDetails } = await getCurrentUser();
-                try {
-                    const result = await client.graphql({
-                        query: getFridgeUser,
-                        variables: {
-                            pk:userId,
-                        }
-                    })
-                    if (result.data) {
-                        setUser({
-                            isLoggedIn: true,
-                            userId: userId,
-                            username: result.data.getFridgeUser.username,
-                            email: result.data.getFridgeUser.email,
-                            name: result.data.getFridgeUser.name2
-                        })
-                    }
-                    else {
-                        console.log('ERROR: User does not exist');
-                    }
-                } catch (error) {
-                    console.log('error on fetching user', error);
-                } 
-                console.log(`Details: ${signInDetails}`);
-                console.log(user)
-            }
-            catch (error) {
-                console.log("Failed to get current user:", error);
-                if (user.isLoggedIn) {
-                    setUser({
-                        isLoggedIn: false,
-                        userId: '',
-                        username: '',
-                        email: '',
-                        name: ''
-                    })
-                }
-            }
-        }
-        else {
-            console.log(user)
-        }
-    }
-
     useEffect(() => {
         const test = async () => {
             try {
@@ -240,7 +170,7 @@ export default function Home() {
             }
         };
         test();
-        getCurrUser();
+        // getCurrUser();
     }, [refreshes, items.length, user])
 
     return (
@@ -261,7 +191,7 @@ export default function Home() {
                         // console.log('Refreshing');
                         setRefreshes(refreshes + 1);
                         console.log({refreshes});
-                        getCurrUser();
+                        // getCurrUser();
                     }} />
                 }
             >

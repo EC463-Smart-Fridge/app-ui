@@ -1,11 +1,10 @@
 import { View, Pressable, TextInput, Text, StyleSheet, Modal, ActivityIndicator } from "react-native";
 import { signInWithRedirect, AuthUser, signUp, confirmSignUp, type ConfirmSignUpInput, autoSignIn, signIn, type SignInInput, getCurrentUser, signOut } from "aws-amplify/auth";
-import { useGraphQLClient } from "../contexts/GraphQLClientContext";
+import { useGraphQLClient, useUser } from "../../contexts/GraphQLClientContext";
 import React, { useEffect, useState } from "react";
 import { Hub } from "aws-amplify/utils";
-import { addUser } from "../src/graphql/mutations";
-import { getFridgeUser } from "../src/graphql/queries";
-import { useUser } from "../contexts/GraphQLClientContext";
+import { addUser } from "../../src/graphql/mutations";
+import { getFridgeUser } from "../../src/graphql/queries";
 import { router } from "expo-router";
 
 type SignUpParameters = {
@@ -21,10 +20,10 @@ enum modes {
   verification
 }
 
-export default function Login() {
+export default function Auth() {
     const client = useGraphQLClient();
     const [isLoading, setIsLoading] = useState(false);
-    const [user, setUser] = useUser();
+    const {user, setUser} = useUser();
 
     const [mode, setMode] = useState(modes.login);
     const [userLogin, setUserLogin] = useState({
@@ -113,6 +112,7 @@ export default function Login() {
     const handleSignOut = async() => {
         console.log("signing out")
         try {
+
             await signOut({global: true});
             setUser({
                 isLoggedIn: false,
@@ -121,7 +121,6 @@ export default function Login() {
                 email: '',
                 name: ''
             });
-            // getCurrUser();
         }
         catch (error) {
             console.log("Error signing user out", error);
