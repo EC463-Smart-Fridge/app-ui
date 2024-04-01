@@ -6,6 +6,7 @@ import { Hub } from "aws-amplify/utils";
 import { addUser } from "../../src/graphql/mutations";
 import { getFridgeUser } from "../../src/graphql/queries";
 import { useUser } from "../../contexts/GraphQLClientContext";
+import { Redirect } from "expo-router";
 
 type SignUpParameters = {
     username: string;
@@ -24,9 +25,7 @@ export default function Settings() {
                 <Text>Settings</Text>
             </View>
         ) : (
-            <View>
-                <Text>You are not logged in</Text>
-            </View>
+            <Redirect href="/" />
         )
     )
 }

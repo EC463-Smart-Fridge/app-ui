@@ -1,6 +1,7 @@
 import { View, Pressable, Text } from "react-native";
 import { useGraphQLClient, useUser } from "../../contexts/GraphQLClientContext";
 import { getRecipes } from "../../src/graphql/queries";
+import { Redirect } from "expo-router";
 
 export default function Recipes() {
     const client = useGraphQLClient();
@@ -28,9 +29,7 @@ export default function Recipes() {
                 <Text>Recipes</Text>
             </View>
         ) : (
-            <View>
-                <Text>You are not logged in</Text>
-            </View>
+            <Redirect href="/" />
         )
     )
 }

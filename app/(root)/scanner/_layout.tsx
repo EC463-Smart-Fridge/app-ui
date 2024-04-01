@@ -1,12 +1,14 @@
-import { Link, Stack } from "expo-router";
+import { Link, Redirect, Stack } from "expo-router";
 import { View, StyleSheet } from "react-native";
 import { usePathname } from 'expo-router';
-import { GraphQLClientProvider, UserProvider} from "../../../contexts/GraphQLClientContext";
+import { useUser, useGraphQLClient} from "../../../contexts/GraphQLClientContext";
 
 export default function Layout() {
     let path = usePathname();
     // console.log(path)
-    return (
+    const { user, setUser } = useUser();
+    // const client = useGraphQLClient();
+    return (user.isLoggedIn ?
         <>
             <View style={styles.nav}>
                 <Link href="/scanner/barcode" style={[styles.link, (path==="/scanner/barcode" || path==="/scanner") && styles.active]}>Barcode Scanner</Link>
@@ -22,7 +24,8 @@ export default function Layout() {
                 <Stack.Screen name="barcode"></Stack.Screen>
                 <Stack.Screen name="smartscan"></Stack.Screen>
             </Stack>
-        </>
+        </> :
+        <Redirect href="/" />
     )
 }
 

@@ -1,6 +1,8 @@
-import { Stack, Tabs } from "expo-router";
-import { View, Text } from "react-native";
-import { GraphQLClientProvider, UserProvider, useUser} from "../../contexts/GraphQLClientContext";
+import { Redirect, Tabs, Stack} from "expo-router";
+import { View, Text, ActivityIndicator } from "react-native";
+import { GraphQLClientProvider, UserProvider, useUser, useGraphQLClient} from "../../contexts/GraphQLClientContext";
+import { signInWithRedirect, AuthUser, signUp, confirmSignUp, type ConfirmSignUpInput, autoSignIn, signIn, type SignInInput, getCurrentUser, signOut } from "aws-amplify/auth";
+import { getFridgeUser } from "../../src/graphql/queries";
 import { StatusBar } from "expo-status-bar";
 import { LinearGradient } from "expo-linear-gradient";
 import HomeIcon from "../../assets/icons/HomeIcon";
@@ -11,9 +13,81 @@ import SettingsIcon from "../../assets/icons/SettingsIcon";
 import { useEffect, useState } from "react";
 
 export default function Layout() {
-    const { user } = useUser();
+    const { user, setUser } = useUser();
+    const [isLoading, setIsLoading] = useState(true);
+    const client = useGraphQLClient();
 
-    return (user.isLoggedIn ?
+    const getCurrUser = async() => {
+        if (!user.isLoggedIn) {
+            try {
+                const { username, userId, signInDetails } = await getCurrentUser();
+                try {
+                    const result = await client.graphql({
+                        query: getFridgeUser,
+                        variables: {
+                            pk:userId,
+                        }
+                    })
+                    if (result.data) {
+                        setUser({
+                            isLoggedIn: true,
+                            userId: userId,
+                            username: result.data.getFridgeUser.username,
+                            email: result.data.getFridgeUser.email,
+                            name: result.data.getFridgeUser.name2
+                        })
+                    }
+                    else {
+                        console.log('ERROR: User does not exist');
+                    }
+                } catch (error) {
+                    console.log('error on fetching user', error);
+                } 
+                console.log(`Details: ${signInDetails}`);
+                console.log(user)
+            }
+            catch (error) {
+                console.log("Failed to get current user:", error);
+                if (user.isLoggedIn) {
+                    setUser({
+                        isLoggedIn: false,
+                        userId: '',
+                        username: '',
+                        email: '',
+                        name: ''
+                    })
+                }
+            } finally {
+            
+            }
+        }
+        else {
+            console.log(user)
+        }
+    }
+
+    useEffect(() => {
+        const update = async() => {
+            setIsLoading(true);
+            console.log("useEffect")
+            await getCurrUser();
+            console.log(user)
+            setIsLoading(false);
+        }
+
+        update();
+    }, [])
+
+    return (isLoading? 
+        <ActivityIndicator />
+        : !user.isLoggedIn ?
+        <Stack 
+            screenOptions={{
+                headerShown: false,
+            }}
+        >
+        </Stack>
+        :
         <>
             <Tabs
                 screenOptions={{
@@ -47,15 +121,6 @@ export default function Layout() {
                     options={{ tabBarLabel: "Settings", tabBarIcon: ({focused}) => <SettingsIcon fill={focused ? 'darkturquoise' : 'black'}/>}}
                 />
             </Tabs>
-        </> : 
-        <Stack 
-            screenOptions={{
-                headerShown: false,
-            }}
-        >
-            <Stack.Screen
-                name="index"
-            ></Stack.Screen>
-        </Stack>
+        </> 
     )
 }

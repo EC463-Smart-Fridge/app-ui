@@ -12,6 +12,7 @@ import ItemWidget from "../../components/ItemWidget";
 import NewItemWidget from "../../components/NewItemWidget";
 import { TextInput } from "react-native";
 import { getCurrentUser } from "aws-amplify/auth";
+import { Redirect } from "expo-router";
 
 
 export default function Home() {
@@ -221,9 +222,7 @@ export default function Home() {
                                 }
                             </>
                         ) : (
-                            <>
-                                <Text>No Current User</Text>
-                            </>
+                            <Redirect href="/" />
                         )}
                     </View>
                 }

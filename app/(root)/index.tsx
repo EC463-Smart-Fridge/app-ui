@@ -1,10 +1,10 @@
 import { View, Pressable, TextInput, Text, StyleSheet, Modal, ActivityIndicator } from "react-native";
 import { signInWithRedirect, AuthUser, signUp, confirmSignUp, type ConfirmSignUpInput, autoSignIn, signIn, type SignInInput, getCurrentUser, signOut } from "aws-amplify/auth";
+import { getFridgeUser } from "../../src/graphql/queries";
 import { useGraphQLClient, useUser } from "../../contexts/GraphQLClientContext";
 import React, { useEffect, useState } from "react";
 import { Hub } from "aws-amplify/utils";
 import { addUser } from "../../src/graphql/mutations";
-import { getFridgeUser } from "../../src/graphql/queries";
 import { router } from "expo-router";
 
 type SignUpParameters = {
@@ -22,8 +22,8 @@ enum modes {
 
 export default function Auth() {
     const client = useGraphQLClient();
-    const [isLoading, setIsLoading] = useState(false);
     const {user, setUser} = useUser();
+    const [isLoading, setIsLoading] = useState(false);
 
     const [mode, setMode] = useState(modes.login);
     const [userLogin, setUserLogin] = useState({
@@ -126,10 +126,10 @@ export default function Auth() {
             console.log("Error signing user out", error);
         }
     }    
-    useEffect(() => {
-      console.log("useEffect triggered")
-      getCurrUser()
-    }, [])
+    // useEffect(() => {
+    //   console.log("useEffect triggered")
+    //   getCurrUser()
+    // }, [user])
 
     return (isLoading ? (
       <ActivityIndicator />
