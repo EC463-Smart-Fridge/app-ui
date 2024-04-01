@@ -40,6 +40,7 @@ export const onCreateItem = /* GraphQL */ `
       img_url
       exp_date
       quantity
+      prod_name
       id
       createdAt
       updatedAt
@@ -62,6 +63,7 @@ export const onUpdateItem = /* GraphQL */ `
       img_url
       exp_date
       quantity
+      prod_name
       id
       createdAt
       updatedAt
@@ -84,6 +86,7 @@ export const onDeleteItem = /* GraphQL */ `
       img_url
       exp_date
       quantity
+      prod_name
       id
       createdAt
       updatedAt

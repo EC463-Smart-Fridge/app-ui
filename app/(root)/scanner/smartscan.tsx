@@ -87,7 +87,8 @@ export default function SmartScan() {
                 query: addItemByUPC,
                 variables: {
                     uid: user.userId,
-                    upc: name + `${isProduce ? ' +raw' : ''}`
+                    upc: name + `${isProduce ? ' +raw' : ''}`,
+                    name: name
                 },
             })
             

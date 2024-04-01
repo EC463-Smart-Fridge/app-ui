@@ -11,8 +11,8 @@ export const addItem = /* GraphQL */ `
   }
 `;
 export const addItemByUPC = /* GraphQL */ `
-  mutation AddItemByUPC($uid: String!, $upc: String!) {
-    addItemByUPC(uid: $uid, upc: $upc) {
+  mutation AddItemByUPC($uid: String!, $upc: String!, $name: String) {
+    addItemByUPC(uid: $uid, upc: $upc, name: $name) {
       pk
       sk
       UPC
@@ -22,6 +22,7 @@ export const addItemByUPC = /* GraphQL */ `
       img_url
       exp_date
       quantity
+      prod_name
     }
   }
 `;
@@ -68,6 +69,7 @@ export const createItem = /* GraphQL */ `
       img_url
       exp_date
       quantity
+      prod_name
       id
       createdAt
       updatedAt
@@ -93,6 +95,7 @@ export const updateItem = /* GraphQL */ `
       img_url
       exp_date
       quantity
+      prod_name
       id
       createdAt
       updatedAt
@@ -118,6 +121,7 @@ export const deleteItem = /* GraphQL */ `
       img_url
       exp_date
       quantity
+      prod_name
       id
       createdAt
       updatedAt

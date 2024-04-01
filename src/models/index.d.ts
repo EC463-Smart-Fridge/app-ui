@@ -95,6 +95,7 @@ type EagerItem = {
   readonly img_url?: string | null;
   readonly exp_date?: number | null;
   readonly quantity?: number | null;
+  readonly prod_name?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -114,6 +115,7 @@ type LazyItem = {
   readonly img_url?: string | null;
   readonly exp_date?: number | null;
   readonly quantity?: number | null;
+  readonly prod_name?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

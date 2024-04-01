@@ -18,6 +18,7 @@ type Item @model @auth(rules: [{ allow: public }]){
 	img_url: String
 	exp_date: Int
 	quantity: Int
+	prod_name: String
 }
 
 type Items {
@@ -82,7 +83,7 @@ type ingredient {
 
 type Mutation {
 	addItem(input: addItemInput!): Fridgebase
-	addItemByUPC(uid: String!, upc: String!): Item
+	addItemByUPC(uid: String!, upc: String!, name: String): Item
 	editItem(input: updateItemInput!): Fridgebase
 	removeItem(input: deleteItemInput!): Fridgebase
 	addUser(input: addUserInput): User
