@@ -245,7 +245,7 @@ export default function Auth() {
                     style={({pressed}) => [{backgroundColor: pressed ? 'darkturquoise' : 'paleturquoise', }, styles.submitWrapper,]} 
                     onPress={() => handleSignIn({username: userLogin.username, password: userLogin.password})}
                 >
-                    <Text>Login</Text>
+                    <Text style={styles.submit}>Login</Text>
                 </Pressable>
 
                 <View style={{flexGrow: 1}}></View>
