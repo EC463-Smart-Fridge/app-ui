@@ -37,6 +37,7 @@ export default function Auth() {
         password: '',
     });
     const [verificationCode, setCode] = useState('');
+    
     // Handler for user sign-in
     const handleSignIn = async({username, password}: SignInInput) => {
       console.log("logging in")
@@ -108,6 +109,73 @@ export default function Auth() {
         }
     }
 
+    // Handler for signing up users
+    const handleSignUp = async({username, password, email, name}: SignUpParameters) => {
+        try {
+            const { isSignUpComplete, userId, nextStep } = await signUp({
+                username,
+                password,
+                options: {
+                    userAttributes: {
+                        email,
+                        name
+                    },
+                    autoSignIn: true
+                }
+            });
+            setMode(modes.verification);
+            console.log(nextStep);
+            
+            // Handle creating a user in GraphQL here
+            try {
+                // Run deleteItem GraphQL mutation
+                const addResult = await client.graphql({
+                    query: addUser,
+                    variables: {
+                        input: {
+                            pk: userId,
+                            username: username,
+                            email: email,
+                            name2: name
+                        }
+                    },
+                })
+                console.log('Item added successfully', addResult);
+            } catch (error) {
+                console.error('Error adding item', error);
+            }
+            
+            // Handle signing in the user
+            handleSignIn({username, password});
+        }
+        catch (error) {
+            console.log("Error Signing up:", error);
+        }
+    };
+
+    // Function for handling user confirmation after signing up
+    const handleSignUpConfirmation = async({username, confirmationCode}: ConfirmSignUpInput) => {
+        try {
+            const { isSignUpComplete, nextStep } = await confirmSignUp({username, confirmationCode});
+            console.log(isSignUpComplete);
+            console.log(nextStep);
+            setMode(modes.login);
+            setUserLogin({
+                username: '',
+                password: ''
+            });
+            setUserSignup({
+                email: '',
+                name: '',
+                username: '',
+                password: '',
+            });
+        }
+        catch (error) {
+            console.log('Error confirming sign up', error);
+        }
+    }
+
     // Handler for signing current user out (invalidate all authentication tokens)
     const handleSignOut = async() => {
         console.log("signing out")
@@ -134,6 +202,7 @@ export default function Auth() {
     return (isLoading ? (
       <ActivityIndicator />
     ) : user.isLoggedIn ? (
+        // ACCOUNT INFO
       <View style={styles.page}>
             <View style={styles.container}>
                 <Text style={styles.title}>Account Info</Text>
@@ -152,6 +221,7 @@ export default function Auth() {
             </View>
       </View>
       ) : mode == modes.login? (
+        // IF (mode == modes.login)
         <View style={styles.page}>
             <View style={styles.container}>
                 <Text style={styles.title}>Fridge Buddy</Text>
@@ -182,56 +252,64 @@ export default function Auth() {
 
                 <View style={styles.switchWrapper}>
                     <Text>Don't have an account?</Text>
-                    {/* <Pressable onPress={() => setMode(modes.signup)}> */}
-                    <Pressable onPress={() => {} }>
+                    <Pressable onPress={() => setMode(modes.signup)}>
                         <Text style={styles.switchLink}>Sign Up</Text>
                     </Pressable>
                 </View>
             </View>
         </View>
     ) : (
-      <>
-          <View>
-              <TextInput
-              
-                  placeholder="Email"
-                  placeholderTextColor="gray"
-                  value={userSignup.email ? (userSignup.email) : ""}
-                  onChangeText={text => setUserSignup({email:text, name:userSignup.name, username:userSignup.username, password:userSignup.password})}
-              />
-          </View>
-          <View>
-              <TextInput
-                  placeholder="Name"
-                  placeholderTextColor="gray"
-                  value={userSignup.name ? (userSignup.name) : ""}
-                  onChangeText={text => setUserSignup({email:userSignup.email, name:text, username:userSignup.username, password:userSignup.password})}
-              />
-          </View>
-          <View>
-              <TextInput
-                  placeholder="Username"
-                  placeholderTextColor="gray"
-                  value={userSignup.username ? (userSignup.username) : ""}
-                  onChangeText={text => setUserSignup({email:userSignup.email, name:userSignup.name, username:text, password:userSignup.password})}
-              />
-          </View>
-          <View>
-              <TextInput
-                  placeholder="Password"
-                  placeholderTextColor="gray"
-                  value={userSignup.password ? (userSignup.password) : ""}
-                  onChangeText={text => setUserSignup({email:userSignup.email, name:userSignup.name, username:userSignup.username, password:text})}
-              />
-          </View>
+        // ELSE (mode == modes.signup)
+        <View style={styles.page}>
+            <View style={styles.container}>
+            <Text style={styles.title}>Fridge Buddy</Text>
+            <TextInput
+                placeholder="Email"
+                placeholderTextColor="gray"
+                value={userSignup.email ? (userSignup.email) : ""}
+                onChangeText={text => setUserSignup({email:text, name:userSignup.name, username:userSignup.username, password:userSignup.password})}
+                style={styles.input}
+            />
+        
+            <TextInput
+                placeholder="Name"
+                placeholderTextColor="gray"
+                value={userSignup.name ? (userSignup.name) : ""}
+                onChangeText={text => setUserSignup({email:userSignup.email, name:text, username:userSignup.username, password:userSignup.password})}
+                style={styles.input}
+            />
 
-          {/* <Pressable onPress={() => handleSignUp({email:userSignup.email, name:userSignup.name, username: userSignup.username, password: userSignup.password})}>
-              <Text>Sign Up</Text>
-          </Pressable> */}
-          {/* <Pressable onPress={() => switchLogin()}>
-              <Text>Login</Text>
-          </Pressable> */}
-      </>
+            <TextInput
+                placeholder="Username"
+                placeholderTextColor="gray"
+                value={userSignup.username ? (userSignup.username) : ""}
+                onChangeText={text => setUserSignup({email:userSignup.email, name:userSignup.name, username:text, password:userSignup.password})}
+                style={styles.input}
+            />
+        
+            <TextInput
+                secureTextEntry={true}
+                placeholder="Password"
+                placeholderTextColor="gray"
+                value={userSignup.password ? (userSignup.password) : ""}
+                onChangeText={text => setUserSignup({email:userSignup.email, name:userSignup.name, username:userSignup.username, password:text})}
+                style={styles.input}
+            />
+
+            <Pressable 
+                onPress={() => handleSignUp({email:userSignup.email, name:userSignup.name, username: userSignup.username, password: userSignup.password})}
+                style={({pressed}) => [{backgroundColor: pressed ? 'darkturquoise' : 'paleturquoise', }, styles.submitWrapper,]}
+            >
+                <Text style={styles.submit}>Sign Up</Text>
+            </Pressable>
+          <View style={styles.switchWrapper}>
+                <Text>Already have an account?</Text>
+                <Pressable onPress={() => setMode(modes.login)}>
+                    <Text style={styles.switchLink}>Login</Text>
+                </Pressable>
+            </View>
+        </View>
+        </View>
       )
     )
 }
