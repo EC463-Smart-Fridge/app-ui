@@ -10,15 +10,6 @@ import ScanIcon from "../../assets/icons/ScanIcon";
 import SettingsIcon from "../../assets/icons/SettingsIcon";
 import { useEffect, useState } from "react";
 
-const initState = {
-    isLoggedIn: false,
-    userId: '',
-    username: '',
-    email: '',
-    name: ''
-  }
-
-
 export default function Layout() {
     const { user } = useUser();
 

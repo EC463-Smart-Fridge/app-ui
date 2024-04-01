@@ -21,7 +21,7 @@ export const GraphQLClientProvider = ({ children }: { children: ReactNode }) => 
 // Hook to use the GraphQL client
 export const useGraphQLClient = () => useContext(GraphQLClientContext);
 
-type user = {
+type userType = {
   isLoggedIn: boolean,
   userId: string,
   username: string,
@@ -29,7 +29,7 @@ type user = {
   name: string,
 }
 
-const initState: user = {
+const initState: userType = {
   isLoggedIn: false,
   userId: '',
   username: '',
