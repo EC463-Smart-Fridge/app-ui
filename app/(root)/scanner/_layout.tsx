@@ -9,7 +9,7 @@ export default function Layout() {
     return (
         <>
             <View style={styles.nav}>
-                <Link href="scanner/barcode" style={[styles.link, path==="/scanner/barcode" && styles.active]}>Barcode Scanner</Link>
+                <Link href="scanner/barcode" style={[styles.link, (path==="/scanner/barcode" || path==="/scanner") && styles.active]}>Barcode Scanner</Link>
                 <Link href="scanner/smartscan" style={[styles.link, path==="/scanner/smartscan" && styles.active]}>Smart Scanner</Link>
             </View>
             <Stack
