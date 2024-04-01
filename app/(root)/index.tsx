@@ -146,34 +146,39 @@ export default function Auth() {
           </Pressable>
       </>
       ) : mode == modes.login? (
-        <>
-            <View>
+        <View style={styles.page}>
+            <View style={styles.container}>
+                <Text style={styles.title}>Fridge Buddy</Text>
                 <TextInput
-                
                     placeholder="Username"
                     placeholderTextColor="gray"
                     value={userLogin.username ? (userLogin.username) : ""}
                     onChangeText={text => setUserLogin({username:text, password:userLogin.password})}
-                  />
-            </View>
-            <View>
+                    style={styles.input}
+                />
                 <TextInput
-                
                     placeholder="Password"
                     placeholderTextColor="gray"
                     value={userLogin.password ? (userLogin.password) : ""}
                     onChangeText={text => setUserLogin({username:userLogin.username, password:text})}
-                  />
+                    style={styles.input}
+                />
+
+                <Pressable style={styles.submit} onPress={() => handleSignIn({username: userLogin.username, password: userLogin.password})}>
+                    <Text>Login</Text>
+                </Pressable>
+
+                <View style={{flexGrow: 1}}></View>
+
+                <View style={styles.switchWrapper}>
+                    <Text>Don't have an account?</Text>
+                    {/* <Pressable onPress={() => setMode(modes.signup)}> */}
+                    <Pressable onPress={() => {}}>
+                        <Text style={styles.switchLink}>Sign Up</Text>
+                    </Pressable>
+                </View>
             </View>
-
-            <Pressable onPress={() => handleSignIn({username: userLogin.username, password: userLogin.password})}>
-                <Text>Login</Text>
-            </Pressable>
-            {/* <Pressable onPress={() => switchSignUp()}>
-                <Text>Sign Up</Text>
-            </Pressable> */}
-
-        </>
+        </View>
     ) : (
       <>
           <View>
@@ -225,5 +230,51 @@ export default function Auth() {
 }
 
 const styles = StyleSheet.create({
-
+    page: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    title: {
+        fontSize: 32,
+        fontWeight: 'bold',
+        color: 'paleturquoise',
+        marginBottom: 10,
+        fontFamily: 'sans-serif',
+    },
+    container: {
+        padding: 40,
+        borderWidth: 1,
+        borderRadius: 20,
+        borderColor: 'lightgray',
+        width: '80%',
+        height: '50%',
+        justifyContent: 'space-between',
+        backgroundColor: 'white',
+        rowGap: 10,
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: 'lightgray',
+        borderRadius: 20,
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+    },
+    submit: {
+        backgroundColor: 'paleturquoise',
+        padding: 10,
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'white',
+    },
+    switchWrapper: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        columnGap: 4,
+    },
+    switchLink: {
+        color: 'darkturquoise',
+    }
 })
