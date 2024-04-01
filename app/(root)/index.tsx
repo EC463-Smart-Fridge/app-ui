@@ -134,17 +134,23 @@ export default function Auth() {
     return (isLoading ? (
       <ActivityIndicator />
     ) : user.isLoggedIn ? (
-      <>
-          <Text>Current User</Text>
-          <Text>Username: {user.username}</Text>
-          <Text>Name: {user.name}</Text>
-          <Text>Email: {user.email}</Text>
-          <Text>User ID: {user.userId}</Text>
+      <View style={styles.page}>
+            <View style={styles.container}>
+                <Text style={styles.title}>Account Info</Text>
+                <Text style={styles.input}>Current User</Text>
+                <Text style={styles.input}>Username: {user.username}</Text>
+                <Text style={styles.input}>Name: {user.name}</Text>
+                <Text style={styles.input}>Email: {user.email}</Text>
+                <Text style={styles.input}>User ID: {user.userId}</Text>
 
-          <Pressable onPress={() => handleSignOut()}>
-              <Text>Sign Out</Text>
-          </Pressable>
-      </>
+                <Pressable 
+                    onPress={() => handleSignOut()}
+                    style={({pressed}) => [{backgroundColor: pressed ? 'darkturquoise' : 'paleturquoise', }, styles.submitWrapper,]}
+                >
+                    <Text style={styles.submit}>Sign Out</Text>
+                </Pressable>
+            </View>
+      </View>
       ) : mode == modes.login? (
         <View style={styles.page}>
             <View style={styles.container}>
@@ -157,6 +163,7 @@ export default function Auth() {
                     style={styles.input}
                 />
                 <TextInput
+                    secureTextEntry={true}
                     placeholder="Password"
                     placeholderTextColor="gray"
                     value={userLogin.password ? (userLogin.password) : ""}
@@ -164,7 +171,10 @@ export default function Auth() {
                     style={styles.input}
                 />
 
-                <Pressable style={styles.submit} onPress={() => handleSignIn({username: userLogin.username, password: userLogin.password})}>
+                <Pressable 
+                    style={({pressed}) => [{backgroundColor: pressed ? 'darkturquoise' : 'paleturquoise', }, styles.submitWrapper,]} 
+                    onPress={() => handleSignIn({username: userLogin.username, password: userLogin.password})}
+                >
                     <Text>Login</Text>
                 </Pressable>
 
@@ -173,7 +183,7 @@ export default function Auth() {
                 <View style={styles.switchWrapper}>
                     <Text>Don't have an account?</Text>
                     {/* <Pressable onPress={() => setMode(modes.signup)}> */}
-                    <Pressable onPress={() => {}}>
+                    <Pressable onPress={() => {} }>
                         <Text style={styles.switchLink}>Sign Up</Text>
                     </Pressable>
                 </View>
@@ -192,7 +202,6 @@ export default function Auth() {
           </View>
           <View>
               <TextInput
-              
                   placeholder="Name"
                   placeholderTextColor="gray"
                   value={userSignup.name ? (userSignup.name) : ""}
@@ -201,7 +210,6 @@ export default function Auth() {
           </View>
           <View>
               <TextInput
-              
                   placeholder="Username"
                   placeholderTextColor="gray"
                   value={userSignup.username ? (userSignup.username) : ""}
@@ -210,7 +218,6 @@ export default function Auth() {
           </View>
           <View>
               <TextInput
-              
                   placeholder="Password"
                   placeholderTextColor="gray"
                   value={userSignup.password ? (userSignup.password) : ""}
@@ -255,17 +262,18 @@ const styles = StyleSheet.create({
     },
     input: {
         borderWidth: 1,
-        borderColor: 'lightgray',
+        borderColor: 'whitesmoke',
         borderRadius: 20,
         paddingHorizontal: 10,
-        paddingVertical: 5,
+        paddingVertical: 8,
     },
-    submit: {
-        backgroundColor: 'paleturquoise',
+    submitWrapper: {
         padding: 10,
         borderRadius: 20,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    submit: {
         color: 'white',
     },
     switchWrapper: {
