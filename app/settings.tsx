@@ -235,99 +235,99 @@ export default function Settings() {
                     <Text>Email: {user.email}</Text>
                     <Text>User ID: {user.userId}</Text>
 
-                    <Pressable style={styles.loginBtn} onPress={() => handleSignOut()}>
+                    <Pressable onPress={() => handleSignOut()}>
                         <Text>Sign Out</Text>
                     </Pressable>
                 </>
             ) : ( 
                 <View>
                 {mode == 'login'? (
-                    <View style={styles.container}>
-                        <View style={styles.inputView}>
+                    <View>
+                        <View>
                             <TextInput
-                                style={styles.inputText}
+                            
                                 placeholder="Username"
-                                placeholderTextColor="003f5c"
+                                placeholderTextColor="gray"
                                 value={userLogin.username ? (userLogin.username) : ""}
                                 onChangeText={text => setUserLogin({username:text, password:userLogin.password})}/>
                         </View>
-                        <View style={styles.inputView}>
+                        <View>
                             <TextInput
-                                style={styles.inputText}
+                            
                                 placeholder="Password"
-                                placeholderTextColor="003f5c"
+                                placeholderTextColor="gray"
                                 value={userLogin.password ? (userLogin.password) : ""}
                                 onChangeText={text => setUserLogin({username:userLogin.username, password:text})}/>
                         </View>
 
                         <Pressable onPress={() => handleSignIn({username: userLogin.username, password: userLogin.password})}>
-                            <Text style={styles.loginBtn}>Login</Text>
+                            <Text>Login</Text>
                         </Pressable>
                         <Pressable onPress={() => switchSignUp()}>
-                            <Text style={styles.signupBtn}>Sign Up</Text>
+                            <Text>Sign Up</Text>
                         </Pressable>
 
                     </View>
                 ): (
                     <View>
-                        {mode == 'signup'? (<View style={styles.container}>
-                            <View style={styles.inputView}>
+                        {mode == 'signup'? (<View>
+                            <View>
                                 <TextInput
-                                    style={styles.inputText}
+                                
                                     placeholder="Email"
-                                    placeholderTextColor="003f5c"
+                                    placeholderTextColor="gray"
                                     value={userSignup.email ? (userSignup.email) : ""}
                                     onChangeText={text => setUserSignup({email:text, name:userSignup.name, username:userSignup.username, password:userSignup.password})}/>
                             </View>
-                            <View style={styles.inputView}>
+                            <View>
                                 <TextInput
-                                    style={styles.inputText}
+                                
                                     placeholder="Name"
-                                    placeholderTextColor="003f5c"
+                                    placeholderTextColor="gray"
                                     value={userSignup.name ? (userSignup.name) : ""}
                                     onChangeText={text => setUserSignup({email:userSignup.email, name:text, username:userSignup.username, password:userSignup.password})}/>
                             </View>
-                            <View style={styles.inputView}>
+                            <View>
                                 <TextInput
-                                    style={styles.inputText}
+                                
                                     placeholder="Username"
-                                    placeholderTextColor="003f5c"
+                                    placeholderTextColor="gray"
                                     value={userSignup.username ? (userSignup.username) : ""}
                                     onChangeText={text => setUserSignup({email:userSignup.email, name:userSignup.name, username:text, password:userSignup.password})}/>
                             </View>
-                            <View style={styles.inputView}>
+                            <View>
                                 <TextInput
-                                    style={styles.inputText}
+                                
                                     placeholder="Password"
-                                    placeholderTextColor="003f5c"
+                                    placeholderTextColor="gray"
                                     value={userSignup.password ? (userSignup.password) : ""}
                                     onChangeText={text => setUserSignup({email:userSignup.email, name:userSignup.name, username:userSignup.username, password:text})}/>
                             </View>
 
                             <Pressable onPress={() => handleSignUp({email:userSignup.email, name:userSignup.name, username: userSignup.username, password: userSignup.password})}>
-                                <Text style={styles.loginBtn}>Sign Up</Text>
+                                <Text>Sign Up</Text>
                             </Pressable>
                             <Pressable onPress={() => switchLogin()}>
-                                <Text style={styles.signupBtn}>Login</Text>
+                                <Text>Login</Text>
                             </Pressable>
                     </View>
                     ) : (
                         <View>
-                            <View style={styles.inputView}>
+                            <View>
                                 <TextInput
-                                    style={styles.inputText}
+                                
                                     keyboardType="numeric"
                                     placeholder="Verification Code: ######"
-                                    placeholderTextColor="003f5c"
+                                    placeholderTextColor="gray"
                                     value={verificationCode ? (verificationCode) : ""}
                                     onChangeText={text => setCode(text)}/>
                             </View>
 
                             <Pressable onPress={() => handleSignUpConfirmation({username: userSignup.username, confirmationCode: verificationCode})}>
-                                <Text style={styles.loginBtn}>Verify</Text>
+                                <Text>Verify</Text>
                             </Pressable>
                             <Pressable onPress={() => switchSignUp()}>
-                                <Text style={styles.signupBtn}>Cancel</Text>
+                                <Text>Cancel</Text>
                             </Pressable>
                         </View>
                     )}
@@ -341,54 +341,5 @@ export default function Settings() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'white',
-        alignItems: 'center',
-        borderRadius: 10,
-        justifyContent: 'center',
-        padding: 8,
-        marginTop: 5,
-        marginHorizontal: 10,
-        // flexShrink: 1
-    },
-    title: {
-        fontWeight: "bold",
-        fontSize: 50,
-        color: 'black',
-        marginBottom: 40,
-    },
-    inputView:{
-        width:"80%",
-        backgroundColor:"#3AB4BA",
-        borderRadius:25,
-        height:50,
-        marginBottom:20,
-        justifyContent:"center",
-        padding:20
-    },
-    inputText:{
-        height:50,
-        color:"white"
-    },
-    loginBtn:{
-        width:100,
-        backgroundColor:"#fb5b5a",
-        borderRadius:25,
-        height:50,
-        alignItems:"center",
-        justifyContent:"center",
-        marginTop:40,
-        marginBottom:10,
-    },
-    signupBtn:{
-        width:100,
-        backgroundColor:"#d3d3d3",
-        borderRadius:25,
-        height:50,
-        alignItems:"center",
-        justifyContent:"center",
-        marginTop:40,
-        marginBottom:10,
-    },
+
 })
