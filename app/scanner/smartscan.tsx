@@ -119,6 +119,7 @@ export default function SmartScanner() {
   }
 
   return (
+    user.isLoggedin ?
     <View style={styles.container}>
       <Camera style={styles.camera} ref={cameraRef} type={isFrontCamera ? CameraType.front : CameraType.back} />
       <View style={styles.buttonContainer}>
@@ -142,6 +143,9 @@ export default function SmartScanner() {
           />
         </View>
       </View>
+    </View> :
+    <View>
+      <Text>Not logged in</Text>
     </View>
   );
 }

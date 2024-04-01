@@ -1,6 +1,6 @@
-import { Slot, Tabs } from "expo-router";
+import { Tabs } from "expo-router";
 import { View } from "react-native";
-import { GraphQLClientProvider, UserProvider } from "../contexts/GraphQLClientContext";
+import { GraphQLClientProvider, UserProvider} from "../contexts/GraphQLClientContext";
 import { StatusBar } from "expo-status-bar";
 import { LinearGradient } from "expo-linear-gradient";
 import HomeIcon from "../assets/icons/HomeIcon";
@@ -18,7 +18,6 @@ const initState = {
   }
 
 export default function Layout() {
-
     return (
         <>
         {/* NATIVE TOP BAR */}
@@ -28,7 +27,6 @@ export default function Layout() {
         {/* <View style={{height: 24, width: "100%", backgroundColor: 'white'}}></View> */}
 
         {/* TEMP MOBILE TOP BAR */}
-        <View style={{height: 50, width: "100%", backgroundColor: 'white'}}></View>
         <GraphQLClientProvider>
             <UserProvider>
                 <Tabs
@@ -40,7 +38,6 @@ export default function Layout() {
                         headerShown: false,
                         tabBarLabelPosition: 'below-icon',
                         tabBarActiveTintColor: 'darkturquoise',
-                        
                     }}
                 >
                     <Tabs.Screen
