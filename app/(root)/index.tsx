@@ -258,7 +258,7 @@ export default function Auth() {
                 </View>
             </View>
         </View>
-    ) : (
+    ) : mode == modes.signup ? (
         // ELSE (mode == modes.signup)
         <View style={styles.page}>
             <View style={styles.container}>
@@ -310,6 +310,34 @@ export default function Auth() {
             </View>
         </View>
         </View>
+      ): (
+        <View style={styles.page}>
+            <View style={styles.container}>
+                <Text style={styles.title}>Fridge Buddy</Text>
+                <TextInput
+                    style={styles.input}
+                    keyboardType="numeric"
+                    placeholder="Verification Code"
+                    placeholderTextColor="lightgray"
+                    value={verificationCode ? (verificationCode) : ""}
+                    onChangeText={text => setCode(text)}
+                />
+                <View style={styles.verifyWrapper}>
+                    <Pressable 
+                        onPress={() => setMode(modes.signup)}
+                        style={({pressed}) => [{backgroundColor: pressed ? 'gray' : 'lightgray', flexGrow: 1,}, styles.submitWrapper,]}
+                    >
+                        <Text style={styles.submit}>Cancel</Text>
+                    </Pressable>
+                    <Pressable 
+                        onPress={() => handleSignUpConfirmation({username: userSignup.username, confirmationCode: verificationCode})}
+                        style={({pressed}) => [{backgroundColor: pressed ? 'darkturquoise' : 'paleturquoise', flexGrow: 1,}, styles.submitWrapper,]}
+                    >
+                        <Text style={styles.submit}>Confirm</Text>
+                    </Pressable>
+                </View>
+            </View>
+        </View>
       )
     )
 }
@@ -333,7 +361,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         borderColor: 'lightgray',
         width: '80%',
-        height: '50%',
+        height: 500,
         justifyContent: 'space-between',
         backgroundColor: 'white',
         rowGap: 10,
@@ -353,6 +381,19 @@ const styles = StyleSheet.create({
     },
     submit: {
         color: 'white',
+    },
+    verifyWrapper: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        columnGap: 20,
+        width: '100%',
+    },
+    confirm: {
+
+    },
+    cancel: {
+
     },
     switchWrapper: {
         flexDirection: 'row',
