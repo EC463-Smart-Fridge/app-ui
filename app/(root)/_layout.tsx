@@ -20,14 +20,9 @@ const initState = {
 
 
 export default function Layout() {
-    const user = useUser();
-    const [isLoggedIn, setIsLoggedIn] = useState();
-    useEffect(() => {
-        setIsLoggedIn(user.isLoggedIn);
-        console.log(user.isLoggedIn);
-    }, [user.isLoggedIn])
+    const { user } = useUser();
 
-    return (!isLoggedIn ?
+    return (user.isLoggedIn ?
         <>
             <Tabs
                 screenOptions={{
@@ -62,15 +57,14 @@ export default function Layout() {
                 />
             </Tabs>
         </> : 
-        // <Stack>
-        //     <Stack.Screen
-        //         name="auth"
-        //     ></Stack.Screen>
-        // </Stack>
-        <View>
-            <Text>
-                Test
-            </Text>
-        </View>
+        <Stack 
+            screenOptions={{
+                headerShown: false,
+            }}
+        >
+            <Stack.Screen
+                name="index"
+            ></Stack.Screen>
+        </Stack>
     )
 }
