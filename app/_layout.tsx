@@ -21,10 +21,10 @@ export default function Layout() {
     return (
         <>
         {/* NATIVE TOP BAR */}
-        <StatusBar style="light" />
+        {/* <StatusBar style="light" /> */}
 
         {/* TEMP TABLET TOP BAR */}
-        {/* <View style={{height: 24, width: "100%", backgroundColor: 'white'}}></View> */}
+        <View style={{height: 24, width: "100%", backgroundColor: 'white'}}></View>
 
         {/* TEMP MOBILE TOP BAR */}
         <GraphQLClientProvider>

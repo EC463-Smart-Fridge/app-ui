@@ -174,7 +174,7 @@ export default function Home() {
         // getCurrUser();
     }, [refreshes, items.length, user])
 
-    return (
+    return (user.isLoggedIn ?
         <>
             {/* Search Bar */}
             <View style={styles.search}>
@@ -196,38 +196,32 @@ export default function Home() {
                     }} />
                 }
             >
-                {loading ?
-                    <ActivityIndicator size="large" color="#0000ff" animating={loading} />
-                    :
                     <View>
-                        {user.isLoggedIn? (
-                            <>
-                            {items.filter((item, i) => search == '' || item.name?.toLowerCase().includes(search.toLowerCase())).map((item, i) => (
-                                <View key={i}>
-                                    <ItemWidget 
-                                        __typename="Item"
-                                        name={item.name} 
-                                        exp_date={item.exp_date} 
-                                        category={item.category}
-                                        calories={item.calories}
-                                        quantity={item.quantity}
-                                        deleteHandler ={() => deleteItemHandler(i)} 
-                                        editHandler = {(edits) => editItemHandler(i, edits)}
-                                    />
-                                </View>
-                                ))}
-        
-                                {
-                                    search == '' && <NewItemWidget handler={addItemHandler}/>
-                                }
-                            </>
-                        ) : (
-                            <Redirect href="/" />
-                        )}
+                        <>
+                        {items.filter((item, i) => search == '' || item.name?.toLowerCase().includes(search.toLowerCase())).map((item, i) => (
+                            <View key={i}>
+                                <ItemWidget 
+                                    __typename="Item"
+                                    name={item.name} 
+                                    exp_date={item.exp_date} 
+                                    category={item.category}
+                                    calories={item.calories}
+                                    quantity={item.quantity}
+                                    deleteHandler ={() => deleteItemHandler(i)} 
+                                    editHandler = {(edits) => editItemHandler(i, edits)}
+                                />
+                            </View>
+                            ))}
+    
+                            {
+                                search == '' && <NewItemWidget handler={addItemHandler}/>
+                            }
+                        </>
                     </View>
-                }
             </ScrollView>
         </>
+        :
+        <Redirect href="/" />
     )
 }
 
