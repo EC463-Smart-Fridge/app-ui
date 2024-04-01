@@ -112,7 +112,7 @@ export default function SmartScan() {
   };
 
   if (hasPermission === null) {
-    return <View />;
+    return <View />
   }
   if (hasPermission === false) {
     return <Text>No access to camera</Text>;
@@ -123,16 +123,16 @@ export default function SmartScan() {
       <Camera style={styles.camera} ref={cameraRef} type={isFrontCamera ? CameraType.front : CameraType.back} />
       <View style={styles.buttonContainer}>
         <View style={styles.leftButtons}>
-          <Pressable onPress={() => setIsFrontCamera(!isFrontCamera)} style={styles.swap}><SwapIcon /></Pressable>
+          <Pressable onPress={() => setIsFrontCamera(!isFrontCamera)} style={styles.swap}><SwapIcon fill={"darkturquoise"}/></Pressable>
           {/* <Pressable onPress={() => setIsFrontCamera(!isFrontCamera)} style={styles.swap}><SwapIcon /></Pressable> */}
         </View>
         
         <View style={styles.captureContainer}>
-          <Pressable onPress={handleCapture} style={styles.capture}><Text>Capture</Text></Pressable>
+          <Pressable onPress={handleCapture} style={({pressed}) => [{backgroundColor: pressed ? 'darkturquoise' : 'whitesmoke', },styles.capture]}></Pressable>
         </View>
 
         <View style={styles.toggle}>
-          <Text>Produce</Text>
+          <Text style={styles.produce}>Produce</Text>
           <Switch
             trackColor={{false: 'darkgray', true: 'darkturquoise'}}
             thumbColor='white'
@@ -165,13 +165,17 @@ const styles = StyleSheet.create({
     columnGap: 8,
   },
   toggle: {
-    backgroundColor: 'lightgray',
-    padding: 10,
+    borderColor: 'lightgray',
+    borderWidth: 2,
+    padding: 8,
     height: 40,
     borderRadius: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  produce: {
+    color: 'darkturquoise',
   },
   captureContainer: {
     position: 'absolute',
@@ -190,16 +194,19 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   swap: {
+    borderColor: 'lightgray',
+    borderWidth: 2,
     height: 40,
     aspectRatio: 1,
-    backgroundColor: 'lightgray',
     borderRadius: 20,
     padding: 4,
   },
   capture: {
-    backgroundColor: 'darkturquoise',
+    borderWidth: 4,
+    borderColor: 'darkturquoise',
     padding: 10,
     borderRadius: 20,
     height: 40,
+    aspectRatio: 1,
   }
 });

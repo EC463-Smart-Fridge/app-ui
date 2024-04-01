@@ -47,7 +47,7 @@ export default function Auth() {
             console.log(isSignedIn);
             console.log(nextStep);
             await getCurrUser();
-            router.replace('/home');
+            router.push('/home');
             // Handle signing in the user and storing the userID
         }
         catch (error) {
