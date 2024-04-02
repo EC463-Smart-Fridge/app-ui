@@ -17,7 +17,13 @@ type SignUpParameters = {
 enum modes {
   login,
   signup,
-  verification
+  verification,
+}
+
+enum errors {
+    alreadyexists,
+    incorrectlogin,
+    incorrectcode,
 }
 
 export default function Auth() {
