@@ -13,6 +13,7 @@ export const getUserItems = /* GraphQL */ `
       img_url
       exp_date
       quantity
+      prod_name
     }
   }
 `;
@@ -54,6 +55,7 @@ export const getItem = /* GraphQL */ `
       img_url
       exp_date
       quantity
+      prod_name
       id
       createdAt
       updatedAt
@@ -81,6 +83,7 @@ export const listItems = /* GraphQL */ `
         img_url
         exp_date
         quantity
+        prod_name
         id
         createdAt
         updatedAt
@@ -118,6 +121,7 @@ export const syncItems = /* GraphQL */ `
         img_url
         exp_date
         quantity
+        prod_name
         id
         createdAt
         updatedAt
