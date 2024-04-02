@@ -9,9 +9,13 @@ export default function Recipes() {
     const client = useGraphQLClient();
     const {user, setUser} = useUser();
     const [search, setSearch] = useState('');
+    const [readRecipe, setRead] = useState(0);
 
     const func = () => {
         console.log(user);
+    }
+    const selectRecipe = (i: number) => {
+        setRead(i + 1);
     }
 
     return (user.isLoggedIn ?
@@ -36,19 +40,51 @@ export default function Recipes() {
                     <View>
                         <>
                         {user.recipes.map((recipe, i) => (
-                            <View key={i}>
-                                <Text>{recipe.name}</Text>
-                                <Text>{recipe.img}</Text>
-                                <Text>{recipe.calories}</Text>
-                                {/* THINGS TO ADD:
-                                    Styling
-                                    Pressable => Only shows recipe name / img / Calorie count at first, Press = displays steps and ingredients
-                                    Can't display ingredients atm, they are stored as array of {ingredient: string, amt: string} 
-                                */}
-                                {/* {recipe.ingredients && recipe.ingredients.map((ingredient, index) => (
-                                    <Text key={index}>{ingredient}</Text>
-                                ))} */}
-                                <Text>{recipe.steps}</Text>
+                            <View key={i} >
+                                <Pressable style={styles.recipe_container}
+                                    onPress={() => selectRecipe(i)}>
+                                    <Text>{recipe.name}</Text>
+                                    <Text>{recipe.img}</Text>
+                                    <Text>{recipe.calories}</Text>
+                                    {/* THINGS TO ADD:
+                                        Styling
+                                        Pressable => Only shows recipe name / img / Calorie count at first, Press = displays steps and ingredients
+                                        Can't display ingredients atm, they are stored as array of {ingredient: string, amt: string} 
+                                    */}
+                                    
+                                </Pressable>
+                                {readRecipe === (i + 1)? (
+                                    <>
+                                        {recipe.ingredients.length !== 0? (
+                                            <>
+                                                <Text>Recipe Ingredients</Text>
+                                                {recipe.ingredients.map((ingredient, id1) => (
+                                                    <Text key={id1}>
+                                                        {ingredient.name}: {ingredient.amt}
+                                                    </Text>
+                                                ))}
+                                            </>
+                                        ):(
+                                            <Text>No Ingredients Found</Text>
+                                        )}
+                                
+                                        {recipe.steps.length !== 0? (
+                                            <>
+                                                <Text>Recipe Steps</Text>
+                                                {recipe.steps.map((step, id2) => (
+                                                    <Text key={id2}>
+                                                        {id2 + 1}: {step}
+                                                    </Text>
+                                                ))}
+                                            </>
+                                        ):(
+                                            <Text>No Recipe Steps Found</Text>
+                                        )}
+
+                                    </>
+                                ):(
+                                    <></>
+                                )}
                             </View>
                             ))}
 
@@ -60,33 +96,6 @@ export default function Recipes() {
         </>
         :
         <Redirect href="/" />
-    )
-
-
-    const getUserRecipes = async() => {
-        try {
-            const result = await client.graphql({
-                query: getRecipes,
-                variables: {
-                    input: {
-                        ingredients: ["eggs", "FAIRLIFE milk" , "sargento string cheese"]
-                    }
-                },
-            })
-            console.log(result)
-        } catch (error) {
-            console.log('error on fetching recipes', error);
-        } 
-    }
-    
-    return (
-        user.isLoggedIn ? (
-            <View>
-                <Text>Recipes</Text>
-            </View>
-        ) : (
-            <Redirect href="/" />
-        )
     )
 }
 
@@ -112,6 +121,18 @@ const styles = StyleSheet.create({
 
     },
     cancelSelectBtn:{},
-    recipeBtn:{}
+    recipeBtn:{},
+    recipe_container: {
+        flex: 1,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 8,
+        marginTop: 5,
+        marginHorizontal: 10,
+        elevation: 2,
+    },
 
 });
