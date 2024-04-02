@@ -262,12 +262,12 @@ export default function Auth() {
       <View style={styles.page}>
             <View style={styles.container}>
                 <Text style={styles.title}>Account Info</Text>
-                <Text style={styles.input}>Current User</Text>
+                {/* <Text style={styles.input}>Current User</Text> */}
                 <Text style={styles.input}>Username: {user.username}</Text>
                 <Text style={styles.input}>Name: {user.name}</Text>
                 <Text style={styles.input}>Email: {user.email}</Text>
                 <Text style={styles.input}>User ID: {user.userId}</Text>
-
+                <View style={{flexGrow: 1}}></View>
                 <Pressable 
                     onPress={() => handleSignOut()}
                     style={({pressed}) => [{backgroundColor: pressed ? 'darkturquoise' : 'paleturquoise', }, styles.submitWrapper,]}
@@ -375,10 +375,11 @@ export default function Auth() {
         </View>
 
       ): (
-
+        // VERFICATION MODE
         <View style={styles.page}>
             <View style={styles.container}>
                 <Text style={styles.title}>Fridge Buddy</Text>
+                <Text style={{color: 'gray'}}>A verification code has been sent to your email. Please enter the code below to complete the process.</Text>
                 <TextInput
                     style={styles.input}
                     keyboardType="numeric"
