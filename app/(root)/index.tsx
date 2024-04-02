@@ -136,17 +136,14 @@ export default function Auth() {
                             pk: userId,
                             username: username,
                             email: email,
-                            name2: name
+                            name: name
                         }
                     },
                 })
                 console.log('Item added successfully', addResult);
             } catch (error) {
-                console.error('Error adding item', error);
+                console.error('Error adding user', error);
             }
-            
-            // Handle signing in the user
-            handleSignIn({username, password});
         }
         catch (error) {
             console.log("Error Signing up:", error);
