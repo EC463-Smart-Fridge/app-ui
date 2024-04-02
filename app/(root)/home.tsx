@@ -14,22 +14,27 @@ import { TextInput } from "react-native";
 import { getCurrentUser } from "aws-amplify/auth";
 import { Redirect } from "expo-router";
 
+interface fridgeItem {
+    item: Item,
+    checked: boolean
+}
 
 export default function Home() {
     const client = useGraphQLClient();
     const {user, setUser} = useUser();
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
+    const [selectState, setSelectState] = useState(false);
     // const [editedItems, setEditedItems] = useState({});
     const [refreshes, setRefreshes] = useState(0);
 
-    const [items, setItems] = useState<Item[]>([]);
+    const [items, setItems] = useState<fridgeItem[]>([]);
 
     // Remove item handler that removes item from both memory and from DynamoDB
     const deleteItemHandler = async (index: number) => {
         const itemToRemove = items[index];
         if (!itemToRemove) return;
-        if (!itemToRemove.pk || !itemToRemove.sk) {
+        if (!itemToRemove.item.pk || !itemToRemove.item.sk) {
             console.log('Error: No Primary or secondary key');
             return;
         }
@@ -39,8 +44,8 @@ export default function Home() {
                 query: removeItem,
                 variables: {
                     input: {
-                        pk: itemToRemove.pk,
-                        sk: itemToRemove.sk,
+                        pk: itemToRemove.item.pk,
+                        sk: itemToRemove.item.sk,
                     }
                 },
             });
@@ -54,7 +59,8 @@ export default function Home() {
     };
 
     const addItemHandler = async (item: Item) => {
-        setItems([...items, item]);
+
+        setItems([...items, {item: item, checked: false}]);
         if (user.isLoggedIn) {
             try {
                 // Run deleteItem GraphQL mutation
@@ -96,21 +102,21 @@ export default function Home() {
     const editItemHandler = async (index: number, edits: {name?: string, category?: string, exp_date?: number, quantity?: number, calories?: string}) => {
         const itemToEdit = items[index];
         if (!itemToEdit) return;
-        if (!itemToEdit.pk || !itemToEdit.sk) {
+        if (!itemToEdit.item.pk || !itemToEdit.item.sk) {
             console.log('Error: No Primary or secondary key');
             return;
         }
 
         // If none of the values were changed, do nothing
-        if (edits == undefined || (edits.name == itemToEdit.name && edits.exp_date == itemToEdit.exp_date && edits.quantity == itemToEdit.quantity)) {
+        if (edits == undefined || (edits.name == itemToEdit.item.name && edits.exp_date == itemToEdit.item.exp_date && edits.quantity == itemToEdit.item.quantity)) {
             console.log("No changes found, exiting.");
             return;
         }
 
         // Start appending to the input values
         let input_values : EditItemInput = {
-            pk: items[Number(index)].pk,
-            sk: items[Number(index)].sk,
+            pk: items[Number(index)].item.pk,
+            sk: items[Number(index)].item.sk,
             ...edits
         };
 
@@ -136,6 +142,52 @@ export default function Home() {
             console.error('Error editing item', error);
         }
     };
+
+    // Handler for select 
+    const selectItemHandler = async (index: number, check: boolean) => {
+        if (selectState) {
+            try {
+                let curItems = [...items]
+                curItems[index].checked = !check;
+                setItems(curItems);
+            } catch (error) {
+                console.error('Error selecting item', error);
+            }
+        }
+    }
+
+    // Handler for select all
+    const selectAllHandler = async() => {
+        if (selectState) {
+            try {
+                if (!items[0].checked) {
+                    const selectedItems = items.map(item => ({ ...item, checked: true}));
+                    setItems(selectedItems);
+                }
+                else {
+                    const selectedItems = items.map(item => ({ ...item, checked: false}));
+                    setItems(selectedItems);
+                }
+            }
+            catch (error) {
+                console.log("Error selecting all items", error);
+            }
+        }
+    }
+
+    // Handler for deselect all
+    const deselectAllHandler = async() => {
+        if (selectState) {
+            try {
+                const deselectedItems = items.map(item => ({ ...item, checked: false}));
+                setItems(deselectedItems);
+            }
+            catch (error) {
+                console.log("Error deselecting all items", error);
+            }
+        }
+    }
+
     useEffect(() => {
         const test = async () => {
             try {
@@ -149,16 +201,20 @@ export default function Home() {
                     })
                     // await new Promise(resolve => setTimeout(resolve, 3000));
                     if (result.data && result.data.getUserItems) {
-                        const items: Item[] = result.data.getUserItems
-                            .filter((item: Item) => item.name != null)
-                            .map((item: Item, i: number) => ({
-                                pk: item.pk,
-                                sk: item.sk,
-                                name: item.name,
-                                exp_date: item.exp_date,
-                                category: item.category,
-                                calories: item.calories,
-                                quantity: item.quantity,
+                        const items: fridgeItem[] = result.data.getUserItems
+                            .filter((cur_item: Item) => cur_item.name != null)
+                            .map((cur_item: Item, i: number) => ({
+                                item: {
+                                    pk: cur_item.pk,
+                                    sk: cur_item.sk,
+                                    name: cur_item.name,
+                                    exp_date: cur_item.exp_date,
+                                    category: cur_item.category,
+                                    calories: cur_item.calories,
+                                    quantity: cur_item.quantity,
+                                    prod_name: cur_item.prod_name
+                                },
+                                checked: false,
                                 handler: () => deleteItemHandler(i)
                             }));
                         setItems(items);
@@ -174,6 +230,15 @@ export default function Home() {
         // getCurrUser();
     }, [refreshes, items.length, user])
 
+    const toggleSelect = () => {
+        if (selectState) {
+            setSelectState(false);
+            deselectAllHandler();
+        }
+        else {
+            setSelectState(true);
+        }
+    }
     return (user.isLoggedIn ?
         <>
             {/* Search Bar */}
@@ -184,6 +249,22 @@ export default function Home() {
                     value={search}
                     onChangeText={setSearch}
                 />
+                {selectState? (
+                    <>
+                        <Pressable style={styles.selectBtn} onPress={toggleSelect}>
+                            <Text>Cancel</Text>
+                        </Pressable>
+
+                        <Pressable style={styles.selectBtn} onPress={selectAllHandler}>
+                            <Text>Select All</Text>
+                        </Pressable>
+                    </>
+                ) : (
+                    <Pressable style={styles.cancelSelectBtn} onPress={toggleSelect}>
+                        <Text>Select</Text>
+                    </Pressable>
+                )}
+                
             </View>
             <ScrollView 
                 style={styles.container}
@@ -198,23 +279,26 @@ export default function Home() {
             >
                     <View>
                         <>
-                        {items.filter((item, i) => search == '' || item.name?.toLowerCase().includes(search.toLowerCase())).map((item, i) => (
+                        {items.filter((item, i) => search == '' || item.item.name?.toLowerCase().includes(search.toLowerCase())).map((item, i) => (
                             <View key={i}>
                                 <ItemWidget 
                                     __typename="Item"
-                                    name={item.name} 
-                                    exp_date={item.exp_date} 
-                                    category={item.category}
-                                    calories={item.calories}
-                                    quantity={item.quantity}
+                                    name={item.item.name} 
+                                    exp_date={item.item.exp_date} 
+                                    category={item.item.category}
+                                    calories={item.item.calories}
+                                    quantity={item.item.quantity}
+                                    checked={item.checked}
+                                    selectMode={selectState}
                                     deleteHandler ={() => deleteItemHandler(i)} 
                                     editHandler = {(edits) => editItemHandler(i, edits)}
+                                    selectHandler = {() => selectItemHandler(i, item.checked)}
                                 />
                             </View>
                             ))}
     
                             {
-                                search == '' && <NewItemWidget handler={addItemHandler}/>
+                                search == '' && !selectState && <NewItemWidget handler={addItemHandler}/>
                             }
                         </>
                     </View>
@@ -242,5 +326,10 @@ const styles = StyleSheet.create({
         padding: 10,
         paddingLeft: 20,
         borderRadius: 25,
-    }
+    },
+    selectBtn: {
+
+    },
+    cancelSelectBtn:{},
+
 });
