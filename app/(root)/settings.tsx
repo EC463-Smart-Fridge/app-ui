@@ -21,7 +21,7 @@ export default function Settings() {
 
                 <Pressable 
                     onPress={() => router.push("/")}
-                    style={({pressed}) => [{backgroundColor: pressed ? 'lightgray' : 'whitesmoke' }, styles.settingWrapper,]}
+                    style={({pressed}) => [{backgroundColor: pressed ? 'lightgray' : 'transparent' }, styles.settingWrapper,]}
                 >
                     <Text>Account Info</Text>
                     <View style={styles.icon}><RightIcon fill="black"/></View>
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         padding: 8,
-        borderRadius: 4,
+        borderRadius: 8,
     },
     icon: {
         width: 24,
