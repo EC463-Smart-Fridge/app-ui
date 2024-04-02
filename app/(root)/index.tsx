@@ -318,7 +318,7 @@ export default function Auth() {
                     style={styles.input}
                     keyboardType="numeric"
                     placeholder="Verification Code"
-                    placeholderTextColor="lightgray"
+                    placeholderTextColor="gray"
                     value={verificationCode ? (verificationCode) : ""}
                     onChangeText={text => setCode(text)}
                 />
@@ -372,6 +372,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         paddingHorizontal: 10,
         paddingVertical: 8,
+        color: "gray",
     },
     submitWrapper: {
         padding: 10,
