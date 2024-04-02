@@ -20,11 +20,18 @@ enum modes {
   verification,
 }
 
-enum errors {
-    alreadyexists,
-    incorrectlogin,
-    incorrectcode,
-}
+// const errors = {
+//     'UsernameExistsException: User already exists': 'User already exists.',
+//     'Incorrect username or password.': 'Incorrect username or password.',
+//     'Invalid verification code provided, please try again.': 'Invalid verification code provided, please try again.',
+//     // PASSWORD RESTRICTIONS
+//     'Password did not conform with policy: Password not long enough': 'Password needs to be at least 8 characters long.',
+//     'Password did not conform with policy: Password must have uppercase characters': 'Password must have at least one uppercase character.',
+//     'Password did not conform with policy: Password must have lowercase characters': 'Password must have at least one lowercase character.',
+//     'Password did not conform with policy: Password must have numeric characters': 'Password must have at least one number character.',
+//     'Password did not conform with policy: Password must have symbol characters': 'Password must have at least one symbol character.',
+//     // GENERIC AUTH ERRORS
+// }
 
 export default function Auth() {
     const client = useGraphQLClient();
@@ -44,9 +51,11 @@ export default function Auth() {
     });
     const [verificationCode, setCode] = useState('');
     
+    const [error, setError] = useState('');
     // Handler for user sign-in
     const handleSignIn = async({username, password}: SignInInput) => {
-      console.log("logging in")
+        setError('');
+        console.log("logging in")
         try {
             setIsLoading(true);
             const { isSignedIn, nextStep } = await signIn({username, password});
@@ -54,10 +63,17 @@ export default function Auth() {
             console.log(nextStep);
             await getCurrUser();
             router.push('/home');
+            setError('');
             // Handle signing in the user and storing the userID
         }
-        catch (error) {
-            console.log("Error signing in", error);
+        catch (error: any) {
+            console.error('Error signing in', error.message);
+            console.log(error.message);
+            if (error.message ==='Incorrect username or password.') {
+                setError('Incorrect username or password.');
+            } else {
+                setError('An unknown error occurred in signing in.');
+            }
         } finally {
           setIsLoading(false);
           
@@ -65,6 +81,7 @@ export default function Auth() {
     }
 
     const getCurrUser = async() => {
+        setError('')
         if (!user.isLoggedIn) {
           setIsLoading(true);
             try {
@@ -88,14 +105,14 @@ export default function Auth() {
                     else {
                         console.log('ERROR: User does not exist');
                     }
-                } catch (error) {
-                    console.log('error on fetching user', error);
+                } catch (error: any) {
+                    console.log(error.message);
                 } 
                 console.log(`Details: ${signInDetails}`);
                 console.log(user)
             }
-            catch (error) {
-                console.log("Failed to get current user:", error);
+            catch (error: any) {
+                console.log(error.message);
                 if (user.isLoggedIn) {
                     setUser({
                         isLoggedIn: false,
@@ -117,7 +134,24 @@ export default function Auth() {
 
     // Handler for signing up users
     const handleSignUp = async({username, password, email, name}: SignUpParameters) => {
+        setError('');
         try {
+            if (username === '') {
+                setError('Username required.');
+                return;
+            }
+            if (email.length < 3 || !email.includes('@') || !email.includes('.')) {
+                setError('Email required.');
+                return;
+            }
+            if (name === '') {
+                setError('Name required.');
+                return;
+            }
+            if (password === '') {
+                setError('Password required.');
+                return;
+            }
             const { isSignUpComplete, userId, nextStep } = await signUp({
                 username,
                 password,
@@ -133,7 +167,7 @@ export default function Auth() {
             console.log(nextStep);
             
             // Handle creating a user in GraphQL here
-            try {
+
                 // Run deleteItem GraphQL mutation
                 const addResult = await client.graphql({
                     query: addUser,
@@ -147,13 +181,22 @@ export default function Auth() {
                     },
                 })
                 console.log('Item added successfully', addResult);
-            } catch (error) {
-                console.error('Error adding user', error);
+                setError('');
+            } catch (error: any) {
+                console.error("Error adding user", error.message);
+                console.error(error.message);
+                if (error.message === 'User already exists') {
+                    setError('User already exists.');
+                } else if (error.message.includes('password') || error.message.includes('Password')) {
+                    setError('Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one symbol.');
+                } else if (error.message.includes('username') || error.message.includes('Username')) {
+                    setError('Username required.');
+                } else if (error.message.includes('email') || error.message.includes('Email')) {
+                    setError('Invalid email.');
+                } else if (error.message.includes('name') || error.message.includes('Name')) {
+                    setError('Name required.');
+                }
             }
-        }
-        catch (error) {
-            console.log("Error Signing up:", error);
-        }
     };
 
     // Function for handling user confirmation after signing up
@@ -173,14 +216,21 @@ export default function Auth() {
                 username: '',
                 password: '',
             });
+            setError('');
         }
-        catch (error) {
-            console.log('Error confirming sign up', error);
+        catch (error: any) {
+            console.log(error.message);
+            if (error.message === 'Invalid verification code provided, please try again.') {
+                setError('Invalid verification code provided, please try again.');
+            } else {
+                setError('An unknown error occurred in confirming signup.');
         }
     }
+}
 
     // Handler for signing current user out (invalidate all authentication tokens)
     const handleSignOut = async() => {
+        setError('')
         console.log("signing out")
         try {
 
@@ -192,9 +242,11 @@ export default function Auth() {
                 email: '',
                 name: ''
             });
+            setError('');
         }
-        catch (error) {
-            console.log("Error signing user out", error);
+        catch (error: any) {
+            console.log(error.message);
+            setError('An unknown error occurred in signing out.');
         }
     }    
     // useEffect(() => {
@@ -206,6 +258,7 @@ export default function Auth() {
       <ActivityIndicator />
     ) : user.isLoggedIn ? (
         // ACCOUNT INFO
+
       <View style={styles.page}>
             <View style={styles.container}>
                 <Text style={styles.title}>Account Info</Text>
@@ -222,9 +275,12 @@ export default function Auth() {
                     <Text style={styles.submit}>Sign Out</Text>
                 </Pressable>
             </View>
+        <Text style={styles.error}>{error}</Text>
+
       </View>
       ) : mode == modes.login? (
         // IF (mode == modes.login)
+
         <View style={styles.page}>
             <View style={styles.container}>
                 <Text style={styles.title}>Fridge Buddy</Text>
@@ -255,14 +311,17 @@ export default function Auth() {
 
                 <View style={styles.switchWrapper}>
                     <Text>Don't have an account?</Text>
-                    <Pressable onPress={() => setMode(modes.signup)}>
+                    <Pressable onPress={() => {setMode(modes.signup); setError('');}}>
                         <Text style={styles.switchLink}>Sign Up</Text>
                     </Pressable>
                 </View>
             </View>
+        <Text style={styles.error}>{error}</Text>
         </View>
+
     ) : mode == modes.signup ? (
         // ELSE (mode == modes.signup)
+
         <View style={styles.page}>
             <View style={styles.container}>
             <Text style={styles.title}>Fridge Buddy</Text>
@@ -307,13 +366,16 @@ export default function Auth() {
             </Pressable>
           <View style={styles.switchWrapper}>
                 <Text>Already have an account?</Text>
-                <Pressable onPress={() => setMode(modes.login)}>
+                <Pressable onPress={() => {setMode(modes.login); setError('')}}>
                     <Text style={styles.switchLink}>Login</Text>
                 </Pressable>
             </View>
+            </View>
+        <Text style={styles.error}>{error}</Text>
         </View>
-        </View>
+
       ): (
+
         <View style={styles.page}>
             <View style={styles.container}>
                 <Text style={styles.title}>Fridge Buddy</Text>
@@ -340,7 +402,9 @@ export default function Auth() {
                     </Pressable>
                 </View>
             </View>
+            <Text style={styles.error}>{error}</Text>
         </View>
+
       )
     )
 }
@@ -350,6 +414,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        height: '100%',
     },
     title: {
         fontSize: 32,
@@ -363,15 +428,15 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 20,
         borderColor: 'lightgray',
-        width: '80%',
-        height: 500,
+        width: 400,
+        height: 450,
         justifyContent: 'space-between',
         backgroundColor: 'white',
         rowGap: 10,
     },
     input: {
         borderWidth: 1,
-        borderColor: 'whitesmoke',
+        borderColor: 'lightgray',
         borderRadius: 20,
         paddingHorizontal: 10,
         paddingVertical: 8,
@@ -392,6 +457,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         columnGap: 20,
         width: '100%',
+    },
+    error : {
+        color: 'red',
+        fontSize: 12,
+        textAlign: 'center',
+        justifyContent: 'flex-start',
+        height: 0,
+        width: 400,
+        marginTop: 8,
     },
     confirm: {
 
