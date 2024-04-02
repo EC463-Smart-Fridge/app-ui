@@ -37,11 +37,15 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     link: {
-        padding: 10,
-        margin: 10,
-        borderRadius: 5,
+        padding: 8,
+        margin: 12,
+        borderRadius: 20,
+        justifyContent: "center",
+        alignItems: "center",
+        color: "gray"
     },
     active: {
-        backgroundColor: "darkturquoise",
+        color: "white",
+        backgroundColor: "darkturquoise"
     }
 });
