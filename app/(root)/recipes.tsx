@@ -1,4 +1,4 @@
-import { View, Pressable, Text, TextInput, StyleSheet, ScrollView } from "react-native";
+import { View, Pressable, Text, TextInput, StyleSheet, ScrollView, Image } from "react-native";
 import { useGraphQLClient, useUser } from "../../contexts/GraphQLClientContext";
 import { getRecipes } from "../../src/graphql/queries";
 import { Redirect } from "expo-router";
@@ -33,7 +33,10 @@ export default function Recipes() {
             </Pressable>
 
             {(user.recipes === undefined || user.recipes.length == 0)? (
+                <>
                 <Text>No Recipes</Text>
+                </>
+
             ):(
                 <ScrollView 
                     style={styles.container}>
@@ -43,8 +46,8 @@ export default function Recipes() {
                             <View key={i} >
                                 <Pressable style={styles.recipe_container}
                                     onPress={() => selectRecipe(i)}>
+                                    <Image source={{ uri: recipe.img}} style={styles.recipe_img}/>
                                     <Text>{recipe.name}</Text>
-                                    <Text>{recipe.img}</Text>
                                     <Text>{recipe.calories}</Text>
                                     {/* THINGS TO ADD:
                                         Styling
@@ -54,7 +57,7 @@ export default function Recipes() {
                                     
                                 </Pressable>
                                 {readRecipe === (i + 1)? (
-                                    <>
+                                    <View style={styles.recipe_info_container}>
                                         {recipe.ingredients.length !== 0? (
                                             <>
                                                 <Text>Recipe Ingredients</Text>
@@ -81,7 +84,7 @@ export default function Recipes() {
                                             <Text>No Recipe Steps Found</Text>
                                         )}
 
-                                    </>
+                                    </View>
                                 ):(
                                     <></>
                                 )}
@@ -134,5 +137,13 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         elevation: 2,
     },
+    recipe_info_container:{
+
+    },
+    recipe_img:{
+        height: 75,
+        width: 75,
+        backgroundColor: 'black'
+    }
 
 });
