@@ -23,6 +23,7 @@ export const addItemByUPC = /* GraphQL */ `
       exp_date
       quantity
       prod_name
+      __typename
     }
   }
 `;
@@ -51,6 +52,7 @@ export const addUser = /* GraphQL */ `
       username
       email
       name2
+      __typename
     }
   }
 `;
@@ -70,12 +72,6 @@ export const createItem = /* GraphQL */ `
       exp_date
       quantity
       prod_name
-      id
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
   }
@@ -96,12 +92,6 @@ export const updateItem = /* GraphQL */ `
       exp_date
       quantity
       prod_name
-      id
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
   }
@@ -122,12 +112,6 @@ export const deleteItem = /* GraphQL */ `
       exp_date
       quantity
       prod_name
-      id
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
   }
@@ -142,12 +126,6 @@ export const createUser = /* GraphQL */ `
       username
       email
       name2
-      id
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
   }
@@ -162,12 +140,6 @@ export const updateUser = /* GraphQL */ `
       username
       email
       name2
-      id
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
   }
@@ -182,12 +154,6 @@ export const deleteUser = /* GraphQL */ `
       username
       email
       name2
-      id
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
   }

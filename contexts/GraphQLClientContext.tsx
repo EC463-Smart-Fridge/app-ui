@@ -3,6 +3,7 @@ import { generateClient } from 'aws-amplify/api';
 import awsmobile from '../src/aws-exports';
 import { Amplify } from 'aws-amplify';
 import { useState } from 'react';
+import { ingredient, Recipe } from '../src/models';
 
 Amplify.configure(awsmobile);
 
@@ -27,6 +28,7 @@ type userType = {
   username: string,
   email: string,
   name: string,
+  recipes: Recipe[]
 }
 
 const initState: userType = {
@@ -34,7 +36,8 @@ const initState: userType = {
   userId: '',
   username: '',
   email: '',
-  name: ''
+  name: '',
+  recipes: []
 }
 
 

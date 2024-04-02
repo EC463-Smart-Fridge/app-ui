@@ -41,12 +41,6 @@ export const onCreateItem = /* GraphQL */ `
       exp_date
       quantity
       prod_name
-      id
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
   }
@@ -64,12 +58,6 @@ export const onUpdateItem = /* GraphQL */ `
       exp_date
       quantity
       prod_name
-      id
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
   }
@@ -87,12 +75,6 @@ export const onDeleteItem = /* GraphQL */ `
       exp_date
       quantity
       prod_name
-      id
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
   }
@@ -104,12 +86,6 @@ export const onCreateUser = /* GraphQL */ `
       username
       email
       name2
-      id
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
   }
@@ -121,12 +97,6 @@ export const onUpdateUser = /* GraphQL */ `
       username
       email
       name2
-      id
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
   }
@@ -138,12 +108,6 @@ export const onDeleteUser = /* GraphQL */ `
       username
       email
       name2
-      id
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
   }

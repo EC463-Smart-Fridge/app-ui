@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { ScrollView, StatusBar, View, ActivityIndicator, RefreshControl, StyleSheet, Pressable, Text } from "react-native";
-import { getUserItems, getFridgeUser } from "../../src/graphql/queries";
+import { getUserItems, getRecipes } from "../../src/graphql/queries";
 import { removeItem, addItem, editItem } from "../../src/graphql/mutations";
 
 import { DataStore } from '@aws-amplify/datastore';
 
 import { useGraphQLClient, useUser } from "../../contexts/GraphQLClientContext";
-import { Item } from '../../src/API';
+import { Item, Recipe, ingredient } from '../../src/API';
 
 import ItemWidget from "../../components/ItemWidget";
 import NewItemWidget from "../../components/NewItemWidget";
@@ -114,7 +114,7 @@ export default function Home() {
         }
 
         // Start appending to the input values
-        let input_values : EditItemInput = {
+        var input_values : EditItemInput = {
             pk: items[Number(index)].item.pk,
             sk: items[Number(index)].item.sk,
             ...edits
@@ -147,7 +147,7 @@ export default function Home() {
     const selectItemHandler = async (index: number, check: boolean) => {
         if (selectState) {
             try {
-                let curItems = [...items]
+                var curItems = [...items]
                 curItems[index].checked = !check;
                 setItems(curItems);
             } catch (error) {
@@ -185,6 +185,59 @@ export default function Home() {
             catch (error) {
                 console.log("Error deselecting all items", error);
             }
+        }
+    }
+
+    // Handler for getting the recipes for the user
+    const recipeHandler = async() => {
+        if (user.isLoggedIn) {
+            try {
+                // Get list of selected item's prod_name's
+                const selected_ingredients = items.filter(item => item.checked).map(
+                    item=> item.item.prod_name
+                )
+
+                // <PUT ALERT HERE>: No Items selected
+                if (selected_ingredients === undefined || selected_ingredients.length == 0) {
+                    console.log("No items selected")
+                }
+                else {
+
+                    // Get recipes using Lambda function
+                    const result = await client.graphql({
+                        query: getRecipes,
+                        variables: {
+                            input: {
+                                ingredients: selected_ingredients
+                            }
+                        },
+                    })
+                    const fetched_recipes : [Recipe] = result.data.getRecipes;
+                    console.log(fetched_recipes)
+
+                    if (result) {
+                        // Update current user's recipes
+                        setUser({
+                            isLoggedIn: user.isLoggedIn,
+                            userId: user.userId,
+                            username: user.username,
+                            email: user.email,
+                            name: user.name,
+                            recipes: fetched_recipes
+                        });
+                    }
+                    
+                    // <PUT ALERT HERE>: No recipes found
+                    else {
+                        console.log("No Recipes Found")
+                    }
+                }
+            } catch (error) {
+                console.log('error on fetching recipes', error);
+            } 
+        }
+        else {
+            console.log("User not logged in");
         }
     }
 
@@ -255,8 +308,12 @@ export default function Home() {
                             <Text>Cancel</Text>
                         </Pressable>
 
-                        <Pressable style={styles.selectBtn} onPress={selectAllHandler}>
+                        <Pressable style={styles.cancelSelectBtn} onPress={selectAllHandler}>
                             <Text>Select All</Text>
+                        </Pressable>
+
+                        <Pressable style={styles.recipeBtn} onPress={recipeHandler}>
+                            <Text>Generate Recipes</Text>
                         </Pressable>
                     </>
                 ) : (
@@ -331,5 +388,6 @@ const styles = StyleSheet.create({
 
     },
     cancelSelectBtn:{},
+    recipeBtn:{}
 
 });

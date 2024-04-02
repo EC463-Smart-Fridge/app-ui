@@ -14,6 +14,7 @@ export const getUserItems = /* GraphQL */ `
       exp_date
       quantity
       prod_name
+      __typename
     }
   }
 `;
@@ -24,6 +25,7 @@ export const getFridgeUser = /* GraphQL */ `
       username
       email
       name2
+      __typename
     }
   }
 `;
@@ -56,12 +58,6 @@ export const getItem = /* GraphQL */ `
       exp_date
       quantity
       prod_name
-      id
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
   }
@@ -84,12 +80,6 @@ export const listItems = /* GraphQL */ `
         exp_date
         quantity
         prod_name
-        id
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
         __typename
       }
       nextToken
@@ -122,12 +112,6 @@ export const syncItems = /* GraphQL */ `
         exp_date
         quantity
         prod_name
-        id
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
         __typename
       }
       nextToken
@@ -143,12 +127,6 @@ export const getUser = /* GraphQL */ `
       username
       email
       name2
-      id
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       __typename
     }
   }
@@ -165,12 +143,6 @@ export const listUsers = /* GraphQL */ `
         username
         email
         name2
-        id
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
         __typename
       }
       nextToken
@@ -197,12 +169,6 @@ export const syncUsers = /* GraphQL */ `
         username
         email
         name2
-        id
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
         __typename
       }
       nextToken

@@ -99,7 +99,8 @@ export default function Auth() {
                             userId: userId,
                             username: result.data.getFridgeUser.username,
                             email: result.data.getFridgeUser.email,
-                            name: result.data.getFridgeUser.name2
+                            name: result.data.getFridgeUser.name2,
+                            recipes: [...user.recipes]
                         })
                     }
                     else {
@@ -119,7 +120,8 @@ export default function Auth() {
                         userId: '',
                         username: '',
                         email: '',
-                        name: ''
+                        name: '',
+                        recipes: []
                     })
                 }
             } finally {
@@ -240,7 +242,8 @@ export default function Auth() {
                 userId: '',
                 username: '',
                 email: '',
-                name: ''
+                name: '',
+                recipes: []
             });
             setError('');
         }
