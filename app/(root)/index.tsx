@@ -288,6 +288,7 @@ export default function Auth() {
             <View style={styles.container}>
                 <Text style={styles.title}>Fridge Buddy</Text>
                 <TextInput
+                    autoCapitalize="none"
                     placeholder="Username"
                     placeholderTextColor="gray"
                     value={userLogin.username ? (userLogin.username) : ""}
@@ -295,6 +296,7 @@ export default function Auth() {
                     style={styles.input}
                 />
                 <TextInput
+                    autoCapitalize="none"
                     secureTextEntry={true}
                     placeholder="Password"
                     placeholderTextColor="gray"
@@ -329,6 +331,7 @@ export default function Auth() {
             <View style={styles.container}>
             <Text style={styles.title}>Fridge Buddy</Text>
             <TextInput
+                autoCapitalize="none"
                 placeholder="Email"
                 placeholderTextColor="gray"
                 value={userSignup.email ? (userSignup.email) : ""}
@@ -337,6 +340,7 @@ export default function Auth() {
             />
         
             <TextInput
+                autoCapitalize="none"
                 placeholder="Name"
                 placeholderTextColor="gray"
                 value={userSignup.name ? (userSignup.name) : ""}
@@ -345,6 +349,7 @@ export default function Auth() {
             />
 
             <TextInput
+                autoCapitalize="none"
                 placeholder="Username"
                 placeholderTextColor="gray"
                 value={userSignup.username ? (userSignup.username) : ""}
@@ -353,6 +358,7 @@ export default function Auth() {
             />
         
             <TextInput
+                autoCapitalize="none"
                 secureTextEntry={true}
                 placeholder="Password"
                 placeholderTextColor="gray"
@@ -384,6 +390,7 @@ export default function Auth() {
                 <Text style={styles.title}>Fridge Buddy</Text>
                 <Text style={{color: 'gray'}}>A verification code has been sent to your email. Please enter the code below to complete the process.</Text>
                 <TextInput
+                    autoCapitalize="none"
                     style={styles.input}
                     keyboardType="numeric"
                     placeholder="Verification Code"
