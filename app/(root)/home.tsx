@@ -47,6 +47,7 @@ export default function Home() {
 
     // Remove item handler that removes item from both memory and from DynamoDB
     const deleteItemHandler = async (index: number) => {
+        setSortState(false);
         const itemToRemove = items[index];
         if (!itemToRemove) return;
         if (!itemToRemove.item.pk || !itemToRemove.item.sk) {
@@ -74,6 +75,7 @@ export default function Home() {
     };
 
     const multiDeleteItemHandler = async () => {
+        setSortState(false);
         if (user.isLoggedIn) {
             setLoading(true);
             try {
@@ -110,6 +112,7 @@ export default function Home() {
     }
 
     const addItemHandler = async (item: Item) => {
+        setSortState(false);
 
         setItems([...items, {item: item, checked: false}]);
         if (user.isLoggedIn) {
@@ -151,6 +154,7 @@ export default function Home() {
 
     // Edit Item handler that handles modifying an existing item
     const editItemHandler = async (index: number, edits: {name?: string, category?: string, exp_date?: number, quantity?: number, calories?: string}) => {
+        setSortState(false);
         const itemToEdit = items[index];
         if (!itemToEdit) return;
         if (!itemToEdit.item.pk || !itemToEdit.item.sk) {
@@ -233,6 +237,7 @@ export default function Home() {
 
     // Handler for getting the recipes for the user
     const recipeHandler = async() => {
+        setSortState(false);
         if (user.isLoggedIn) {
             try {
                 // Get list of selected item's prod_name's
