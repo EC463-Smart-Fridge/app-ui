@@ -35,7 +35,7 @@ export default function Home() {
     const client = useGraphQLClient();
     const {user, setUser} = useUser();
 
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState('');
     const [selectState, setSelectState] = useState(false);
     const [sortState, setSortState] = useState(false);
@@ -72,6 +72,42 @@ export default function Home() {
             console.error('Error deleting item', error);
         }
     };
+
+    const multiDeleteItemHandler = async () => {
+        if (user.isLoggedIn) {
+            setLoading(true);
+            try {
+                // Get list of selected item's prod_name's
+                const selected_sk = items.filter(item => item.checked).map(
+                    item => item.item.sk
+                )
+
+                // <PUT ALERT HERE>: No Items selected
+                if (selected_sk === undefined || selected_sk.length == 0) {
+                    console.log("No items selected")
+                }
+                else {
+
+                    await Promise.all(
+                        selected_sk.map((_sk_) => {
+                            const index = items.findIndex(_iter_ => _iter_.item.sk === _sk_);
+                            console.log("deleting", index, _sk_);
+                            return deleteItemHandler(index);
+                        })
+                    )
+
+                    
+                }
+            } catch (error) {
+                console.log('error on fetching recipes', error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        else {
+            console.log("User not logged in");
+        }
+    }
 
     const addItemHandler = async (item: Item) => {
 
@@ -291,7 +327,7 @@ export default function Home() {
         };
         test();
         // getCurrUser();
-    }, [refreshes, user])
+    }, [refreshes, user, items.length])
 
     const toggleSelect = () => {
         if (selectState) {
@@ -358,9 +394,9 @@ export default function Home() {
             </View>
             {selectState && 
                 <View style={styles.selectOptionList}>
-                    <Pressable style={({pressed}) => [{backgroundColor: pressed ? 'paleturquoise' : 'white', }, styles.selectOption,]} onPress={toggleSelect}>
+                    {/* <Pressable style={({pressed}) => [{backgroundColor: pressed ? 'paleturquoise' : 'white', }, styles.selectOption,]} onPress={toggleSelect}>
                         <Text>Cancel</Text>
-                    </Pressable>
+                    </Pressable> */}
 
                     <Pressable style={({pressed}) => [{backgroundColor: pressed ? 'paleturquoise' : 'white', }, styles.selectOption,]} onPress={selectAllHandler}>
                         <Text>Select/Deselect All</Text>
@@ -368,6 +404,10 @@ export default function Home() {
 
                     <Pressable style={({pressed}) => [{backgroundColor: pressed ? 'paleturquoise' : 'white', }, styles.selectOption,]} onPress={recipeHandler}>
                         <Text>Generate Recipes</Text>
+                    </Pressable>
+
+                    <Pressable style={({pressed}) => [{backgroundColor: pressed ? 'paleturquoise' : 'white', }, styles.selectOption,]} onPress={multiDeleteItemHandler}>
+                        <Text>Delete Selected</Text>
                     </Pressable>
                 </View>
             }
@@ -431,7 +471,9 @@ export default function Home() {
                         <Text>Quantity</Text>
                     </Pressable>
                 </View>
-            }
+            }{loading ?
+            <ActivityIndicator size="large" color="darkturquoise" />
+            : 
             <ScrollView 
                 style={styles.container}
                 refreshControl={
@@ -468,7 +510,7 @@ export default function Home() {
                             }
                         </>
                     </View>
-            </ScrollView>
+            </ScrollView>}
         </>
         :
         <Redirect href="/" />

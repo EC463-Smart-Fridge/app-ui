@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
     },
     select_container: {
         flex: 1,
-        backgroundColor: 'blue',
+        backgroundColor: 'darkturquoise',
         borderRadius: 10,
         display: 'flex',
         flexDirection: 'row',
