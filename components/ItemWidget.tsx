@@ -78,11 +78,11 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
                 <View style={styles.info}>                
                     <Text numberOfLines={1} style={styles.name}>{name}</Text>
                     {exp_date != 0 && exp_date != null && 
-                        <View style={tillExp < 5? {...styles.wrapper, backgroundColor: 'lightcoral', borderRadius: 10} : styles.wrapper}>
+                        <View style={styles.wrapper}>
                             <View style={styles.label}>
                                 <ExpirationIcon fill={tillExp < 5 ? "red" : "paleturquoise"} />
                             </View>
-                            <Text>{new Date(exp_date * 1000).toLocaleDateString("en-US")}</Text>
+                            <Text style={(tillExp >= 0 && tillExp < 5)? {color:"red"} : {color: 'black'}}>{new Date(exp_date * 1000).toLocaleDateString("en-US").concat((tillExp >= 0 && tillExp < 5)? `(Expires in: ${tillExp.toFixed(2)} Days)` :"")}</Text>
                         </View>
                     }
 
@@ -195,11 +195,11 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
                         <View style={styles.info}>                
                             <Text numberOfLines={1} style={styles.name}>{name}</Text>
                             {exp_date != 0 && exp_date != null && 
-                                <View style={tillExp < 5? {...styles.wrapper, backgroundColor: 'lightcoral', borderRadius: 10} : styles.wrapper}>
+                                <View style={styles.wrapper}>
                                     <View style={styles.label}>
                                         <ExpirationIcon fill={tillExp < 5 ? "red" : "paleturquoise"} />
                                     </View>
-                                    <Text style={styles.detail}>{new Date(exp_date * 1000).toLocaleDateString("en-US")}</Text>
+                                    <Text style={(tillExp >= 0 && tillExp < 5)? {color:"red"} : {color: 'black'}}>{new Date(exp_date * 1000).toLocaleDateString("en-US").concat((tillExp >= 0 && tillExp < 5)? ` (Expires in: ${tillExp.toFixed(2)} Days)` :"")}</Text>
                                 </View>
                             }
 
