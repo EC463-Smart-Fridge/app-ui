@@ -14,19 +14,33 @@ import NewItemWidget from "../../components/NewItemWidget";
 import { TextInput } from "react-native";
 import { getCurrentUser } from "aws-amplify/auth";
 import { Redirect } from "expo-router";
+import SaveIcon from "../../assets/icons/SaveIcon";
+import SortIcon from "../../assets/icons/SortIcon";
 
 interface fridgeItem {
     item: Item,
     checked: boolean
 }
 
+enum sort {
+    default,
+    name,
+    exp_date,
+    category,
+    calories,
+    quantity
+}
+
 export default function Home() {
     const client = useGraphQLClient();
     const {user, setUser} = useUser();
+
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
     const [selectState, setSelectState] = useState(false);
-    // const [editedItems, setEditedItems] = useState({});
+    const [sortState, setSortState] = useState(false);
+    const [sortType, setSortType] = useState<sort>(sort.default);
+    const [ascendingSort, setAscendingSort] = useState(true);
     const [refreshes, setRefreshes] = useState(0);
 
     const [items, setItems] = useState<fridgeItem[]>([]);
@@ -92,11 +106,11 @@ export default function Home() {
     interface EditItemInput {
         pk: string | null | undefined;
         sk: string | null | undefined;
-        name?: string; // Optional
-        category?: string; // Optional
-        exp_date?: number; // Optional
-        quantity?: number; // Optional
-        calories?: string; // Optional
+        name?: string;
+        category?: string;
+        exp_date?: number;
+        quantity?: number;
+        calories?: string;
     }
 
     // Edit Item handler that handles modifying an existing item
@@ -130,19 +144,6 @@ export default function Home() {
             });
             // Modify the item on the interface
             console.log('Item edited successfully', editResult);
-
-            // console.log(index)
-            // const updatedItems = items.map((item, idx) => {
-            //     if (idx === index) {
-            //         console.log("found", idx, item)
-            //         return { ...item, ...input_values };
-            //     } else {
-            //         console.log("not", idx)
-            //     }
-            //     return item;
-            // });
-            // console.log(updatedItems)
-            // setItems(updatedItems);
             setItems(items.map((item, i) => i == index ? {item: {...item.item, ...edits}, checked: item.checked} : item));
         }
         catch (error) {
@@ -185,14 +186,12 @@ export default function Home() {
 
     // Handler for deselect all
     const deselectAllHandler = async() => {
-        if (selectState) {
-            try {
-                const deselectedItems = items.map(item => ({ ...item, checked: false}));
-                setItems(deselectedItems);
-            }
-            catch (error) {
-                console.log("Error deselecting all items", error);
-            }
+        try {
+            const deselectedItems = items.map(item => ({ ...item, checked: false}));
+            setItems(deselectedItems);
+        }
+        catch (error) {
+            console.log("Error deselecting all items", error);
         }
     }
 
@@ -252,6 +251,7 @@ export default function Home() {
     }
 
     useEffect(() => {
+        console.log('Fetching items');
         const test = async () => {
             try {
                 console.log(user)
@@ -291,7 +291,7 @@ export default function Home() {
         };
         test();
         // getCurrUser();
-    }, [refreshes, items.length, user])
+    }, [refreshes, user])
 
     const toggleSelect = () => {
         if (selectState) {
@@ -302,37 +302,136 @@ export default function Home() {
             setSelectState(true);
         }
     }
+
+    const sortCriteria = (_a_: any, _b_: any) => {
+        const sortOrder = ascendingSort ? 1 : -1;
+    
+        switch (sortType) {
+            case sort.name:
+                const nameA = _a_.item.name || '';
+                const nameB = _b_.item.name || '';
+                return nameA === '' ? sortOrder : nameB === '' ? -sortOrder : nameA.localeCompare(nameB) * sortOrder;
+    
+            case sort.exp_date:
+                const expDateA = _a_.item.exp_date || (ascendingSort ? Infinity : -Infinity);
+                const expDateB = _b_.item.exp_date || (ascendingSort ? Infinity : -Infinity);
+                return expDateA === Infinity ? sortOrder : expDateB === Infinity ? -sortOrder : (expDateA - expDateB) * sortOrder;
+    
+            case sort.category:
+                const categoryA = _a_.item.category || '';
+                const categoryB = _b_.item.category || '';
+                return categoryA === '' ? sortOrder : categoryB === '' ? -sortOrder : categoryA.localeCompare(categoryB) * sortOrder;
+    
+            case sort.calories:
+                const caloriesA = parseFloat(_a_.item.calories) || (ascendingSort ? Infinity : -Infinity);
+                const caloriesB = parseFloat(_b_.item.calories) || (ascendingSort ? Infinity : -Infinity);
+                return caloriesA === Infinity ? sortOrder : caloriesB === Infinity ? -sortOrder : (caloriesA - caloriesB) * sortOrder;
+    
+            case sort.quantity:
+                const quantityA = _a_.item.quantity || (ascendingSort ? Infinity : -Infinity);
+                const quantityB = _b_.item.quantity || (ascendingSort ? Infinity : -Infinity);
+                return quantityA === Infinity ? sortOrder : quantityB === Infinity ? -sortOrder : (quantityA - quantityB) * sortOrder;
+    
+            default:
+                return 0;
+        }
+    };
+    
+    
     return (user.isLoggedIn ?
         <>
             {/* Search Bar */}
-            <View style={styles.search}>
+            <View style={styles.topbar}>
                 <TextInput 
-                    style={styles.searchInput}
+                    style={styles.search}
                     placeholder="Search"
                     value={search}
                     onChangeText={setSearch}
                 />
-                {selectState? (
-                    <>
-                        <Pressable style={styles.selectBtn} onPress={toggleSelect}>
-                            <Text>Cancel</Text>
-                        </Pressable>
-
-                        <Pressable style={styles.cancelSelectBtn} onPress={selectAllHandler}>
-                            <Text>Select All</Text>
-                        </Pressable>
-
-                        <Pressable style={styles.recipeBtn} onPress={recipeHandler}>
-                            <Text>Generate Recipes</Text>
-                        </Pressable>
-                    </>
-                ) : (
-                    <Pressable style={styles.cancelSelectBtn} onPress={toggleSelect}>
-                        <Text>Select</Text>
-                    </Pressable>
-                )}
-                
+                <Pressable style={{...styles.topButton, backgroundColor: selectState ? 'darkturquoise' : 'paleturquoise'}} onPress={toggleSelect}>
+                    <SaveIcon />
+                </Pressable>
+                {/* <Pressable style={styles.topButton} onPress={toggleSelect}> */}
+                <Pressable style={{...styles.topButton, backgroundColor: sortState ? 'darkturquoise' : 'paleturquoise'}} onPress={() => {setSortState(!sortState)}}>
+                    <SortIcon />
+                </Pressable>
             </View>
+            {selectState && 
+                <View style={styles.selectOptionList}>
+                    <Pressable style={({pressed}) => [{backgroundColor: pressed ? 'paleturquoise' : 'white', }, styles.selectOption,]} onPress={toggleSelect}>
+                        <Text>Cancel</Text>
+                    </Pressable>
+
+                    <Pressable style={({pressed}) => [{backgroundColor: pressed ? 'paleturquoise' : 'white', }, styles.selectOption,]} onPress={selectAllHandler}>
+                        <Text>Select/Deselect All</Text>
+                    </Pressable>
+
+                    <Pressable style={({pressed}) => [{backgroundColor: pressed ? 'paleturquoise' : 'white', }, styles.selectOption,]} onPress={recipeHandler}>
+                        <Text>Generate Recipes</Text>
+                    </Pressable>
+                </View>
+            }
+            {sortState &&
+                <View style={styles.sortOptionList}>
+                    <Text style={styles.sortOption}>
+                        Sort by:
+                    </Text>
+
+                    <View style={{height: 1, backgroundColor: 'gray'}}></View>
+
+                    <Pressable
+                        style={{...styles.sortOption, backgroundColor: ascendingSort ? 'paleturquoise' : 'white'}}
+                        onPress={() => setAscendingSort(true)}
+                    >
+                        <Text>Ascending</Text>
+                    </Pressable>
+                    <Pressable
+                        style={{...styles.sortOption, backgroundColor: !ascendingSort ? 'paleturquoise' : 'white'}}
+                        onPress={() => setAscendingSort(false)}
+                    >
+                        <Text>Descending</Text>
+                    </Pressable>
+
+                    <View style={{height: 1, backgroundColor: 'gray'}}></View>
+
+                    <Pressable 
+                        style={{...styles.sortOption, backgroundColor: sortType == sort.default ? 'paleturquoise' : 'white'}}
+                        onPress={() => {setSortType(sort.default);}}
+                    >
+                        <Text>Default</Text>
+                    </Pressable>
+                    <Pressable 
+                        style={{...styles.sortOption, backgroundColor: sortType == sort.name ? 'paleturquoise' : 'white'}}
+                        onPress={() => {setSortType(sort.name);}}
+                    >
+                        <Text>Name</Text>
+                    </Pressable>
+                    <Pressable 
+                        style={{...styles.sortOption, backgroundColor: sortType == sort.exp_date ? 'paleturquoise' : 'white'}}
+                        onPress={() => {setSortType(sort.exp_date);}}
+                    >
+                        <Text>Expiration</Text>
+                    </Pressable>
+                    <Pressable 
+                        style={{...styles.sortOption, backgroundColor: sortType == sort.category ? 'paleturquoise' : 'white'}}
+                        onPress={() => {setSortType(sort.category);}}
+                    >
+                        <Text>Category</Text>
+                    </Pressable>
+                    <Pressable 
+                        style={{...styles.sortOption, backgroundColor: sortType == sort.calories ? 'paleturquoise' : 'white'}}
+                        onPress={() => {setSortType(sort.calories);}}
+                    >
+                        <Text>Calories</Text>
+                    </Pressable>
+                    <Pressable 
+                        style={{...styles.sortOption, backgroundColor: sortType == sort.quantity ? 'paleturquoise' : 'white'}}
+                        onPress={() => {setSortType(sort.quantity);}}
+                    >
+                        <Text>Quantity</Text>
+                    </Pressable>
+                </View>
+            }
             <ScrollView 
                 style={styles.container}
                 refreshControl={
@@ -346,7 +445,7 @@ export default function Home() {
             >
                     <View>
                         <>
-                        {items.filter((item, i) => search == '' || item.item.name?.toLowerCase().includes(search.toLowerCase())).map((item, i) => (
+                        {items.filter((item, i) => search == '' || item.item.name?.toLowerCase().includes(search.toLowerCase())).sort(sortCriteria).map((item, i) => (
                             <View key={i}>
                                 <ItemWidget 
                                     __typename="Item"
@@ -381,23 +480,64 @@ const styles = StyleSheet.create({
         backgroundColor: 'paleturquoise', 
         width: '100%', 
     },
-    search: {
+    topbar: {
         backgroundColor: 'white',
         padding: 10,
         width: '100%',
         zIndex: 40,
         shadowColor: 'black',
+        flexDirection: 'row',
+        columnGap: 10,
     },
-    searchInput: {
+    search: {
         backgroundColor: 'paleturquoise',
         padding: 10,
         paddingLeft: 20,
         borderRadius: 25,
+        flexGrow: 1,
+        height: 45,
     },
-    selectBtn: {
-
+    topButton: {
+        padding: 10,
+        borderRadius: 25,
+        height: 45,
+        aspectRatio: 1,
     },
-    cancelSelectBtn:{},
-    recipeBtn:{}
-
+    selectOptionList: {
+        flexDirection: 'row',
+        // justifyContent: 'center',
+        alignContent: 'center',
+        backgroundColor: 'whitesmoke',
+        // height: 40,
+        elevation: 2,
+        // padding: 10,
+    },
+    sortOptionList: {
+        width: 128,
+        position: 'absolute',
+        top: 60,
+        right: 10,
+        zIndex: 100,
+        backgroundColor: 'whitesmoke',
+        elevation: 2,
+        padding: 4,
+        borderRadius: 10,
+        rowGap: 4,
+    },
+    selectOption: {
+        paddingVertical: 4,
+        // paddingHorizontal: 8,
+        borderRadius: 25,
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: 4,
+        flexGrow: 1,
+        width: 100,
+    },
+    sortOption: {
+        paddingVertical: 4,
+        paddingHorizontal: 8,
+        borderRadius: 8,
+        color: 'gray',
+    },
 });
