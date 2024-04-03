@@ -27,6 +27,12 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
     const [editedCategory, setEditedCategory] = useState(category ? category : "");
     const [editedQuantity, setEditedQuantity] = useState(quantity ? quantity.toString() : "");
     const [editedCalories, setEditedCalories] = useState(calories ? calories : "");
+    const cur_date = new Date(Date.now() / 1000).getTime();
+    const exp_diff = (exp_date != 0 && exp_date != null)? new Date(exp_date).getTime() : 999;
+
+    // Calculate the difference between current time and expiration date
+    const [tillExp, setTillExp] = useState((exp_date != 0 && exp_date != null) ? (exp_diff - cur_date) * 0.0000115741 : 999);
+    // console.log(tillExp);
 
     const handleCancel = () => {
         setEditMode(false);
@@ -50,9 +56,26 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
         });
         setEditMode(false);
         setEditedName(editedName);
-        setEditedQuantity(editedQuantity);
+        setEditedQuantity(editedQuantity ? editedQuantity : "");
         setEditedExpDate(editedExpDate ? editedExpDate : 0);
+        
+        
+        // Calculate the difference between current time and expiration date
     };
+
+    // Update page whenever the tillExp is updated
+    useEffect(() => {
+        if (!editMode){
+            if (exp_date != 0 && exp_date != null) {
+                const cur_date = new Date(Date.now() / 1000).getTime();
+                const exp_diff = new Date(exp_date).getTime();
+                setTillExp((exp_diff - cur_date) * 0.0000115741);
+            }
+            else {
+                setTillExp(9999);
+            }
+        }
+    }, [tillExp, editMode])
 
     return (<>
         {selectMode ? (
@@ -146,7 +169,7 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
                                     placeholder="1"
                                     onChangeText={setEditedQuantity}
                                     value={editedQuantity}
-                                    inputMode="numeric"
+                                    inputMode="text"
                                     style={styles.input}
                                 />
                             </View>
@@ -174,7 +197,9 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
                     </View>
                     </>
                 ) : (
-                    <View style={styles.container}>
+                    <>
+                    {tillExp <= 7 ? (
+                        <View style={styles.weekExp}>
                         <View style={styles.info}>                
                             <Text numberOfLines={1} style={styles.name}>{name}</Text>
                             {exp_date != 0 && exp_date != null && 
@@ -224,7 +249,7 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
                                     setEditedName(name);
                                     setEditedQuantity(quantity ? quantity.toString() : "");
                                     setEditedExpDate(exp_date ? exp_date : 0);
-                                    console.log(name, "is being edited.")
+                                    // console.log(name, "is being edited.")
                                     }}
                                 activeOpacity={0.6} 
                                 underlayColor="#DDDDDD" 
@@ -234,6 +259,71 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
                             </TouchableHighlight>
                         </View>
                     </View>
+                    ) : (
+                        <View style={styles.container}>
+                        <View style={styles.info}>                
+                            <Text numberOfLines={1} style={styles.name}>{name}</Text>
+                            {exp_date != 0 && exp_date != null && 
+                                <View style={styles.wrapper}>
+                                    <View style={styles.label}>
+                                        <ExpirationIcon fill={"paleturquoise"} />
+                                    </View>
+                                    <Text>{new Date(exp_date * 1000).toLocaleDateString("en-US")}</Text>
+                                </View>
+                            }
+
+                            {category != '' && category != null && 
+                                <View style={styles.wrapper}>
+                                    <View style={styles.label}>
+                                        <CategoryIcon fill={"paleturquoise"}/>
+                                    </View>
+                                    <Text>{category}</Text>
+                                </View>
+                            }
+
+                            {quantity != 0 && quantity != null &&
+                                <View style={styles.wrapper}>
+                                    <Text style={styles.label}>
+                                        Qty
+                                    </Text>
+                                    <Text>{quantity}</Text>
+                                </View>
+                            }
+
+                            {calories != '' && calories != null &&
+                                <View style={styles.wrapper}>
+                                    <Text style={styles.label}>
+                                        Cal
+                                    </Text>
+                                    <Text>{calories}</Text>
+                                </View>
+                            }
+                        </View>
+
+                        <View style={styles.buttonsContainer}>
+                            <TouchableHighlight onPress={deleteHandler} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.button}>
+                                <DeleteIcon />
+                            </TouchableHighlight>
+                            <TouchableHighlight 
+                                onPress={() => {
+                                    setEditMode(true); 
+                                    setEditedName(name);
+                                    setEditedQuantity(quantity ? quantity.toString() : "");
+                                    setEditedExpDate(exp_date ? exp_date : 0);
+                                    // console.log(name, "is being edited.")
+                                    }}
+                                activeOpacity={0.6} 
+                                underlayColor="#DDDDDD" 
+                                style={styles.button}
+                            >
+                                <EditIcon />
+                            </TouchableHighlight>
+                        </View>
+                    </View>
+                    )}
+                    
+                    </>
+                    
                 )}
         </>
     )
@@ -341,6 +431,30 @@ const styles = StyleSheet.create({
         height: '100%',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
         zIndex: 50,
+    },
+    weekExp: {
+        flex: 1,
+        backgroundColor: 'red',
+        borderRadius: 10,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 8,
+        marginTop: 5,
+        marginHorizontal: 10,
+        elevation: 2,
+    },
+    soonExp: {
+        flex: 1,
+        backgroundColor: 'green',
+        borderRadius: 10,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 8,
+        marginTop: 5,
+        marginHorizontal: 10,
+        elevation: 2,
     },
 })
 

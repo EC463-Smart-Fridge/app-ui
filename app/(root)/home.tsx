@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ScrollView, StatusBar, View, ActivityIndicator, RefreshControl, StyleSheet, Pressable, Text } from "react-native";
+import { ScrollView, StatusBar, View, ActivityIndicator, RefreshControl, StyleSheet, Pressable, Text, Alert } from "react-native";
 import { getUserItems, getRecipes } from "../../src/graphql/queries";
 import { removeItem, addItem, editItem } from "../../src/graphql/mutations";
 import { router } from "expo-router";
@@ -114,7 +114,7 @@ export default function Home() {
     const addItemHandler = async (item: Item) => {
         setSortState(false);
 
-        setItems([...items, {item: item, checked: false}]);
+        setItems([{item: item, checked: false}, ...items]);
         if (user.isLoggedIn) {
             try {
                 // Run deleteItem GraphQL mutation
@@ -247,7 +247,19 @@ export default function Home() {
 
                 // <PUT ALERT HERE>: No Items selected
                 if (selected_ingredients === undefined || selected_ingredients.length == 0) {
-                    console.log("No items selected")
+                    console.log("No items selected");
+                    Alert.alert(  
+                        'Alert Title',  
+                        'My Alert Msg',  
+                        [  
+                            {  
+                                text: 'OK',  
+                                onPress: () => console.log('Cancel Pressed'),  
+                                style: 'cancel',  
+                            }
+                        ],
+                        {cancelable: true}
+                    );  
                 }
                 else {
 
@@ -280,6 +292,18 @@ export default function Home() {
                     // <PUT ALERT HERE>: No recipes found
                     else {
                         console.log("No Recipes Found")
+                        Alert.alert(  
+                            'Sorry :(',  
+                            'No Recipes Found for Selected Items',  
+                            [  
+                                {  
+                                    text: 'OK',  
+                                    onPress: () => console.log('Cancel Pressed'),  
+                                    style: 'cancel',  
+                                }
+                            ],
+                            {cancelable: true}
+                        );  
                     }
                 }
             } catch (error) {
