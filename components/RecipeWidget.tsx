@@ -22,8 +22,7 @@ const RecipeWidget = ({ recipe }: Props) => {
                 <View style={styles.infoWrapper}>
                     <Text style={styles.title}>{recipe.name}</Text>
                     {(recipe.calories != '' && recipe.calories != '0') && <Text style={styles.info}>Calories: {recipe.calories}</Text>}
-                </View>
-                
+                </View> 
             </Pressable>
             {open && (
                 <View style={styles.extend}>
@@ -84,7 +83,6 @@ const styles = StyleSheet.create({
     },
     infoWrapper: {
         flexDirection: 'column',
-        flexGrow: 1,
         justifyContent: 'flex-start',
     },
     info: {
@@ -92,6 +90,8 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 20,
+        flexWrap: 'wrap',
+        width: 400,
     },
     subTitle: {
         fontSize: 20,
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     },
     img:{
         height: 100,
-        aspectRatio: 1.5,
+        aspectRatio: 1,
         backgroundColor: 'paleturquoise',
         borderRadius: 8,
     }
