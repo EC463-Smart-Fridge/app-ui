@@ -60,32 +60,27 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
         setEditedQuantity(editedQuantity && 1);
         setEditedExpDate(editedExpDate ? editedExpDate : 0);
         setEditMode(false);
+        if (editedExpDate != 0 && editedExpDate != null) {
+            const cur_date = new Date(Date.now() / 1000).getTime();
+            const exp_diff = new Date(editedExpDate).getTime();
+            setTillExp((exp_diff - cur_date) * 0.0000115741);
+            console.log(tillExp)
+        }
+        else {
+            setTillExp(9999);
+        }
     };
 
-    // Update page whenever the tillExp is updated
-    useEffect(() => {
-        if (!editMode){
-            if (editedExpDate != 0 && editedExpDate != null) {
-                const cur_date = new Date(Date.now() / 1000).getTime();
-                const exp_diff = new Date(editedExpDate).getTime();
-                setTillExp((exp_diff - cur_date) * 0.0000115741);
-                console.log(tillExp)
-            }
-            else {
-                setTillExp(9999);
-            }
-        }
-    }, [tillExp, editMode])
 
     return (<>
         {selectMode ? (
-            <Pressable style={checked?  styles.select_container: styles.container} onPress={selectHandler}>
+            <Pressable style={checked?  styles.select_container: tillExp < 0 ? styles.expired_item : styles.container} onPress={selectHandler}>
                 <View style={styles.info}>                
                     <Text numberOfLines={1} style={styles.name}>{name}</Text>
                     {exp_date != 0 && exp_date != null && 
-                        <View style={styles.wrapper}>
+                        <View style={tillExp < 5? {...styles.wrapper, backgroundColor: 'lightcoral', borderRadius: 10} : styles.wrapper}>
                             <View style={styles.label}>
-                                <ExpirationIcon fill={"paleturquoise"} />
+                                <ExpirationIcon fill={tillExp < 5 ? "red" : "paleturquoise"} />
                             </View>
                             <Text>{new Date(exp_date * 1000).toLocaleDateString("en-US")}</Text>
                         </View>
@@ -196,13 +191,13 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
                     </View>
                     </>
                 ) : (
-                    <View style={tillExp < 0 ? styles.expired_item : (tillExp <= 7 ? (tillExp <= 3 ? styles.soonExp : styles.weekExp) : styles.container)}>
+                    <View style={tillExp < 0 ? styles.expired_item : styles.container}>
                         <View style={styles.info}>                
                             <Text numberOfLines={1} style={styles.name}>{name}</Text>
                             {exp_date != 0 && exp_date != null && 
-                                <View style={styles.wrapper}>
+                                <View style={tillExp < 5? {...styles.wrapper, backgroundColor: 'lightcoral', borderRadius: 10} : styles.wrapper}>
                                     <View style={styles.label}>
-                                        <ExpirationIcon fill={"paleturquoise"} />
+                                        <ExpirationIcon fill={tillExp < 5 ? "red" : "paleturquoise"} />
                                     </View>
                                     <Text style={styles.detail}>{new Date(exp_date * 1000).toLocaleDateString("en-US")}</Text>
                                 </View>
@@ -376,39 +371,9 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
         zIndex: 50,
     },
-    weekExp: {
-        flex: 1,
-        backgroundColor: 'lightcoral',
-        borderRadius: 10,
-        borderWidth: 2,
-        borderColor: 'black',
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 8,
-        marginTop: 5,
-        marginHorizontal: 10,
-        elevation: 2,
-    },
-    soonExp: {
-        flex: 1,
-        backgroundColor: 'lightcoral',
-        borderRadius: 10,
-        borderWidth: 2,
-        borderColor: 'red',
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 8,
-        marginTop: 5,
-        marginHorizontal: 10,
-        elevation: 2,
-    },
     expired_item: {
         flex: 1,
-        backgroundColor: 'red',
-        borderColor: 'black',
-        borderWidth: 2,
+        backgroundColor: 'lightcoral',
         borderRadius: 10,
         display: 'flex',
         flexDirection: 'row',
