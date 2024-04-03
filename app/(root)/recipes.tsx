@@ -1,7 +1,7 @@
 import { View, Pressable, Text, TextInput, StyleSheet, ScrollView } from "react-native";
 import { useUser } from "../../contexts/GraphQLClientContext";
 import { getRecipes } from "../../src/graphql/queries";
-import { Redirect } from "expo-router";
+import { Redirect, useRouter } from "expo-router";
 import { Recipe } from "../../src/API";
 import { useState } from "react";
 import RecipeWidget from "../../components/RecipeWidget";
@@ -9,7 +9,7 @@ import RecipeWidget from "../../components/RecipeWidget";
 export default function Recipes() {
     const {user} = useUser();
     const [search, setSearch] = useState('');
-
+    const router = useRouter();
     return (user.isLoggedIn ?
         <>
             <View style={styles.search}>
@@ -22,12 +22,11 @@ export default function Recipes() {
             </View>
 
             {(user.recipes === undefined || user.recipes.length == 0)? (
-                <>
-                <Text>No Recipes</Text>
-                </>
-
+                <View style={styles.container}>
+                    <Pressable onPress={() => router.push('/home')} style={({pressed}) => [{backgroundColor: pressed ? 'paleturquoise' : 'white', }, styles.homeButton,]}><Text>Generate from Ingredients</Text></Pressable>
+                </View>
             ):(
-                <ScrollView style={styles.container}>
+                <ScrollView style={styles.recipeList}>
                     {user.recipes.map((recipe: Recipe, i: any) => (
                         <View key={i} style={styles.wrapper}>
                             <RecipeWidget recipe={recipe} />
@@ -35,7 +34,6 @@ export default function Recipes() {
                     ))}
                 </ScrollView>
             )}
-            
         </>
         :
         <Redirect href="/" />
@@ -44,6 +42,16 @@ export default function Recipes() {
 
 const styles = StyleSheet.create({
     container: {
+        justifyContent: "center",
+        alignItems: "center",
+        height: '100%',
+        elevation: 2,
+    },
+    homeButton: {
+        padding: 10,
+        borderRadius: 10,
+    },
+    recipeList: {
         backgroundColor: 'paleturquoise', 
         width: '100%', 
         flexGrow: 1,
