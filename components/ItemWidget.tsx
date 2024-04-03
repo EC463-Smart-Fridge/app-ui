@@ -25,13 +25,13 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
     const [editedName, setEditedName] = useState(name);
     const [editedExpDate, setEditedExpDate] = useState(exp_date ? exp_date : 0);
     const [editedCategory, setEditedCategory] = useState(category ? category : "");
-    const [editedQuantity, setEditedQuantity] = useState(quantity ? quantity.toString() : "");
+    const [editedQuantity, setEditedQuantity] = useState(quantity && 1);
     const [editedCalories, setEditedCalories] = useState(calories ? calories : "");
 
     const handleCancel = () => {
         setEditMode(false);
         setEditedName(name);
-        setEditedQuantity(quantity ? quantity.toString() : "");
+        setEditedQuantity(quantity ?? 1);
         setEditedExpDate(exp_date ?? 0);
     }
 
@@ -43,15 +43,17 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
         
         editHandler({
             name: editedName,
-            quantity: parseInt(editedQuantity, 10),
+            quantity: editedQuantity,
             // category: editedCategory,
             // calories: editedCalories,
             exp_date: editedExpDate,
         });
-        setEditMode(false);
+
+        console.log(editedQuantity)
         setEditedName(editedName);
-        setEditedQuantity(editedQuantity);
+        setEditedQuantity(editedQuantity && 1);
         setEditedExpDate(editedExpDate ? editedExpDate : 0);
+        setEditMode(false);
     };
 
     return (<>
@@ -121,9 +123,8 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
                                 <View style={styles.label}>
                                     <ExpirationIcon fill={'darkgray'}/>
                                 </View>
-                                <TouchableHighlight onPress={() => setCalendarOpen(!calendarOpen)} activeOpacity={0.6} underlayColor="#DDDDDD">
-                                    <Text style={styles.input}>
-                                        {/* {date != 0 ? new Date(date * 1000).toLocaleDateString("en-US") : "Add Date"} */}
+                                <TouchableHighlight onPress={() => setCalendarOpen(!calendarOpen)} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.input}>
+                                    <Text >
                                         {editedExpDate != 0 ? new Date(editedExpDate * 1000).toLocaleDateString("en-US") : "Add Date"}
                                     </Text>
                                 </TouchableHighlight>
@@ -143,9 +144,9 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
                                     Qty
                                 </Text>
                                 <TextInput
-                                    placeholder="1"
-                                    onChangeText={setEditedQuantity}
-                                    value={editedQuantity}
+                                    placeholder="Quantity"
+                                    onChangeText={(e) => setEditedQuantity(e != "" ? parseInt(e) : null)}
+                                    value={editedQuantity ? String(editedQuantity) : ""}
                                     inputMode="numeric"
                                     style={styles.input}
                                 />
@@ -182,7 +183,7 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
                                     <View style={styles.label}>
                                         <ExpirationIcon fill={"paleturquoise"} />
                                     </View>
-                                    <Text>{new Date(exp_date * 1000).toLocaleDateString("en-US")}</Text>
+                                    <Text style={styles.detail}>{new Date(exp_date * 1000).toLocaleDateString("en-US")}</Text>
                                 </View>
                             }
 
@@ -191,7 +192,7 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
                                     <View style={styles.label}>
                                         <CategoryIcon fill={"paleturquoise"}/>
                                     </View>
-                                    <Text>{category}</Text>
+                                    <Text style={styles.detail}>{category}</Text>
                                 </View>
                             }
 
@@ -200,7 +201,7 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
                                     <Text style={styles.label}>
                                         Qty
                                     </Text>
-                                    <Text>{quantity}</Text>
+                                    <Text style={styles.detail}>{quantity}</Text>
                                 </View>
                             }
 
@@ -209,7 +210,7 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
                                     <Text style={styles.label}>
                                         Cal
                                     </Text>
-                                    <Text>{calories}</Text>
+                                    <Text style={styles.detail}>{calories}</Text>
                                 </View>
                             }
                         </View>
@@ -222,7 +223,7 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
                                 onPress={() => {
                                     setEditMode(true); 
                                     setEditedName(name);
-                                    setEditedQuantity(quantity ? quantity.toString() : "");
+                                    setEditedQuantity(quantity && 1);
                                     setEditedExpDate(exp_date ? exp_date : 0);
                                     console.log(name, "is being edited.")
                                     }}
@@ -285,10 +286,21 @@ const styles = StyleSheet.create({
         flexShrink: 1,
         flexGrow: 1,
     },
+    detail: {
+        // height: 24,
+        height: '100%',
+        textAlignVertical: 'center',
+    },
     input: {
         // height: '100%',
-        // verticalAlign: 'middle',
-        fontSize: 16,
+        verticalAlign: 'middle',
+        // fontSize: 16,
+        borderWidth: 1,
+        borderRadius: 10,
+        borderColor: 'gray',
+        paddingHorizontal: 8,
+        height: '100%',
+        // backgroundColor: 'red',
         // flexGrow: 1,       
     },
     label: {
