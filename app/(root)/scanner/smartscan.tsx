@@ -6,6 +6,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { addItemByUPC } from "../../../src/graphql/mutations";
 import { useGraphQLClient, useUser } from "../../../contexts/GraphQLClientContext";
 import SwapIcon from '../../../assets/icons/SwapIcon';
+import { Modal } from 'react-native';
 
 export default function SmartScan() {
   const client = useGraphQLClient();
@@ -14,6 +15,9 @@ export default function SmartScan() {
   const cameraRef = useRef<Camera>(null);
   const [isFrontCamera, setIsFrontCamera] = useState<boolean>(true);
   const [isProduce, setIsProduce] = useState<boolean>(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [items, setItems] = useState<string[]>([]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -80,27 +84,29 @@ export default function SmartScan() {
         if (outputs && outputs.length > 0) {
           const prediction = outputs[0]; // Assuming there's only one prediction
           const data = prediction.data;
-          const name = String(data.concepts[0].name)
-          console.log(name + `${isProduce ? ' +raw' : ''}`)
-          try {
-            const addResult = await client.graphql({
-                query: addItemByUPC,
-                variables: {
-                    uid: user.userId,
-                    upc: name + `${isProduce ? ' +raw' : ''}`,
-                    name: name
-                },
-            })
+          setItems(data.concepts.map((concept: any) => String(concept.name)))
+          // const name = String(data.concepts[0].name)
+          // console.log(name + `${isProduce ? ' +raw' : ''}`)
+          // try {
+          //   const addResult = await client.graphql({
+          //       query: addItemByUPC,
+          //       variables: {
+          //           uid: user.userId,
+          //           upc: name + `${isProduce ? ' +raw' : ''}`,
+          //           name: name
+          //       },
+          //   })
             
-            console.log('Item added successfully', addResult);
-        } catch (error) {
-            console.error('Error adding item', error);
-        }
+          //   console.log('Item added successfully', addResult);
+          // } catch (error) {
+          //     console.error('Error adding item', error);
+          // }
 
           // Log prediction details to the console
-          console.log('Prediction:');
-          console.log('Classes:', data.concepts.map((concept: any) => concept.name).join(', ')); // Assuming concepts contain predicted classes
-          console.log('Probabilities:', data.concepts.map((concept: any) => concept.value).join(', ')); // Assuming concepts contain probabilities
+          // console.log('Prediction:');
+          // console.log('Classes:', data.concepts.map((concept: any) => concept.name).join(', ')); // Assuming concepts contain predicted classes
+          // console.log('Probabilities:', data.concepts.map((concept: any) => concept.value).join(', ')); // Assuming concepts contain probabilities
+          setIsModalVisible(true)
         } else {
           console.log('No prediction outputs found.');
         }
@@ -112,15 +118,32 @@ export default function SmartScan() {
     }
   };
 
-  if (hasPermission === null) {
-    return <View />
-  }
-  if (hasPermission === false) {
+  if (hasPermission === null || hasPermission === false) {
     return <Text>No access to camera</Text>;
   }
 
-  return (user.isLoggedIn ?
-    <View style={styles.container}>
+  return (user.isLoggedIn ?  
+    <View style={styles.page}>
+      {isModalVisible && 
+          <Modal
+            transparent={true}
+            visible={isModalVisible}
+            onRequestClose={() => setIsModalVisible(false)}
+            style={styles.modal}
+          >
+            <View style={styles.selection}>
+              {items.map((item, index) => 
+                <Pressable key={index} onPress={() => {
+                  setSelectedItems([...selectedItems, item])
+                  setIsModalVisible(false)
+                }}>
+                  <Text>{item}</Text>
+                </Pressable>
+              )}
+            </View>
+          <Pressable onPress={() => setIsModalVisible(false)} style={styles.modalBackground}></Pressable>
+          </Modal>
+      }
       <Camera style={styles.camera} ref={cameraRef} type={isFrontCamera ? CameraType.front : CameraType.back} />
       <View style={styles.buttonContainer}>
         <View style={styles.leftButtons}>
@@ -152,10 +175,34 @@ export default function SmartScan() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  page: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  selection: {
+    // position: 'absolute',
+    zIndex: 100,
+    height: 500,
+    width: 400,
+    alignSelf: 'center',
+    marginTop: 100,
+    backgroundColor: 'white',
+    borderRadius: 12,
+  },
+  modal: {
+    display: 'flex',
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+  },
+  modalBackground: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 50,
   },
   camera: {
     flex: 1,
