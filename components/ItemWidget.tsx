@@ -82,7 +82,12 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
                             <View style={styles.label}>
                                 <ExpirationIcon fill={tillExp < 5 ? "red" : "paleturquoise"} />
                             </View>
-                            <Text style={(tillExp >= 0 && tillExp < 5)? {color:"red"} : {color: 'black'}}>{new Date(exp_date * 1000).toLocaleDateString("en-US").concat((tillExp >= 0 && tillExp < 5)? ` (Expires in: ${tillExp.toFixed(2)} Days)` :"")}</Text>
+                            <Text style={{color: 'black'}}>
+                                {new Date(exp_date * 1000).toLocaleDateString("en-US")}
+                            </Text>
+                            <Text style={(tillExp >= 0 && tillExp < 5)? {color:"red"} : {color: 'black'}}>
+                                {(tillExp >= 0 && tillExp < 5)? ` (Expires in ${tillExp.toFixed(2)} Days)` :""}
+                            </Text>
                         </View>
                     }
 
@@ -199,7 +204,12 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
                                     <View style={styles.label}>
                                         <ExpirationIcon fill={tillExp < 5 ? "red" : "paleturquoise"} />
                                     </View>
-                                    <Text style={(tillExp >= 0 && tillExp < 5)? {color:"red"} : {color: 'black'}}>{new Date(exp_date * 1000).toLocaleDateString("en-US").concat((tillExp >= 0 && tillExp < 5)? ` (Expires in: ${tillExp.toFixed(2)} Days)` :"")}</Text>
+                                    <Text style={{color: 'black'}}>
+                                        {new Date(exp_date * 1000).toLocaleDateString("en-US")}
+                                    </Text>
+                                    <Text style={(tillExp >= 0 && tillExp < 5)? {color:"red"} : {color: 'black'}}>
+                                        {(tillExp >= 0 && tillExp < 5)? ` (Expires in ${tillExp.toFixed(2)} Days)` :""}
+                                    </Text>
                                 </View>
                             }
 
