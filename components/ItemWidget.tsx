@@ -78,9 +78,7 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
                     }
                 </View>
             </Pressable>
-        ):
-            <View>
-                {editMode ? (
+        ):editMode ? (
                     <>
                         <Modal
                             transparent={true}
@@ -121,7 +119,7 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
                             </View> */}
                             <View style={styles.wrapper}>
                                 <View style={styles.label}>
-                                    <ExpirationIcon />
+                                    <ExpirationIcon fill={'darkgray'}/>
                                 </View>
                                 <TouchableHighlight onPress={() => setCalendarOpen(!calendarOpen)} activeOpacity={0.6} underlayColor="#DDDDDD">
                                     <Text style={styles.input}>
@@ -141,9 +139,9 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
                                 />
                             </View> */}
                             <View style={styles.wrapper}>
-                                <View style={styles.label}>
-                                    <QuantityIcon />
-                                </View>
+                                <Text style={{...styles.label, color: 'darkgray'}}>
+                                    Qty
+                                </Text>
                                 <TextInput
                                     placeholder="1"
                                     onChangeText={setEditedQuantity}
@@ -237,8 +235,6 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
                         </View>
                     </View>
                 )}
-            </View>
-            }
         </>
     )
 }
