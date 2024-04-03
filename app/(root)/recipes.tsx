@@ -1,23 +1,15 @@
-import { View, Pressable, Text, TextInput, StyleSheet, ScrollView, Image } from "react-native";
-import { useGraphQLClient, useUser } from "../../contexts/GraphQLClientContext";
+import { View, Pressable, Text, TextInput, StyleSheet, ScrollView } from "react-native";
+import { useUser } from "../../contexts/GraphQLClientContext";
 import { getRecipes } from "../../src/graphql/queries";
-import { Redirect } from "expo-router";
+import { Redirect, useRouter } from "expo-router";
 import { Recipe } from "../../src/API";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import RecipeWidget from "../../components/RecipeWidget";
 
 export default function Recipes() {
-    const client = useGraphQLClient();
-    const {user, setUser} = useUser();
+    const {user} = useUser();
     const [search, setSearch] = useState('');
-    const [readRecipe, setRead] = useState(0);
-
-    const func = () => {
-        console.log(user);
-    }
-    const selectRecipe = (i: number) => {
-        setRead(i + 1);
-    }
-
+    const router = useRouter();
     return (user.isLoggedIn ?
         <>
             <View style={styles.search}>
@@ -28,74 +20,20 @@ export default function Recipes() {
                     onChangeText={setSearch}
                 /> 
             </View>
-            <Pressable onPress={func}>
-                <Text>Test</Text>
-            </Pressable>
 
             {(user.recipes === undefined || user.recipes.length == 0)? (
-                <>
-                <Text>No Recipes</Text>
-                </>
-
+                <View style={styles.container}>
+                    <Pressable onPress={() => router.push('/home')} style={({pressed}) => [{backgroundColor: pressed ? 'paleturquoise' : 'white', }, styles.homeButton,]}><Text>Generate from Ingredients</Text></Pressable>
+                </View>
             ):(
-                <ScrollView 
-                    style={styles.container}>
-                    <View>
-                        <>
-                        {user.recipes.map((recipe, i) => (
-                            <View key={i} >
-                                <Pressable style={styles.recipe_container}
-                                    onPress={() => selectRecipe(i)}>
-                                    <Image source={{ uri: recipe.img}} style={styles.recipe_img}/>
-                                    <Text>{recipe.name}</Text>
-                                    <Text>{recipe.calories}</Text>
-                                    {/* THINGS TO ADD:
-                                        Styling
-                                        Pressable => Only shows recipe name / img / Calorie count at first, Press = displays steps and ingredients
-                                        Can't display ingredients atm, they are stored as array of {ingredient: string, amt: string} 
-                                    */}
-                                    
-                                </Pressable>
-                                {readRecipe === (i + 1)? (
-                                    <View style={styles.recipe_info_container}>
-                                        {recipe.ingredients.length !== 0? (
-                                            <>
-                                                <Text>Recipe Ingredients</Text>
-                                                {recipe.ingredients.map((ingredient, id1) => (
-                                                    <Text key={id1}>
-                                                        {ingredient.name}: {ingredient.amt}
-                                                    </Text>
-                                                ))}
-                                            </>
-                                        ):(
-                                            <Text>No Ingredients Found</Text>
-                                        )}
-                                
-                                        {recipe.steps.length !== 0? (
-                                            <>
-                                                <Text>Recipe Steps</Text>
-                                                {recipe.steps.map((step, id2) => (
-                                                    <Text key={id2}>
-                                                        {id2 + 1}: {step}
-                                                    </Text>
-                                                ))}
-                                            </>
-                                        ):(
-                                            <Text>No Recipe Steps Found</Text>
-                                        )}
-
-                                    </View>
-                                ):(
-                                    <></>
-                                )}
-                            </View>
-                            ))}
-
-                        </>
-                    </View>
+                <ScrollView style={styles.recipeList}>
+                    {user.recipes.map((recipe: Recipe, i: any) => (
+                        <View key={i} style={styles.wrapper}>
+                            <RecipeWidget recipe={recipe} />
+                        </View>
+                    ))}
                 </ScrollView>
             )}
-            
         </>
         :
         <Redirect href="/" />
@@ -104,8 +42,20 @@ export default function Recipes() {
 
 const styles = StyleSheet.create({
     container: {
+        justifyContent: "center",
+        alignItems: "center",
+        height: '100%',
+        elevation: 2,
+    },
+    homeButton: {
+        padding: 10,
+        borderRadius: 10,
+    },
+    recipeList: {
         backgroundColor: 'paleturquoise', 
         width: '100%', 
+        flexGrow: 1,
+        padding: 10,
     },
     search: {
         backgroundColor: 'white',
@@ -119,13 +69,12 @@ const styles = StyleSheet.create({
         padding: 10,
         paddingLeft: 20,
         borderRadius: 25,
+        color: 'gray',
     },
-    selectBtn: {
-
+    wrapper: {
+        marginBottom: 10,
     },
-    cancelSelectBtn:{},
-    recipeBtn:{},
-    recipe_container: {
+    recipeContiner: {
         flex: 1,
         backgroundColor: 'white',
         borderRadius: 10,
@@ -137,13 +86,4 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         elevation: 2,
     },
-    recipe_info_container:{
-
-    },
-    recipe_img:{
-        height: 75,
-        width: 75,
-        backgroundColor: 'black'
-    }
-
 });

@@ -22,7 +22,7 @@ export const GraphQLClientProvider = ({ children }: { children: ReactNode }) => 
 // Hook to use the GraphQL client
 export const useGraphQLClient = () => useContext(GraphQLClientContext);
 
-type userType = {
+export type userType = {
   isLoggedIn: boolean,
   userId: string,
   username: string,
@@ -46,7 +46,7 @@ const initState: userType = {
 export const UserContext = createContext<any>(null);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState(initState);
+  const [user, setUser] = useState<userType>(initState);
 
   return (
     <UserContext.Provider value = {{ user, setUser}}>
