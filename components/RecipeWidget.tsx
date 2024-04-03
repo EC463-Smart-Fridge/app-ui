@@ -1,4 +1,4 @@
-import { View, Pressable, Text, TextInput, StyleSheet, ScrollView, Image } from "react-native";
+import { View, Pressable, Text, StyleSheet, Image } from "react-native";
 import { Recipe, ingredient } from "../src/API";
 import { useState, useEffect } from "react";
 

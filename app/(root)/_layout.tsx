@@ -1,12 +1,9 @@
-import { Redirect, Tabs, Stack} from "expo-router";
-import { View, Text, ActivityIndicator } from "react-native";
-import { GraphQLClientProvider, UserProvider, useUser, useGraphQLClient} from "../../contexts/GraphQLClientContext";
-import { signInWithRedirect, AuthUser, signUp, confirmSignUp, type ConfirmSignUpInput, autoSignIn, signIn, type SignInInput, getCurrentUser, signOut } from "aws-amplify/auth";
+import { Tabs, Stack} from "expo-router";
+import { ActivityIndicator } from "react-native";
+import { useUser, useGraphQLClient} from "../../contexts/GraphQLClientContext";
+import { getCurrentUser, } from "aws-amplify/auth";
 import { getFridgeUser } from "../../src/graphql/queries";
-import { StatusBar } from "expo-status-bar";
-import { LinearGradient } from "expo-linear-gradient";
 import HomeIcon from "../../assets/icons/HomeIcon";
-// import CakeIcon from "../assets/icons/CakeIcon";
 import RecipeIcon from "../../assets/icons/RecipeIcon";
 import ScanIcon from "../../assets/icons/ScanIcon";
 import SettingsIcon from "../../assets/icons/SettingsIcon";

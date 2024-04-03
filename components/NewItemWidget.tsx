@@ -1,8 +1,7 @@
-import { Dispatch, SetStateAction, useState } from 'react'
+import { useState } from 'react'
 import { Text, TextInput, View, TouchableHighlight, StyleSheet, Modal, Pressable} from "react-native"
 import { Calendar } from 'react-native-calendars'
 import { Item } from '../src/API';
-import { useGraphQLClient } from '../contexts/GraphQLClientContext';
 import AddIcon from '../assets/icons/AddIcon';
 import CategoryIcon from '../assets/icons/CategoryIcon';
 import CaloriesIcon from '../assets/icons/CaloriesIcon';

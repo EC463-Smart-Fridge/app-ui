@@ -238,6 +238,7 @@ export default function Home() {
     // Handler for getting the recipes for the user
     const recipeHandler = async() => {
         setSortState(false);
+        setLoading(true);
         if (user.isLoggedIn) {
             try {
                 // Get list of selected item's prod_name's
@@ -284,7 +285,9 @@ export default function Home() {
                 }
             } catch (error) {
                 console.log('error on fetching recipes', error);
-            } 
+            } finally {
+                setLoading(false);
+            }
         }
         else {
             console.log("User not logged in");

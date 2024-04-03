@@ -1,13 +1,13 @@
-import { View, Pressable, Text, TextInput, StyleSheet, ScrollView, Image } from "react-native";
-import { useGraphQLClient, useUser, userType } from "../../contexts/GraphQLClientContext";
+import { View, Pressable, Text, TextInput, StyleSheet, ScrollView } from "react-native";
+import { useUser } from "../../contexts/GraphQLClientContext";
 import { getRecipes } from "../../src/graphql/queries";
 import { Redirect } from "expo-router";
-import { Recipe, ingredient } from "../../src/API";
-import { useState, useEffect } from "react";
+import { Recipe } from "../../src/API";
+import { useState } from "react";
 import RecipeWidget from "../../components/RecipeWidget";
 
 export default function Recipes() {
-    const {user, setUser} = useUser();
+    const {user} = useUser();
     const [search, setSearch] = useState('');
 
     return (user.isLoggedIn ?

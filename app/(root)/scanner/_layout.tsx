@@ -1,13 +1,12 @@
 import { Link, Redirect, Stack } from "expo-router";
 import { View, StyleSheet } from "react-native";
 import { usePathname } from 'expo-router';
-import { useUser, useGraphQLClient} from "../../../contexts/GraphQLClientContext";
+import { useUser} from "../../../contexts/GraphQLClientContext";
 
 export default function Layout() {
     let path = usePathname();
     // console.log(path)
     const { user, setUser } = useUser();
-    // const client = useGraphQLClient();
     return (user.isLoggedIn ?
         <>
             <View style={styles.nav}>

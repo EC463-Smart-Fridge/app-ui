@@ -1,5 +1,5 @@
 import { Text, View, TouchableHighlight, TextInput, StyleSheet, Modal, Pressable} from "react-native"
-import React, { useEffect, useState } from 'react'; 
+import React, { useState } from 'react'; 
 import { Item } from '../src/API';
 import DeleteIcon from '../assets/icons/DeleteIcon';
 import { Calendar } from "react-native-calendars";

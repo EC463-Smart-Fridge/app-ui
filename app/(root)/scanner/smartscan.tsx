@@ -9,7 +9,7 @@ import SwapIcon from '../../../assets/icons/SwapIcon';
 
 export default function SmartScan() {
   const client = useGraphQLClient();
-  const {user, setUser} = useUser();
+  const {user} = useUser();
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const cameraRef = useRef<Camera>(null);
   const [isFrontCamera, setIsFrontCamera] = useState<boolean>(true);
