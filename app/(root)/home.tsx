@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ScrollView, StatusBar, View, ActivityIndicator, RefreshControl, StyleSheet, Pressable, Text } from "react-native";
 import { getUserItems, getRecipes } from "../../src/graphql/queries";
 import { removeItem, addItem, editItem } from "../../src/graphql/mutations";
+import { router } from "expo-router";
 
 import { DataStore } from '@aws-amplify/datastore';
 
@@ -232,7 +233,9 @@ export default function Home() {
                             name: user.name,
                             recipes: fetched_recipes
                         });
+                        router.push('/recipes');
                     }
+
                     
                     // <PUT ALERT HERE>: No recipes found
                     else {
