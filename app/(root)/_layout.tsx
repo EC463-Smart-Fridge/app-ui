@@ -79,7 +79,7 @@ export default function Layout() {
     }, [])
 
     return (isLoading? 
-        <ActivityIndicator />
+        <ActivityIndicator size="large" color="darkturquoise" />
         : !user.isLoggedIn ?
         <Stack 
             screenOptions={{

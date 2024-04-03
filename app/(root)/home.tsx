@@ -35,7 +35,7 @@ export default function Home() {
     const client = useGraphQLClient();
     const {user, setUser} = useUser();
 
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
     const [selectState, setSelectState] = useState(false);
     const [sortState, setSortState] = useState(false);

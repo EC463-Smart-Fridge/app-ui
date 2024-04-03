@@ -258,7 +258,7 @@ export default function Auth() {
     // }, [user])
 
     return (isLoading ? (
-      <ActivityIndicator />
+        <ActivityIndicator size="large" color="darkturquoise" />
     ) : user.isLoggedIn ? (
         // ACCOUNT INFO
 
