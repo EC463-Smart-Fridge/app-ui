@@ -18,7 +18,7 @@ const NewItemWidget = ({handler}: Props) => {
     const [date, setDate] = useState(0);
     const [category, setCategory] = useState<string>("")
     const [calories, setCalories] = useState<string>("")
-    const [quantity, setQuantity] = useState<number>(1)
+    const [quantity, setQuantity] = useState<number>()
     const [open, setOpen] = useState<boolean>(false)
 
     return (
@@ -84,8 +84,8 @@ const NewItemWidget = ({handler}: Props) => {
                         </Text>
                         <TextInput
                             placeholder="Calories"
-                            value={quantity.toString()}
-                            onChangeText={(text) => setQuantity(Number(text))}
+                            value={calories.toString()}
+                            onChangeText={(text) => setCalories(text)}
                             inputMode="numeric"
                             style={styles.input}
                         />
@@ -100,8 +100,8 @@ const NewItemWidget = ({handler}: Props) => {
                         </Text>
                         <TextInput
                             placeholder="Quantity"
-                            value={calories.toString()}
-                            onChangeText={(text) => setCalories(text)}
+                            value={quantity ? quantity.toString() : ""}
+                            onChangeText={(text) => setQuantity(Number(text))}
                             inputMode="numeric"
                             style={styles.input}
                         />
@@ -123,7 +123,7 @@ const NewItemWidget = ({handler}: Props) => {
                         setDate(0);
                         setCategory("");
                         setCalories("");
-                        setQuantity(1);
+                        setQuantity(undefined);
                     }} 
                     activeOpacity={0.6} 
                     underlayColor="#DDDDDD"
