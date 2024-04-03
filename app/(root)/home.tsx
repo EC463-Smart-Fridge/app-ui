@@ -130,13 +130,19 @@ export default function Home() {
             // Modify the item on the interface
             console.log('Item edited successfully', editResult);
 
-            const updatedItems = items.map((item, idx) => {
-                if (idx === index) {
-                    return { ...item, ...input_values };
-                }
-                return item;
-            });
-            setItems(updatedItems);
+            // console.log(index)
+            // const updatedItems = items.map((item, idx) => {
+            //     if (idx === index) {
+            //         console.log("found", idx, item)
+            //         return { ...item, ...input_values };
+            //     } else {
+            //         console.log("not", idx)
+            //     }
+            //     return item;
+            // });
+            // console.log(updatedItems)
+            // setItems(updatedItems);
+            setItems(items.map((item, i) => i == index ? {item: {...item.item, ...edits}, checked: item.checked} : item));
         }
         catch (error) {
             console.error('Error editing item', error);
@@ -145,6 +151,7 @@ export default function Home() {
 
     // Handler for select 
     const selectItemHandler = async (index: number, check: boolean) => {
+        // console.log(items[index].item)
         if (selectState) {
             try {
                 var curItems = [...items]
@@ -347,9 +354,9 @@ export default function Home() {
                                     quantity={item.item.quantity}
                                     checked={item.checked}
                                     selectMode={selectState}
-                                    deleteHandler ={() => deleteItemHandler(i)} 
-                                    editHandler = {(edits) => editItemHandler(i, edits)}
-                                    selectHandler = {() => selectItemHandler(i, item.checked)}
+                                    deleteHandler ={() => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); console.log("deleting", index); deleteItemHandler(index)}} 
+                                    editHandler = {(edits) => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); console.log("editing", index); editItemHandler(index, edits)}}
+                                    selectHandler = {() => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); console.log("selecting", index); selectItemHandler(index, item.checked);}}
                                 />
                             </View>
                             ))}

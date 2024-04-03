@@ -1,5 +1,5 @@
 import { Text, View, TouchableHighlight, TextInput, StyleSheet, Modal, Pressable} from "react-native"
-import React, { useState } from 'react'; 
+import React, { useEffect, useState } from 'react'; 
 import { Item } from '../src/API';
 import DeleteIcon from '../assets/icons/DeleteIcon';
 import { Calendar } from "react-native-calendars";
@@ -19,7 +19,7 @@ interface Props extends Item {
     selectHandler: (item:any) => void;
 }
 
-const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, quantity, checked, selectMode, deleteHandler, editHandler, selectHandler}: Props) => {
+const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, quantity, checked, selectMode, deleteHandler, editHandler, selectHandler}: Props) => {
     const [editMode, setEditMode] = useState(false);
     const [calendarOpen, setCalendarOpen] = useState(false);
     const [editedName, setEditedName] = useState(name);
@@ -220,7 +220,18 @@ const ItemWidget = ({__typename = "Item",name, exp_date, category, calories, qua
                             <TouchableHighlight onPress={deleteHandler} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.button}>
                                 <DeleteIcon />
                             </TouchableHighlight>
-                            <TouchableHighlight onPress={() => setEditMode(true)} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.button}>
+                            <TouchableHighlight 
+                                onPress={() => {
+                                    setEditMode(true); 
+                                    setEditedName(name);
+                                    setEditedQuantity(quantity ? quantity.toString() : "");
+                                    setEditedExpDate(exp_date ? exp_date : 0);
+                                    console.log(name, "is being edited.")
+                                    }}
+                                activeOpacity={0.6} 
+                                underlayColor="#DDDDDD" 
+                                style={styles.button}
+                            >
                                 <EditIcon />
                             </TouchableHighlight>
                         </View>
