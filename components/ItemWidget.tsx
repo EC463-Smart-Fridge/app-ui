@@ -54,8 +54,6 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
             // calories: editedCalories,
             exp_date: editedExpDate,
         });
-
-        console.log(editedQuantity)
         setEditedName(editedName);
         setEditedQuantity(editedQuantity && 1);
         setEditedExpDate(editedExpDate ? editedExpDate : 0);
@@ -64,7 +62,6 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
             const cur_date = new Date(Date.now() / 1000).getTime();
             const exp_diff = new Date(editedExpDate).getTime();
             setTillExp((exp_diff - cur_date) * 0.0000115741);
-            console.log(tillExp)
         }
         else {
             setTillExp(9999);

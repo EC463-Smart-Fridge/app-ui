@@ -35,7 +35,7 @@ export default function Home() {
     const client = useGraphQLClient();
     const {user, setUser} = useUser();
 
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState('');
     const [selectState, setSelectState] = useState(false);
     const [sortState, setSortState] = useState(false);
@@ -238,7 +238,6 @@ export default function Home() {
     // Handler for getting the recipes for the user
     const recipeHandler = async() => {
         setSortState(false);
-        setLoading(true);
         if (user.isLoggedIn) {
             try {
                 // Get list of selected item's prod_name's
@@ -309,9 +308,7 @@ export default function Home() {
                 }
             } catch (error) {
                 console.log('error on fetching recipes', error);
-            } finally {
-                setLoading(false);
-            }
+            } 
         }
         else {
             console.log("User not logged in");
@@ -510,9 +507,7 @@ export default function Home() {
                 style={styles.container}
                 refreshControl={
                     <RefreshControl refreshing={loading} onRefresh={() => {
-                        // console.log('Refreshing');
                         setRefreshes(refreshes + 1);
-                        console.log({refreshes});
                         // getCurrUser();
                     }} />
                 }
@@ -530,9 +525,9 @@ export default function Home() {
                                     quantity={item.item.quantity}
                                     checked={item.checked}
                                     selectMode={selectState}
-                                    deleteHandler ={() => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); console.log("deleting", index); deleteItemHandler(index)}} 
-                                    editHandler = {(edits) => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); console.log("editing", index); editItemHandler(index, edits)}}
-                                    selectHandler = {() => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); console.log("selecting", index); selectItemHandler(index, item.checked);}}
+                                    deleteHandler ={() => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); deleteItemHandler(index)}} 
+                                    editHandler = {(edits) => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); editItemHandler(index, edits)}}
+                                    selectHandler = {() => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); selectItemHandler(index, item.checked);}}
                                 />
                             </View>
                             ))}
