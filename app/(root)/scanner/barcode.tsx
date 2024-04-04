@@ -16,7 +16,9 @@ export default function BarcodeScanner() {
 
   // Function to handle the barcode scan
   const onCodeScanned = useCallback((codes: Code[]) => {
+    console.log('Barcode scanned:', codes[0].value);
     if (!isShowingAlert && codes.length > 0 && codes[0].value) {
+      
       setIsShowingAlert(true);
       Alert.alert(
         'Scan successful!',
@@ -25,7 +27,7 @@ export default function BarcodeScanner() {
       );
       
       if (user.isLoggedIn) {
-        handleBarcodeData(codes[0].value);
+        handleBarcodeData(String(codes[0].value));
       }
     }
   }, [isShowingAlert, user]);
@@ -33,11 +35,13 @@ export default function BarcodeScanner() {
   // Function to handle barcode data (GraphQL mutation)
   const handleBarcodeData = async (barcodeData: string) => {
     try {
+      console.log('Adding item to user:', barcodeData);
       const addResult = await client.graphql({
         query: addItemByUPC,
         variables: {
           uid: user.userId,
-          upc: barcodeData
+          upc: barcodeData,
+          name: ''
         },
       });
       console.log('Item added successfully', addResult);
