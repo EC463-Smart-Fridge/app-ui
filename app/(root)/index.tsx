@@ -54,6 +54,7 @@ export default function Auth() {
     const [error, setError] = useState('');
     // Handler for user sign-in
     const handleSignIn = async({username, password}: SignInInput) => {
+        await getCurrUser();
         setError('');
         console.log("logging in")
         try {
