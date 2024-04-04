@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   },
   swap: {
     borderColor: 'darkturquoise',
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: 'transparent',
     borderWidth: 2,
     height: 40,
     aspectRatio: 1,
@@ -114,6 +114,6 @@ const styles = StyleSheet.create({
     padding: 4,
     position: 'absolute',
     bottom: 10,
-    left: 10,
+    right: 10,
   },
 });
