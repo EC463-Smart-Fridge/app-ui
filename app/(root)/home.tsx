@@ -35,7 +35,7 @@ export default function Home() {
     const client = useGraphQLClient();
     const {user, setUser} = useUser();
 
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
     const [selectState, setSelectState] = useState(false);
     const [sortState, setSortState] = useState(false);
@@ -75,6 +75,7 @@ export default function Home() {
     };
 
     const multiDeleteItemHandler = async () => {
+        setLoading(true);
         setSortState(false);
         if (user.isLoggedIn) {
             setLoading(true);
@@ -237,6 +238,7 @@ export default function Home() {
 
     // Handler for getting the recipes for the user
     const recipeHandler = async() => {
+        setLoading(true);
         setSortState(false);
         if (user.isLoggedIn) {
             try {
@@ -308,7 +310,9 @@ export default function Home() {
                 }
             } catch (error) {
                 console.log('error on fetching recipes', error);
-            } 
+            } finally {
+                setLoading(false);
+            }
         }
         else {
             console.log("User not logged in");
