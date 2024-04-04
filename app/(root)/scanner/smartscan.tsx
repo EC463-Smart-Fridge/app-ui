@@ -223,7 +223,7 @@ export default function SmartScan() {
         </View>
         
         <View style={styles.captureContainer}>
-          <Pressable onPress={handleCapture} style={({pressed}) => [{backgroundColor: pressed ? 'darkturquoise' : 'whitesmoke', },styles.capture]}></Pressable>
+          <Pressable onPress={handleCapture} style={({pressed}) => [{backgroundColor: pressed ? 'darkturquoise' : 'transparent', },styles.capture]}></Pressable>
         </View>
 
         <View style={styles.toggle}>
@@ -315,6 +315,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
   },
   produce: {
     color: 'darkturquoise',
@@ -329,14 +330,17 @@ const styles = StyleSheet.create({
     margin: 8,
   },
   buttonContainer: {
+    position: 'absolute',
+    bottom: 0,
     flexDirection: 'row',
     padding: 8,
     justifyContent: 'space-between',
-    // backgroundColor: 'red',
+    backgroundColor: 'transparent',
     width: '100%',
   },
   swap: {
-    borderColor: 'lightgray',
+    borderColor: 'darkturquoise',
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
     borderWidth: 2,
     height: 40,
     aspectRatio: 1,
