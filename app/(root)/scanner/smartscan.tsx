@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Pressable, Switch } from 'react-native';
+import { StyleSheet, Pressable, Switch, ActivityIndicator, Alert } from 'react-native';
 import { Text, View } from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import { useFocusEffect } from '@react-navigation/native';
@@ -20,6 +20,7 @@ export default function SmartScan() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [items, setItems] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -29,7 +30,7 @@ export default function SmartScan() {
       };
 
       requestCameraPermission();
-
+      setLoading(false)
       return () => setHasPermission(null); // cleanup function
     }, [])
   );
@@ -59,6 +60,7 @@ export default function SmartScan() {
   };
   
   const fetchClarifaiAPI = (requestData: string) => {
+    setLoading(true)
     const PAT = 'a82e73fa495c4c44942f78de03e45945'; // Replace with Clarifai PAT
     const MODEL_ID = 'food-item-recognition'; //'ocr-scene-english-paddleocr'; // Replace with Clarifai model ID
     const MODEL_VERSION_ID = '1d5fd481e0cf4826aa72ec3ff049e044'; //'46e99516c2d94f58baf2bcaf5a6a53a9'; // Replace with Clarifai model version ID
@@ -88,36 +90,27 @@ export default function SmartScan() {
           const prediction = outputs[0]; // Assuming there's only one prediction
           const data = prediction.data;
           setItems(data.concepts.map((concept: any) => String(concept.name)).slice(0, 5))
-          // const name = String(data.concepts[0].name)
-          // console.log(name + `${isProduce ? ' +raw' : ''}`)
-          // try {
-          //   const addResult = await client.graphql({
-          //       query: addItemByUPC,
-          //       variables: {
-          //           uid: user.userId,
-          //           upc: name + `${isProduce ? ' +raw' : ''}`,
-          //           name: name
-          //       },
-          //   })
-            
-          //   console.log('Item added successfully', addResult);
-          // } catch (error) {
-          //     console.error('Error adding item', error);
-          // }
-
-          // Log prediction details to the console
-          // console.log('Prediction:');
-          // console.log('Classes:', data.concepts.map((concept: any) => concept.name).join(', ')); // Assuming concepts contain predicted classes
-          // console.log('Probabilities:', data.concepts.map((concept: any) => concept.value).join(', ')); // Assuming concepts contain probabilities
-          
           setIsModalVisible(true)
         } else {
           console.log('No prediction outputs found.');
-        }
-      })
+          Alert.alert(  
+            'Sorry :(',  
+            'No results found. Please try again.',  
+            [  
+                {  
+                    text: 'OK',  
+                    onPress: () => console.log('Cancel Pressed'),  
+                    style: 'cancel',  
+                }
+            ],
+            {cancelable: true}
+            );  
+          }
+        })
       } catch (error) {
         console.error('Error fetching from Clarifai API', error);
       } finally {
+        setLoading(false)
       }
     }
     else {
@@ -130,14 +123,6 @@ export default function SmartScan() {
       return;
     }
     try {
-    // const addResult = await client.graphql({
-    //     query: addItemByUPC,
-    //     variables: {
-    //         uid: user.userId,
-    //         upc: name + `${isProduce ? ' +raw' : ''}`,
-    //         name: name
-    //     },
-    //   })
       const addResult = async () => {
         try {
           const promises = selectedItems.map(async (item) => {
@@ -162,21 +147,6 @@ export default function SmartScan() {
       };
       
       addResult();
-        // const addResult = async() => {
-        //   for (let i = 0; i < selectedItems.length; i++) {
-        //     console.log('Adding item', selectedItems[i])
-        //     const data = await client.graphql({
-        //       query: addItemByUPC,
-        //       variables: {
-        //           uid: user.userId,
-        //           upc: selectedItems[i] + `${isProduce ? ' +raw' : ''}`,
-        //           name: selectedItems[i]
-        //         },
-        //       })
-        //       console.log('Item added successfully', data);
-        //     }
-        //   }
-        // addResult();
 
     } catch (error) {
         console.error('Error adding item', error);
@@ -187,11 +157,21 @@ export default function SmartScan() {
     }
 }
 
-  if (hasPermission === null || hasPermission === false) {
-    return <Text>No access to camera</Text>;
+  if (!user.isLoggedIn) {
+    <View>
+      <Text>Not logged in</Text>
+    </View>
   }
 
-  return (user.isLoggedIn ?  
+  if (loading || hasPermission === null || hasPermission === false) {
+    return (
+      <View style={styles.modalBackground}>
+        <ActivityIndicator size={"large"} color={"paleturquoise"} animating={true}/>
+      </View>
+    );
+  }
+
+  return (
     <View style={styles.page}>
       {isModalVisible && 
           <Modal
@@ -257,10 +237,6 @@ export default function SmartScan() {
         </View>
       </View>
     </View>
-    :
-    <View>
-      <Text>Not logged in</Text>
-    </View>
   );
 }
 
@@ -306,6 +282,8 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     zIndex: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cancel: {
     height: 40,
