@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 import { View } from "react-native";
-import { GraphQLClientProvider, UserProvider} from "../contexts/GraphQLClientContext";
+import { GraphQLClientProvider, RefreshProvider, UserProvider} from "../contexts/GraphQLClientContext";
 
 export default function Layout() {
     return (
@@ -14,15 +14,17 @@ export default function Layout() {
         {/* TEMP MOBILE TOP BAR */}
         <GraphQLClientProvider>
             <UserProvider>
-                <Stack
-                    screenOptions={{
-                        headerShown: false,
-                    }}
-                >
-                    <Stack.Screen
-                        name="(root)"
-                    ></Stack.Screen>
-                </Stack>
+                <RefreshProvider>
+                    <Stack
+                        screenOptions={{
+                            headerShown: false,
+                        }}
+                    >
+                        <Stack.Screen
+                            name="(root)"
+                        ></Stack.Screen>
+                    </Stack>
+                </RefreshProvider>
             </UserProvider>
         </GraphQLClientProvider>
         </>

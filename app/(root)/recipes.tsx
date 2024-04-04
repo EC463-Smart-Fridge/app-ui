@@ -23,7 +23,7 @@ export default function Recipes() {
 
             {(user.recipes === undefined || user.recipes.length == 0)? (
                 <View style={styles.container}>
-                    <Pressable onPress={() => router.push('/home')} style={({pressed}) => [{backgroundColor: pressed ? 'paleturquoise' : 'white', }, styles.homeButton,]}><Text>Generate from Ingredients</Text></Pressable>
+                    <Pressable onPress={() => router.push('/home')} style={({pressed}) => [{backgroundColor: pressed ? 'lightgray' : 'white', }, styles.homeButton,]}><Text>Generate from Ingredients</Text></Pressable>
                 </View>
             ):(
                 <ScrollView style={styles.recipeList}>
@@ -32,6 +32,7 @@ export default function Recipes() {
                             <RecipeWidget recipe={recipe} />
                         </View>
                     ))}
+                    <View style={{height: 10,}}></View>
                 </ScrollView>
             )}
         </>
@@ -45,11 +46,12 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         height: '100%',
-        elevation: 2,
+        paddingBottom: 128,
     },
     homeButton: {
         padding: 10,
         borderRadius: 10,
+        elevation: 2,
     },
     recipeList: {
         backgroundColor: 'paleturquoise', 

@@ -6,7 +6,7 @@ import { router } from "expo-router";
 
 import { DataStore } from '@aws-amplify/datastore';
 
-import { useGraphQLClient, useUser } from "../../contexts/GraphQLClientContext";
+import { useGraphQLClient, useRefresh, useUser } from "../../contexts/GraphQLClientContext";
 import { Item, Recipe, ingredient } from '../../src/API';
 
 import ItemWidget from "../../components/ItemWidget";
@@ -35,6 +35,7 @@ enum sort {
 export default function Home() {
     const client = useGraphQLClient();
     const {user, setUser} = useUser();
+    const {refresh, setRefresh} = useRefresh();
 
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
@@ -42,7 +43,6 @@ export default function Home() {
     const [sortState, setSortState] = useState(false);
     const [sortType, setSortType] = useState<sort>(sort.default);
     const [ascendingSort, setAscendingSort] = useState(true);
-    const [refreshes, setRefreshes] = useState(0);
 
     const [items, setItems] = useState<fridgeItem[]>([]);
 
@@ -361,7 +361,7 @@ export default function Home() {
         };
         test();
         // getCurrUser();
-    }, [refreshes, user, items.length])
+    }, [refresh, user, items.length])
 
     const toggleSelect = () => {
         if (selectState) {
@@ -455,13 +455,13 @@ export default function Home() {
 
                     <Pressable
                         style={{...styles.sortOption, backgroundColor: ascendingSort ? 'paleturquoise' : 'white'}}
-                        onPress={() => setAscendingSort(true)}
+                        onPress={() => {setAscendingSort(true); setRefresh(!refresh)}}
                     >
                         <Text>Ascending</Text>
                     </Pressable>
                     <Pressable
                         style={{...styles.sortOption, backgroundColor: !ascendingSort ? 'paleturquoise' : 'white'}}
-                        onPress={() => setAscendingSort(false)}
+                        onPress={() => {setAscendingSort(false); setRefresh(!refresh)}}
                     >
                         <Text>Descending</Text>
                     </Pressable>
@@ -470,37 +470,37 @@ export default function Home() {
 
                     <Pressable 
                         style={{...styles.sortOption, backgroundColor: sortType == sort.default ? 'paleturquoise' : 'white'}}
-                        onPress={() => {setSortType(sort.default);}}
+                        onPress={() => {setSortType(sort.default); setRefresh(!refresh);}}
                     >
                         <Text>Default</Text>
                     </Pressable>
                     <Pressable 
                         style={{...styles.sortOption, backgroundColor: sortType == sort.name ? 'paleturquoise' : 'white'}}
-                        onPress={() => {setSortType(sort.name);}}
+                        onPress={() => {setSortType(sort.name); setRefresh(!refresh);}}
                     >
                         <Text>Name</Text>
                     </Pressable>
                     <Pressable 
                         style={{...styles.sortOption, backgroundColor: sortType == sort.exp_date ? 'paleturquoise' : 'white'}}
-                        onPress={() => {setSortType(sort.exp_date);}}
+                        onPress={() => {setSortType(sort.exp_date); setRefresh(!refresh);}}
                     >
                         <Text>Expiration</Text>
                     </Pressable>
                     <Pressable 
                         style={{...styles.sortOption, backgroundColor: sortType == sort.category ? 'paleturquoise' : 'white'}}
-                        onPress={() => {setSortType(sort.category);}}
+                        onPress={() => {setSortType(sort.category); setRefresh(!refresh);}}
                     >
                         <Text>Category</Text>
                     </Pressable>
                     <Pressable 
                         style={{...styles.sortOption, backgroundColor: sortType == sort.calories ? 'paleturquoise' : 'white'}}
-                        onPress={() => {setSortType(sort.calories);}}
+                        onPress={() => {setSortType(sort.calories); setRefresh(!refresh);}}
                     >
                         <Text>Calories</Text>
                     </Pressable>
                     <Pressable 
                         style={{...styles.sortOption, backgroundColor: sortType == sort.quantity ? 'paleturquoise' : 'white'}}
-                        onPress={() => {setSortType(sort.quantity);}}
+                        onPress={() => {setSortType(sort.quantity); setRefresh(!refresh);}}
                     >
                         <Text>Quantity</Text>
                     </Pressable>
@@ -512,36 +512,36 @@ export default function Home() {
                 style={styles.container}
                 refreshControl={
                     <RefreshControl refreshing={loading} onRefresh={() => {
-                        setRefreshes(refreshes + 1);
-                        // getCurrUser();
+                        setRefresh(!refresh);
                     }} />
                 }
             >
-                    <View>
-                        <>
-                        {items.filter((item, i) => search == '' || item.item.name?.toLowerCase().includes(search.toLowerCase())).sort(sortCriteria).map((item, i) => (
-                            <View key={i}>
-                                <ItemWidget 
-                                    __typename="Item"
-                                    name={item.item.name} 
-                                    exp_date={item.item.exp_date} 
-                                    category={item.item.category}
-                                    calories={item.item.calories}
-                                    quantity={item.item.quantity}
-                                    checked={item.checked}
-                                    selectMode={selectState}
-                                    deleteHandler ={() => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); deleteItemHandler(index)}} 
-                                    editHandler = {(edits) => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); editItemHandler(index, edits)}}
-                                    selectHandler = {() => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); selectItemHandler(index, item.checked);}}
-                                />
-                            </View>
-                            ))}
-    
-                            {
-                                search == '' && !selectState && <NewItemWidget handler={addItemHandler}/>
-                            }
-                        </>
-                    </View>
+                <View>
+                    <>
+                    {items.filter((item, i) => search == '' || item.item.name?.toLowerCase().includes(search.toLowerCase())).sort(sortCriteria).map((item, i) => (
+                        <View key={i}>
+                            <ItemWidget 
+                                __typename="Item"
+                                name={item.item.name} 
+                                exp_date={item.item.exp_date} 
+                                category={item.item.category}
+                                calories={item.item.calories}
+                                quantity={item.item.quantity}
+                                checked={item.checked}
+                                selectMode={selectState}
+                                deleteHandler ={() => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); deleteItemHandler(index)}} 
+                                editHandler = {(edits) => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); editItemHandler(index, edits)}}
+                                selectHandler = {() => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); selectItemHandler(index, item.checked);}}
+                            />
+                        </View>
+                        ))}
+
+                        {
+                            search == '' && !selectState && <NewItemWidget handler={addItemHandler}/>
+                        }
+                    </>
+                </View>
+                <View style={{height: 10,}}></View>
             </ScrollView>}
         </>
         :
