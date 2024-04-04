@@ -62,3 +62,24 @@ export const useUser = () => {
   }
   return context;
 }
+
+
+export const RefreshContext = createContext<any>(null);
+
+export const RefreshProvider = ({ children }: { children: ReactNode }) => {
+  const [refresh, setRefresh] = useState(false);
+
+  return (
+    <RefreshContext.Provider value = {{ refresh, setRefresh}}>
+      { children }
+    </RefreshContext.Provider>
+  );
+}
+
+export const useRefresh = () => {
+  const context = useContext(RefreshContext);
+  if (!context) {
+    throw new Error("That ain't it, chief")
+  }
+  return context;
+}

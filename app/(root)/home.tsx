@@ -6,7 +6,7 @@ import { router } from "expo-router";
 
 import { DataStore } from '@aws-amplify/datastore';
 
-import { useGraphQLClient, useUser } from "../../contexts/GraphQLClientContext";
+import { useGraphQLClient, useRefresh, useUser } from "../../contexts/GraphQLClientContext";
 import { Item, Recipe, ingredient } from '../../src/API';
 
 import ItemWidget from "../../components/ItemWidget";
@@ -35,6 +35,7 @@ enum sort {
 export default function Home() {
     const client = useGraphQLClient();
     const {user, setUser} = useUser();
+    const {refresh, setRefresh} = useRefresh();
 
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
@@ -42,7 +43,6 @@ export default function Home() {
     const [sortState, setSortState] = useState(false);
     const [sortType, setSortType] = useState<sort>(sort.default);
     const [ascendingSort, setAscendingSort] = useState(true);
-    const [refreshes, setRefreshes] = useState(0);
 
     const [items, setItems] = useState<fridgeItem[]>([]);
 
@@ -361,7 +361,7 @@ export default function Home() {
         };
         test();
         // getCurrUser();
-    }, [refreshes, user, items.length])
+    }, [refresh, user, items.length])
 
     const toggleSelect = () => {
         if (selectState) {
@@ -470,37 +470,37 @@ export default function Home() {
 
                     <Pressable 
                         style={{...styles.sortOption, backgroundColor: sortType == sort.default ? 'paleturquoise' : 'white'}}
-                        onPress={() => {setSortType(sort.default);}}
+                        onPress={() => {setSortType(sort.default); setRefresh(!refresh);}}
                     >
                         <Text>Default</Text>
                     </Pressable>
                     <Pressable 
                         style={{...styles.sortOption, backgroundColor: sortType == sort.name ? 'paleturquoise' : 'white'}}
-                        onPress={() => {setSortType(sort.name);}}
+                        onPress={() => {setSortType(sort.name); setRefresh(!refresh);}}
                     >
                         <Text>Name</Text>
                     </Pressable>
                     <Pressable 
                         style={{...styles.sortOption, backgroundColor: sortType == sort.exp_date ? 'paleturquoise' : 'white'}}
-                        onPress={() => {setSortType(sort.exp_date);}}
+                        onPress={() => {setSortType(sort.exp_date); setRefresh(!refresh);}}
                     >
                         <Text>Expiration</Text>
                     </Pressable>
                     <Pressable 
                         style={{...styles.sortOption, backgroundColor: sortType == sort.category ? 'paleturquoise' : 'white'}}
-                        onPress={() => {setSortType(sort.category);}}
+                        onPress={() => {setSortType(sort.category); setRefresh(!refresh);}}
                     >
                         <Text>Category</Text>
                     </Pressable>
                     <Pressable 
                         style={{...styles.sortOption, backgroundColor: sortType == sort.calories ? 'paleturquoise' : 'white'}}
-                        onPress={() => {setSortType(sort.calories);}}
+                        onPress={() => {setSortType(sort.calories); setRefresh(!refresh);}}
                     >
                         <Text>Calories</Text>
                     </Pressable>
                     <Pressable 
                         style={{...styles.sortOption, backgroundColor: sortType == sort.quantity ? 'paleturquoise' : 'white'}}
-                        onPress={() => {setSortType(sort.quantity);}}
+                        onPress={() => {setSortType(sort.quantity); setRefresh(!refresh);}}
                     >
                         <Text>Quantity</Text>
                     </Pressable>
@@ -512,8 +512,7 @@ export default function Home() {
                 style={styles.container}
                 refreshControl={
                     <RefreshControl refreshing={loading} onRefresh={() => {
-                        setRefreshes(refreshes + 1);
-                        // getCurrUser();
+                        setRefresh(!refresh);
                     }} />
                 }
             >

@@ -10,6 +10,7 @@ import CategoryIcon from '../assets/icons/CategoryIcon';
 import CaloriesIcon from '../assets/icons/CaloriesIcon';
 import QuantityIcon from '../assets/icons/QuantityIcon';
 import ExpirationIcon from '../assets/icons/ExpirationIcon';
+import { useRefresh } from "../contexts/GraphQLClientContext";
 
 interface Props extends Item {
     checked: boolean;
@@ -20,13 +21,12 @@ interface Props extends Item {
 }
 
 const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, quantity, checked, selectMode, deleteHandler, editHandler, selectHandler}: Props) => {
+    const {refresh, setRefresh} = useRefresh();
     const [editMode, setEditMode] = useState(false);
     const [calendarOpen, setCalendarOpen] = useState(false);
     const [editedName, setEditedName] = useState(name);
     const [editedExpDate, setEditedExpDate] = useState(exp_date ? exp_date : 0);
-    const [editedCategory, setEditedCategory] = useState(category ? category : "");
     const [editedQuantity, setEditedQuantity] = useState(quantity && 1);
-    const [editedCalories, setEditedCalories] = useState(calories ? calories : "");
     const cur_date = new Date(Date.now() / 1000).getTime();
     const exp_diff = (exp_date != 0 && exp_date != null)? new Date(exp_date).getTime() : 999;
 
@@ -68,6 +68,9 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
         }
     };
 
+    useEffect(() => {
+        setTillExp((exp_date != 0 && exp_date != null) ? (exp_diff - cur_date) * 0.0000115741 : 999);
+    }, [refresh]);
 
     return (<>
         {selectMode ? (
@@ -98,168 +101,139 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
                     }
                 </View>
             </Pressable>
-        ):editMode ? (
-                    <>
-                        <Modal
-                            transparent={true}
-                            visible={calendarOpen}
-                            onRequestClose={() => setCalendarOpen(false)}
-                            style={styles.modal}
-                        >
-                        <View style={styles.calendarWrapper}>
-                            <Calendar
-                                style={styles.calendar} 
-                                // onDayPress={(e) => {setDate(new Date(e.dateString).getTime() / 1000); setOpen(false); }}
-                                onDayPress={(day) => {
-                                    const date = new Date(day.year, day.month - 1, day.day);
-                                    const timestamp = date.getTime() / 1000; // Convert milliseconds to seconds
-                                    setEditedExpDate(timestamp);
-                                    setCalendarOpen(false);
-                                }}
+        ) : editMode ? (
+                <>
+                    <Modal
+                        transparent={true}
+                        visible={calendarOpen}
+                        onRequestClose={() => setCalendarOpen(false)}
+                        style={styles.modal}
+                    >
+                    <View style={styles.calendarWrapper}>
+                        <Calendar
+                            style={styles.calendar} 
+                            // onDayPress={(e) => {setDate(new Date(e.dateString).getTime() / 1000); setOpen(false); }}
+                            onDayPress={(day) => {
+                                const date = new Date(day.year, day.month - 1, day.day);
+                                const timestamp = date.getTime() / 1000; // Convert milliseconds to seconds
+                                setEditedExpDate(timestamp);
+                                setCalendarOpen(false);
+                            }}
+                        />
+                    </View>
+
+                        <Pressable onPress={() => setCalendarOpen(false)} style={styles.modalBackground}></Pressable>
+                    </Modal>
+                <View style={{...(styles.container), opacity: 0.9}}>
+                    <View style={styles.info}>
+                        <TextInput
+                            style={styles.name}
+                            onChangeText={setEditedName}
+                            value={editedName ? (editedName) : ""}
+                            inputMode="text"
+                        />
+                        <View style={styles.wrapper}>
+                            <View style={styles.label}>
+                                <ExpirationIcon fill={'darkgray'}/>
+                            </View>
+                            <TouchableHighlight onPress={() => setCalendarOpen(!calendarOpen)} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.input}>
+                                <Text >
+                                    {editedExpDate != 0 ? new Date(editedExpDate * 1000).toLocaleDateString("en-US") : "Add Date"}
+                                </Text>
+                            </TouchableHighlight>
+                        </View>
+                        <View style={styles.wrapper}>
+                            <Text style={{...styles.label, color: 'darkgray'}}>
+                                Qty
+                            </Text>
+                            <TextInput
+                                placeholder="Quantity"
+                                onChangeText={(e) => setEditedQuantity(e != "" ? parseInt(e) : null)}
+                                value={editedQuantity ? String(editedQuantity) : ""}
+                                inputMode="numeric"
+                                style={styles.input}
                             />
                         </View>
-
-                            <Pressable onPress={() => setCalendarOpen(false)} style={styles.modalBackground}></Pressable>
-                        </Modal>
-                    <View style={{...(styles.container), opacity: 0.9}}>
-                        <View style={styles.info}>
-                            <TextInput
-                                style={styles.name}
-                                onChangeText={setEditedName}
-                                value={editedName ? (editedName) : ""}
-                                inputMode="text"
-                            />
-                            {/* <View style={styles.wrapper}>
-                                <Text>Expires: </Text>
-                                <TextInput
-                                    placeholder="Add Date"
-                                    onChangeText={setEditedExpDate}
-                                    value={editedExpDate}
-                                />
-                            </View> */}
+                    </View>
+                    <View style={styles.buttonsContainer}>
+                        <TouchableHighlight onPress={handleSave} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.button}>
+                            {/* <Text>Save</Text> */}
+                            <SaveIcon />
+                        </TouchableHighlight>
+                        <TouchableHighlight onPress={handleCancel} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.button}>
+                            {/* <Text>Cancel</Text> */}
+                            <CancelIcon />
+                        </TouchableHighlight>
+                    </View>
+                </View>
+                </>
+            ) : (
+                <View style={tillExp < 0 ? styles.expired_item : styles.container}>
+                    <View style={styles.info}>                
+                        <Text numberOfLines={1} style={styles.name}>{name}</Text>
+                        {exp_date != 0 && exp_date != null && 
                             <View style={styles.wrapper}>
                                 <View style={styles.label}>
-                                    <ExpirationIcon fill={'darkgray'}/>
+                                    <ExpirationIcon fill={tillExp < 5 ? "red" : "paleturquoise"} />
                                 </View>
-                                <TouchableHighlight onPress={() => setCalendarOpen(!calendarOpen)} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.input}>
-                                    <Text >
-                                        {editedExpDate != 0 ? new Date(editedExpDate * 1000).toLocaleDateString("en-US") : "Add Date"}
-                                    </Text>
-                                </TouchableHighlight>
+                                <Text style={{color: 'black'}}>
+                                    {new Date(exp_date * 1000).toLocaleDateString("en-US")}
+                                </Text>
+                                <Text style={(tillExp >= 0 && tillExp < 5)? {color:"red"} : {color: 'black'}}>
+                                    {(tillExp >= 0 && tillExp < 5)? ` (Expires in ${tillExp.toFixed(2)} Days)` :""}
+                                </Text>
                             </View>
-                            {/* <View style={styles.wrapper}>
-                                <Text style={styles.label}>Category: </Text>
-                                <TextInput
-                                    placeholder="Add Category"
-                                    onChangeText={setEditedCategory}
-                                    value={editedCategory}
-                                    inputMode="text"
-                                    style={styles.input}
-                                />
-                            </View> */}
+                        }
+
+                        {category != '' && category != null && 
                             <View style={styles.wrapper}>
-                                <Text style={{...styles.label, color: 'darkgray'}}>
+                                <View style={styles.label}>
+                                    <CategoryIcon fill={"paleturquoise"}/>
+                                </View>
+                                <Text style={styles.detail}>{category}</Text>
+                            </View>
+                        }
+
+                        {quantity != 0 && quantity != null &&
+                            <View style={styles.wrapper}>
+                                <Text style={styles.label}>
                                     Qty
                                 </Text>
-                                <TextInput
-                                    placeholder="Quantity"
-                                    onChangeText={(e) => setEditedQuantity(e != "" ? parseInt(e) : null)}
-                                    value={editedQuantity ? String(editedQuantity) : ""}
-                                    inputMode="numeric"
-                                    style={styles.input}
-                                />
+                                <Text style={styles.detail}>{quantity}</Text>
                             </View>
-                            {/* <View style={styles.wrapper}>
-                                <Text style={styles.label}>Calories: </Text>
-                                <TextInput
-                                    placeholder="0"
-                                    onChangeText={setEditedCalories}
-                                    value={editedCalories}
-                                    inputMode="numeric"
-                                    style={styles.input}
-                                />
-                            </View> */}
-                        </View>
-                        <View style={styles.buttonsContainer}>
-                            <TouchableHighlight onPress={handleSave} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.button}>
-                                {/* <Text>Save</Text> */}
-                                <SaveIcon />
-                            </TouchableHighlight>
-                            <TouchableHighlight onPress={handleCancel} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.button}>
-                                {/* <Text>Cancel</Text> */}
-                                <CancelIcon />
-                            </TouchableHighlight>
-                        </View>
+                        }
+
+                        {calories != '' && calories != null &&
+                            <View style={styles.wrapper}>
+                                <Text style={styles.label}>
+                                    Cal
+                                </Text>
+                                <Text style={styles.detail}>{calories}</Text>
+                            </View>
+                        }
                     </View>
-                    </>
-                ) : (
-                    <View style={tillExp < 0 ? styles.expired_item : styles.container}>
-                        <View style={styles.info}>                
-                            <Text numberOfLines={1} style={styles.name}>{name}</Text>
-                            {exp_date != 0 && exp_date != null && 
-                                <View style={styles.wrapper}>
-                                    <View style={styles.label}>
-                                        <ExpirationIcon fill={tillExp < 5 ? "red" : "paleturquoise"} />
-                                    </View>
-                                    <Text style={{color: 'black'}}>
-                                        {new Date(exp_date * 1000).toLocaleDateString("en-US")}
-                                    </Text>
-                                    <Text style={(tillExp >= 0 && tillExp < 5)? {color:"red"} : {color: 'black'}}>
-                                        {(tillExp >= 0 && tillExp < 5)? ` (Expires in ${tillExp.toFixed(2)} Days)` :""}
-                                    </Text>
-                                </View>
-                            }
 
-                            {category != '' && category != null && 
-                                <View style={styles.wrapper}>
-                                    <View style={styles.label}>
-                                        <CategoryIcon fill={"paleturquoise"}/>
-                                    </View>
-                                    <Text style={styles.detail}>{category}</Text>
-                                </View>
-                            }
-
-                            {quantity != 0 && quantity != null &&
-                                <View style={styles.wrapper}>
-                                    <Text style={styles.label}>
-                                        Qty
-                                    </Text>
-                                    <Text style={styles.detail}>{quantity}</Text>
-                                </View>
-                            }
-
-                            {calories != '' && calories != null &&
-                                <View style={styles.wrapper}>
-                                    <Text style={styles.label}>
-                                        Cal
-                                    </Text>
-                                    <Text style={styles.detail}>{calories}</Text>
-                                </View>
-                            }
-                        </View>
-
-                        <View style={styles.buttonsContainer}>
-                            <TouchableHighlight onPress={deleteHandler} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.button}>
-                                <DeleteIcon />
-                            </TouchableHighlight>
-                            <TouchableHighlight 
-                                onPress={() => {
-                                    setEditMode(true); 
-                                    setEditedName(name);
-                                    setEditedQuantity(quantity && 1);
-                                    setEditedExpDate(exp_date ? exp_date : 0);
-                                    // console.log(name, "is being edited.")
-                                    }}
-                                activeOpacity={0.6} 
-                                underlayColor="#DDDDDD" 
-                                style={styles.button}
-                            >
-                                <EditIcon />
-                            </TouchableHighlight>
-                        </View>
+                    <View style={styles.buttonsContainer}>
+                        <TouchableHighlight onPress={deleteHandler} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.button}>
+                            <DeleteIcon />
+                        </TouchableHighlight>
+                        <TouchableHighlight 
+                            onPress={() => {
+                                setEditMode(true); 
+                                setEditedName(name);
+                                setEditedQuantity(quantity && 1);
+                                setEditedExpDate(exp_date ? exp_date : 0);
+                                // console.log(name, "is being edited.")
+                                }}
+                            activeOpacity={0.6} 
+                            underlayColor="#DDDDDD" 
+                            style={styles.button}
+                        >
+                            <EditIcon />
+                        </TouchableHighlight>
                     </View>
-                    
-                )}
+                </View>
+            )}
         </>
     )
 }
