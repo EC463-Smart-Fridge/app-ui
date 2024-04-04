@@ -203,7 +203,7 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
                             </View>
                         }
 
-                        {calories != '' && calories != null &&
+                        {calories != null && calories != '' && calories != '0' && calories != 'NaN' &&
                             <View style={styles.wrapper}>
                                 <Text style={styles.label}>
                                     Cal

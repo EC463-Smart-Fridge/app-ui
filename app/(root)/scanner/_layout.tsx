@@ -10,8 +10,24 @@ export default function Layout() {
     return (user.isLoggedIn ?
         <>
             <View style={styles.nav}>
-                <Link href="/scanner/barcode" style={[styles.link, (path==="/scanner/barcode" || path==="/scanner") && styles.active]}>Barcode Scanner</Link>
-                <Link href="/scanner/smartscan" style={[styles.link, path==="/scanner/smartscan" && styles.active]}>Smart Scanner</Link>
+                <Link 
+                    href="/scanner/smartscan" 
+                    style={{...styles.link, 
+                        backgroundColor: (path==="/scanner/smartscan" || path==="/scanner") ? "darkturquoise" : "white" ,
+                        color: (path==="/scanner/smartscan" || path==="/scanner") ? "white" : "gray",
+                    }}
+                >
+                    Smart Scanner
+                </Link>
+                <Link 
+                    href="/scanner/barcode" 
+                    style={{...styles.link,
+                        backgroundColor: path==="/scanner/barcode" ? "darkturquoise" : "white",
+                        color: path==="/scanner/barcode" ? "white" : "gray",
+                    }}
+                >
+                    Barcode Scanner
+                </Link>
             </View>
             <Stack
                 screenOptions={
@@ -20,8 +36,8 @@ export default function Layout() {
                     }
                 }
             >
-                <Stack.Screen name="barcode"></Stack.Screen>
                 <Stack.Screen name="smartscan"></Stack.Screen>
+                <Stack.Screen name="barcode"></Stack.Screen>
             </Stack>
         </> :
         <Redirect href="/" />
@@ -34,6 +50,11 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
+        backgroundColor: "transparent",
+        position: "absolute",
+        width: "100%",
+        top: 0,
+        zIndex: 100,
     },
     link: {
         padding: 8,
@@ -41,10 +62,5 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         justifyContent: "center",
         alignItems: "center",
-        color: "gray"
     },
-    active: {
-        color: "white",
-        backgroundColor: "darkturquoise"
-    }
 });

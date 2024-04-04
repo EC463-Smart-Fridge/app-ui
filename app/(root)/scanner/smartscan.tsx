@@ -5,8 +5,8 @@ import { Camera, CameraType } from 'expo-camera';
 import { useFocusEffect } from '@react-navigation/native';
 import { addItemByUPC } from "../../../src/graphql/mutations";
 import { useGraphQLClient, useUser } from "../../../contexts/GraphQLClientContext";
-import SwapIcon from '../../../assets/icons/SwapIcon';
 import { Modal } from 'react-native';
+import SwapIcon from '../../../assets/icons/SwapIcon';
 import AddIcon from '../../../assets/icons/AddIcon';
 import DeleteIcon from '../../../assets/icons/DeleteIcon';
 import Spinner from '../../../components/Spinner';
@@ -17,7 +17,6 @@ export default function SmartScan() {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const cameraRef = useRef<Camera>(null);
   const [isFrontCamera, setIsFrontCamera] = useState<boolean>(true);
-  const [isProduce, setIsProduce] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [items, setItems] = useState<string[]>([]);
@@ -133,7 +132,7 @@ export default function SmartScan() {
               query: addItemByUPC,
               variables: {
                 uid: user.userId,
-                upc: item + `${isProduce ? ' +raw' : ''}`,
+                upc: item,
                 name: item,
               },
             });
@@ -216,27 +215,10 @@ export default function SmartScan() {
           </Modal>
       }
       <Camera style={styles.camera} ref={cameraRef} type={isFrontCamera ? CameraType.front : CameraType.back} />
-      <View style={styles.buttonContainer}>
-        <View style={styles.leftButtons}>
-          <Pressable onPress={() => setIsFrontCamera(!isFrontCamera)} style={styles.swap}><SwapIcon fill={"darkturquoise"}/></Pressable>
-          {/* <Pressable onPress={() => setIsFrontCamera(!isFrontCamera)} style={styles.swap}><SwapIcon /></Pressable> */}
-        </View>
-        
         <View style={styles.captureContainer}>
-          <Pressable onPress={handleCapture} style={({pressed}) => [{backgroundColor: pressed ? 'darkturquoise' : 'whitesmoke', },styles.capture]}></Pressable>
+          <Pressable onPress={handleCapture} style={({pressed}) => [{backgroundColor: pressed ? 'darkturquoise' : 'transparent', },styles.capture]}></Pressable>
         </View>
-
-        <View style={styles.toggle}>
-          <Text style={styles.produce}>Produce</Text>
-          <Switch
-            trackColor={{false: 'darkgray', true: 'darkturquoise'}}
-            thumbColor='white'
-            // ios_backgroundColor="#3e3e3e"
-            onValueChange={() => {setIsProduce(!isProduce);}}
-            value={isProduce}
-          />
-        </View>
-      </View>
+      <Pressable onPress={() => setIsFrontCamera(!isFrontCamera)} style={styles.swap}><SwapIcon fill={"darkturquoise"}/></Pressable>
     </View>
   );
 }
@@ -306,19 +288,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     columnGap: 8,
   },
-  toggle: {
-    borderColor: 'lightgray',
-    borderWidth: 2,
-    padding: 8,
-    height: 40,
-    borderRadius: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  produce: {
-    color: 'darkturquoise',
-  },
   captureContainer: {
     position: 'absolute',
     bottom: 0,
@@ -328,23 +297,21 @@ const styles = StyleSheet.create({
     height: 40,
     margin: 8,
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    padding: 8,
-    justifyContent: 'space-between',
-    // backgroundColor: 'red',
-    width: '100%',
-  },
   swap: {
-    borderColor: 'lightgray',
+    borderColor: 'darkturquoise',
+    backgroundColor: 'transparent',
     borderWidth: 2,
     height: 40,
     aspectRatio: 1,
     borderRadius: 20,
     padding: 4,
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+    zIndex: 200,
   },
   capture: {
-    borderWidth: 4,
+    borderWidth: 2,
     borderColor: 'darkturquoise',
     padding: 10,
     borderRadius: 20,
