@@ -455,13 +455,13 @@ export default function Home() {
 
                     <Pressable
                         style={{...styles.sortOption, backgroundColor: ascendingSort ? 'paleturquoise' : 'white'}}
-                        onPress={() => setAscendingSort(true)}
+                        onPress={() => {setAscendingSort(true); setRefresh(!refresh)}}
                     >
                         <Text>Ascending</Text>
                     </Pressable>
                     <Pressable
                         style={{...styles.sortOption, backgroundColor: !ascendingSort ? 'paleturquoise' : 'white'}}
-                        onPress={() => setAscendingSort(false)}
+                        onPress={() => {setAscendingSort(false); setRefresh(!refresh)}}
                     >
                         <Text>Descending</Text>
                     </Pressable>
