@@ -517,31 +517,32 @@ export default function Home() {
                     }} />
                 }
             >
-                    <View>
-                        <>
-                        {items.filter((item, i) => search == '' || item.item.name?.toLowerCase().includes(search.toLowerCase())).sort(sortCriteria).map((item, i) => (
-                            <View key={i}>
-                                <ItemWidget 
-                                    __typename="Item"
-                                    name={item.item.name} 
-                                    exp_date={item.item.exp_date} 
-                                    category={item.item.category}
-                                    calories={item.item.calories}
-                                    quantity={item.item.quantity}
-                                    checked={item.checked}
-                                    selectMode={selectState}
-                                    deleteHandler ={() => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); deleteItemHandler(index)}} 
-                                    editHandler = {(edits) => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); editItemHandler(index, edits)}}
-                                    selectHandler = {() => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); selectItemHandler(index, item.checked);}}
-                                />
-                            </View>
-                            ))}
-    
-                            {
-                                search == '' && !selectState && <NewItemWidget handler={addItemHandler}/>
-                            }
-                        </>
-                    </View>
+                <View>
+                    <>
+                    {items.filter((item, i) => search == '' || item.item.name?.toLowerCase().includes(search.toLowerCase())).sort(sortCriteria).map((item, i) => (
+                        <View key={i}>
+                            <ItemWidget 
+                                __typename="Item"
+                                name={item.item.name} 
+                                exp_date={item.item.exp_date} 
+                                category={item.item.category}
+                                calories={item.item.calories}
+                                quantity={item.item.quantity}
+                                checked={item.checked}
+                                selectMode={selectState}
+                                deleteHandler ={() => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); deleteItemHandler(index)}} 
+                                editHandler = {(edits) => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); editItemHandler(index, edits)}}
+                                selectHandler = {() => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); selectItemHandler(index, item.checked);}}
+                            />
+                        </View>
+                        ))}
+
+                        {
+                            search == '' && !selectState && <NewItemWidget handler={addItemHandler}/>
+                        }
+                    </>
+                </View>
+                <View style={{height: 10,}}></View>
             </ScrollView>}
         </>
         :
