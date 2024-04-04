@@ -9,8 +9,7 @@
       "UnauthRoleName": "amplify-awsomefridge-prototypo-203308-unauthRole",
       "StackName": "amplify-awsomefridge-prototypo-203308",
       "StackId": "arn:aws:cloudformation:us-east-1:532305636260:stack/amplify-awsomefridge-prototypo-203308/542d2b90-d5d9-11ee-af5a-0efc3927b4df",
-      "AmplifyAppId": "d3fdye453mhkca",
-      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-awsomefridge-prototypo-203308-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+      "AmplifyAppId": "d3fdye453mhkca"
     },
     "categories": {
       "storage": {
