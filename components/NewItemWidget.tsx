@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         zIndex: 100,
         top: 0,
-        width: '80%',
+        width: '85%',
         alignSelf: 'center',
     },
     calendar: {
