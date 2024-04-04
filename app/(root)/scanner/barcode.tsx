@@ -4,6 +4,7 @@ import { Code, Camera, useCameraDevice } from 'react-native-vision-camera'; // I
 import { useFocusEffect } from '@react-navigation/native';
 import { addItemByUPC } from '../../../src/graphql/mutations'; 
 import { useGraphQLClient, useUser } from '../../../contexts/GraphQLClientContext';
+import SwapIcon from '../../../assets/icons/SwapIcon';
 
 export default function BarcodeScanner() {
   const client = useGraphQLClient();
@@ -89,7 +90,7 @@ export default function BarcodeScanner() {
       :
       <></>
     }
-    <Pressable onPress={toggleCamera}><Text>Flip Camera</Text></Pressable>
+    <Pressable onPress={toggleCamera} style={styles.swap}><SwapIcon fill='darkturquoise'/></Pressable>
   </View>
   );
 }
@@ -102,5 +103,17 @@ const styles = StyleSheet.create({
   },
   camera: {
     flex: 1,
+  },
+  swap: {
+    borderColor: 'darkturquoise',
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    borderWidth: 2,
+    height: 40,
+    aspectRatio: 1,
+    borderRadius: 20,
+    padding: 4,
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
   },
 });
