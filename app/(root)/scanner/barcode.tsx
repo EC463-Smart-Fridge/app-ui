@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { StyleSheet, Button, Alert, View } from 'react-native';
+import { StyleSheet, Button, Alert, View, Pressable, Text } from 'react-native';
 import { Code, Camera, useCameraDevice } from 'react-native-vision-camera'; // Import useCameraDevice
 import { useFocusEffect } from '@react-navigation/native';
 import { addItemByUPC } from '../../../src/graphql/mutations'; 
@@ -12,11 +12,15 @@ export default function BarcodeScanner() {
   const [isShowingAlert, setIsShowingAlert] = useState<boolean>(false);
   
   // Retrieve camera device
-  const device = useCameraDevice('back'); // Use 'back' as the default camera device
+  //const device = useCameraDevice('back'); // Use 'back' as the default camera device
+  const [device, setDevice] = useState('back'); // Use 'back' as the default camera device
+  const toggleCamera = () => setDevice(device === 'back' ? 'front' : 'back');
+  const frontCamera = useCameraDevice('front');
+  const backCamera = useCameraDevice('back');
 
   // Function to handle the barcode scan
   const onCodeScanned = useCallback((codes: Code[]) => {
-    console.log('Barcode scanned:', codes[0].value);
+    //console.log('Barcode scanned:', codes[0].value);
     if (!isShowingAlert && codes.length > 0 && codes[0].value) {
       
       setIsShowingAlert(true);
@@ -63,16 +67,30 @@ export default function BarcodeScanner() {
 
   return (
     <View style={styles.container}>
+    {
+      (device === 'back' && backCamera != null) ? 
       <Camera
         style={styles.camera}
-        device={device}
+        device={backCamera}
         isActive={true} // Always active
         codeScanner={{ onCodeScanned, codeTypes: ['upc-a'] }}
         torch={torch ? 'on' : 'off'}
         enableZoomGesture={true}
       />
-      <Button title={torch ? 'Turn off torch' : 'Turn on torch'} onPress={() => setTorch(prev => !prev)} />
-    </View>
+      : (device === 'front' && frontCamera != null) ?
+      <Camera
+        style={styles.camera}
+        device={frontCamera}
+        isActive={true} // Always active
+        codeScanner={{ onCodeScanned, codeTypes: ['upc-a'] }}
+        torch={torch ? 'on' : 'off'}
+        enableZoomGesture={true}
+      />
+      :
+      <></>
+    }
+    <Pressable onPress={toggleCamera}><Text>Flip Camera</Text></Pressable>
+  </View>
   );
 }
 
