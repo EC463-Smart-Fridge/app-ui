@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Pressable, Switch, ActivityIndicator, Alert } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { StyleSheet, Pressable, Switch, Alert } from 'react-native';
 import { Text, View } from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import { useFocusEffect } from '@react-navigation/native';
@@ -9,6 +9,7 @@ import SwapIcon from '../../../assets/icons/SwapIcon';
 import { Modal } from 'react-native';
 import AddIcon from '../../../assets/icons/AddIcon';
 import DeleteIcon from '../../../assets/icons/DeleteIcon';
+import Spinner from '../../../components/Spinner';
 
 export default function SmartScan() {
   const client = useGraphQLClient();
@@ -166,7 +167,7 @@ export default function SmartScan() {
   if (loading || hasPermission === null || hasPermission === false) {
     return (
       <View style={styles.modalBackground}>
-        <ActivityIndicator size={"large"} color={"paleturquoise"} animating={true}/>
+        <Spinner />
       </View>
     );
   }

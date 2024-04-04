@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ScrollView, StatusBar, View, ActivityIndicator, RefreshControl, StyleSheet, Pressable, Text, Alert } from "react-native";
+import { ScrollView, StatusBar, View, RefreshControl, StyleSheet, Pressable, Text, Alert } from "react-native";
 import { getUserItems, getRecipes } from "../../src/graphql/queries";
 import { removeItem, addItem, editItem } from "../../src/graphql/mutations";
 import { router } from "expo-router";
@@ -16,6 +16,7 @@ import { getCurrentUser } from "aws-amplify/auth";
 import { Redirect } from "expo-router";
 import SaveIcon from "../../assets/icons/SaveIcon";
 import SortIcon from "../../assets/icons/SortIcon";
+import Spinner from "../../components/Spinner";
 
 interface fridgeItem {
     item: Item,
@@ -505,7 +506,7 @@ export default function Home() {
                     </Pressable>
                 </View>
             }{loading ?
-            <ActivityIndicator size="large" color="darkturquoise" />
+            <Spinner />
             : 
             <ScrollView 
                 style={styles.container}

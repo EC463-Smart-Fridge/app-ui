@@ -1,5 +1,5 @@
 import { Tabs, Stack} from "expo-router";
-import { ActivityIndicator } from "react-native";
+import Spinner from "../../components/Spinner";
 import { useUser, useGraphQLClient} from "../../contexts/GraphQLClientContext";
 import { getCurrentUser, } from "aws-amplify/auth";
 import { getFridgeUser } from "../../src/graphql/queries";
@@ -76,7 +76,7 @@ export default function Layout() {
     }, [])
 
     return (isLoading? 
-        <ActivityIndicator size="large" color="darkturquoise" />
+        <Spinner />
         : !user.isLoggedIn ?
         <Stack 
             screenOptions={{

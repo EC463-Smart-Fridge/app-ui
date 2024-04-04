@@ -1,4 +1,4 @@
-import { View, Pressable, TextInput, Text, StyleSheet, Modal, ActivityIndicator } from "react-native";
+import { View, Pressable, TextInput, Text, StyleSheet, } from "react-native";
 import { signInWithRedirect, AuthUser, signUp, confirmSignUp, type ConfirmSignUpInput, autoSignIn, signIn, type SignInInput, getCurrentUser, signOut } from "aws-amplify/auth";
 import { getFridgeUser } from "../../src/graphql/queries";
 import { useGraphQLClient, useUser } from "../../contexts/GraphQLClientContext";
@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { Hub } from "aws-amplify/utils";
 import { addUser } from "../../src/graphql/mutations";
 import { router } from "expo-router";
+import Spinner from "../../components/Spinner";
 
 type SignUpParameters = {
     username: string;
@@ -19,19 +20,6 @@ enum modes {
   signup,
   verification,
 }
-
-// const errors = {
-//     'UsernameExistsException: User already exists': 'User already exists.',
-//     'Incorrect username or password.': 'Incorrect username or password.',
-//     'Invalid verification code provided, please try again.': 'Invalid verification code provided, please try again.',
-//     // PASSWORD RESTRICTIONS
-//     'Password did not conform with policy: Password not long enough': 'Password needs to be at least 8 characters long.',
-//     'Password did not conform with policy: Password must have uppercase characters': 'Password must have at least one uppercase character.',
-//     'Password did not conform with policy: Password must have lowercase characters': 'Password must have at least one lowercase character.',
-//     'Password did not conform with policy: Password must have numeric characters': 'Password must have at least one number character.',
-//     'Password did not conform with policy: Password must have symbol characters': 'Password must have at least one symbol character.',
-//     // GENERIC AUTH ERRORS
-// }
 
 export default function Auth() {
     const client = useGraphQLClient();
@@ -259,7 +247,7 @@ export default function Auth() {
     // }, [user])
 
     return (isLoading ? (
-        <ActivityIndicator size="large" color="darkturquoise" />
+        <Spinner />
     ) : user.isLoggedIn ? (
         // ACCOUNT INFO
 
