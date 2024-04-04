@@ -18,7 +18,9 @@ const RecipeWidget = ({ recipe }: Props) => {
         <View style={styles.container}>
             <Pressable style={styles.preview}
                 onPress={() => setOpen(!open)}>
-                <Image defaultSource={require('../assets/icon.png')} source={{ uri: String(recipe.img) ?? ''}} style={styles.img}/>
+                    {/* <View style={styles.img}> */}
+                        <Image defaultSource={require('../assets/icon.png')} source={{ uri: String(recipe.img) ?? ''}} resizeMode="cover" style={styles.img}/>
+                    {/* </View> */}
                 <View style={styles.infoWrapper}>
                     <Text style={styles.title}>{recipe.name}</Text>
                     {(recipe.calories != '' && recipe.calories != '0') && <Text style={styles.info}>Calories: {recipe.calories}</Text>}
@@ -42,7 +44,7 @@ const RecipeWidget = ({ recipe }: Props) => {
             
                     {recipe.steps.length !== 0? (
                         <View style={styles.content}>
-                            <Text style={styles.subTitle}>Directions</Text>
+                            <Text numberOfLines={1} style={styles.subTitle}>Directions</Text>
                             {recipe.steps.map((step, i) => (
                                 <Text key={i}>
                                     {recipe.steps.length != 1 && ((i + 1).toString() + ". ")}{step}
@@ -84,6 +86,8 @@ const styles = StyleSheet.create({
     infoWrapper: {
         flexDirection: 'column',
         justifyContent: 'flex-start',
+        flexGrow: 1,
+        flexShrink: 1,
     },
     info: {
         color: 'gray',
@@ -91,7 +95,6 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         flexWrap: 'wrap',
-        width: 400,
     },
     subTitle: {
         fontSize: 20,
@@ -104,10 +107,10 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     img:{
-        height: 100,
+        height: 128,
         aspectRatio: 1,
         backgroundColor: 'paleturquoise',
-        borderRadius: 8,
+        borderRadius: 10,
     }
 
 });
