@@ -21,7 +21,8 @@ interface Props extends Item {
 }
 
 const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, quantity, checked, selectMode, deleteHandler, editHandler, selectHandler}: Props) => {
-    const {refresh, setRefresh} = useRefresh();
+    // const {refresh, setRefresh} = useRefresh();
+    const { refresh, expRefresh } = useRefresh();
     const [editMode, setEditMode] = useState(false);
     const [calendarOpen, setCalendarOpen] = useState(false);
     const [editedName, setEditedName] = useState(name);
@@ -70,7 +71,7 @@ const ItemWidget = ({__typename = "Item", name, exp_date, category, calories, qu
 
     useEffect(() => {
         setTillExp((exp_date != 0 && exp_date != null) ? (exp_diff - cur_date) * 0.0000115741 : 999);
-    }, [refresh]);
+    }, [refresh, expRefresh, exp_date, cur_date, exp_diff]);
 
     return (<>
         {selectMode ? (
