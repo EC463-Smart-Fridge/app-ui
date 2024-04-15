@@ -21,9 +21,9 @@ export const addItemByUPC = /* GraphQL */ `
       calories
       img_url
       exp_date
+      added_date
       quantity
       prod_name
-      __typename
     }
   }
 `;
@@ -52,6 +52,39 @@ export const addUser = /* GraphQL */ `
       username
       email
       name2
+    }
+  }
+`;
+export const addUserRecipe = /* GraphQL */ `
+  mutation AddUserRecipe($input: addUserRecipeInput!) {
+    addUserRecipe(input: $input) {
+      sk
+      name
+      img
+      steps
+      ingredients {
+        name
+        amt
+        __typename
+      }
+      calories
+      __typename
+    }
+  }
+`;
+export const removeRecipe = /* GraphQL */ `
+  mutation RemoveRecipe($input: removeRecipeInput!) {
+    removeRecipe(input: $input) {
+      sk
+      name
+      img
+      steps
+      ingredients {
+        name
+        amt
+        __typename
+      }
+      calories
       __typename
     }
   }
@@ -70,9 +103,9 @@ export const createItem = /* GraphQL */ `
       calories
       img_url
       exp_date
+      added_date
       quantity
       prod_name
-      __typename
     }
   }
 `;
@@ -90,8 +123,15 @@ export const updateItem = /* GraphQL */ `
       calories
       img_url
       exp_date
+      added_date
       quantity
       prod_name
+      id
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       __typename
     }
   }
@@ -110,8 +150,15 @@ export const deleteItem = /* GraphQL */ `
       calories
       img_url
       exp_date
+      added_date
       quantity
       prod_name
+      id
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       __typename
     }
   }
@@ -126,6 +173,12 @@ export const createUser = /* GraphQL */ `
       username
       email
       name2
+      id
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       __typename
     }
   }
@@ -140,6 +193,12 @@ export const updateUser = /* GraphQL */ `
       username
       email
       name2
+      id
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       __typename
     }
   }
@@ -154,6 +213,12 @@ export const deleteUser = /* GraphQL */ `
       username
       email
       name2
+      id
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       __typename
     }
   }

@@ -54,7 +54,8 @@ export type Item = {
   img_url?: string | null,
   exp_date?: number | null,
   quantity?: number | null,
-  prod_name?: string | null
+  prod_name?: string | null,
+  added_date?: string | null
 };
 
 export type TableFridgebaseFilterInput = {

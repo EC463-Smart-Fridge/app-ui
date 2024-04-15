@@ -46,26 +46,6 @@ export declare type Items = LazyLoading extends LazyLoadingDisabled ? EagerItems
 
 export declare const Items: (new (init: ModelInit<Items>) => Items)
 
-type EagerRecipe = {
-  readonly name: string;
-  readonly img?: string | null;
-  readonly steps?: (string | null)[] | null;
-  readonly ingredients?: (ingredient | null)[] | null;
-  readonly calories?: string | null;
-}
-
-type LazyRecipe = {
-  readonly name: string;
-  readonly img?: string | null;
-  readonly steps?: (string | null)[] | null;
-  readonly ingredients?: (ingredient | null)[] | null;
-  readonly calories?: string | null;
-}
-
-export declare type Recipe = LazyLoading extends LazyLoadingDisabled ? EagerRecipe : LazyRecipe
-
-export declare const Recipe: (new (init: ModelInit<Recipe>) => Recipe)
-
 type Eageringredient = {
   readonly name?: string | null;
   readonly amt?: string | null;
@@ -79,6 +59,30 @@ type Lazyingredient = {
 export declare type ingredient = LazyLoading extends LazyLoadingDisabled ? Eageringredient : Lazyingredient
 
 export declare const ingredient: (new (init: ModelInit<ingredient>) => ingredient)
+
+type EagerRecipe = {
+  readonly sk: string;
+  readonly name?: string | null;
+  readonly img?: string | null;
+  readonly steps?: (string | null)[] | null;
+  readonly ingredients?: (ingredient | null)[] | null;
+  readonly calories?: string | null;
+  saved?: bool | null;
+}
+
+type LazyRecipe = {
+  readonly sk: string;
+  readonly name?: string | null;
+  readonly img?: string | null;
+  readonly steps?: (string | null)[] | null;
+  readonly ingredients?: (ingredient | null)[] | null;
+  readonly calories?: string | null;
+  saved?: bool | null;
+}
+
+export declare type Recipe = LazyLoading extends LazyLoadingDisabled ? EagerRecipe : LazyRecipe
+
+export declare const Recipe: (new (init: ModelInit<Recipe>) => Recipe)
 
 type EagerItem = {
   readonly [__modelMeta__]: {
@@ -94,6 +98,7 @@ type EagerItem = {
   readonly calories?: string | null;
   readonly img_url?: string | null;
   readonly exp_date?: number | null;
+  readonly added_date?: number | null;
   readonly quantity?: number | null;
   readonly prod_name?: string | null;
   readonly createdAt?: string | null;
@@ -114,6 +119,7 @@ type LazyItem = {
   readonly calories?: string | null;
   readonly img_url?: string | null;
   readonly exp_date?: number | null;
+  readonly added_date?: number | null;
   readonly quantity?: number | null;
   readonly prod_name?: string | null;
   readonly createdAt?: string | null;

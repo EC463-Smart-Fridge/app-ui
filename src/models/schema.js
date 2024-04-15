@@ -66,6 +66,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "added_date": {
+                    "name": "added_date",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "quantity": {
                     "name": "quantity",
                     "isArray": false,
@@ -268,14 +275,40 @@ export const schema = {
                 }
             }
         },
-        "Recipe": {
-            "name": "Recipe",
+        "ingredient": {
+            "name": "ingredient",
             "fields": {
                 "name": {
                     "name": "name",
                     "isArray": false,
                     "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "amt": {
+                    "name": "amt",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            }
+        },
+        "Recipe": {
+            "name": "Recipe",
+            "fields": {
+                "sk": {
+                    "name": "sk",
+                    "isArray": false,
+                    "type": "String",
                     "isRequired": true,
+                    "attributes": []
+                },
+                "name": {
+                    "name": "name",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
                     "attributes": []
                 },
                 "img": {
@@ -311,27 +344,8 @@ export const schema = {
                     "attributes": []
                 }
             }
-        },
-        "ingredient": {
-            "name": "ingredient",
-            "fields": {
-                "name": {
-                    "name": "name",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "amt": {
-                    "name": "amt",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                }
-            }
         }
     },
     "codegenVersion": "3.4.4",
-    "version": "94fe91060c2e709abd96a898c4fa4d81"
+    "version": "05a91a55c28d50f53fc2909f55d7c5d1"
 };

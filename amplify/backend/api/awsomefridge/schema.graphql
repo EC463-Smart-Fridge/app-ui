@@ -17,6 +17,7 @@ type Item @model @auth(rules: [{ allow: public }]){
 	calories: String
 	img_url: String
 	exp_date: Int
+	added_date: Int
 	quantity: Int
 	prod_name: String
 }
@@ -42,6 +43,7 @@ input addItemInput {
 	img_url: String
 	exp_date: Int
 	quantity: Int
+	added_date: Int
 }
 
 input deleteItemInput {
@@ -68,17 +70,34 @@ input getRecipesInput {
 	ingredients: [String]!
 }
 
+type ingredient {
+	name: String
+	amt: String
+}
+
 type Recipe {
-	name: String!
+	sk: String!
+	name: String
 	img: String
 	steps: [String]
 	ingredients: [ingredient]
 	calories: String
 }
 
-type ingredient {
-	name: String
-	amt: String
+input addUserRecipeInput {
+	pk: String!
+	sk: String!
+	recipe_name: String
+	img: String
+	steps: [String]
+	ingredient_names: [String]
+	ingredient_amts: [String]
+	calories: String
+}
+
+input removeRecipeInput {
+	pk: String!
+	sk: String!
 }
 
 type Mutation {
@@ -87,12 +106,15 @@ type Mutation {
 	editItem(input: updateItemInput!): Fridgebase
 	removeItem(input: deleteItemInput!): Fridgebase
 	addUser(input: addUserInput): User
+	addUserRecipe(input: addUserRecipeInput!): Recipe
+	removeRecipe(input: removeRecipeInput!): Recipe
 }
 
 type Query {
 	getUserItems(pk: String!): [Item]
 	getFridgeUser(pk: String!): User
 	getRecipes(input: getRecipesInput!): [Recipe]
+	getUserRecipes(pk: String!): [Recipe]
 }
 
 type Subscription {

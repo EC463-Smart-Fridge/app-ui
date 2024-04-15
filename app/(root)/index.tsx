@@ -241,10 +241,10 @@ export default function Auth() {
             setError('An unknown error occurred in signing out.');
         }
     }    
-    // useEffect(() => {
-    //   console.log("useEffect triggered")
-    //   getCurrUser()
-    // }, [user])
+    useEffect(() => {
+      console.log("useEffect triggered")
+      getCurrUser()
+    }, [user])
 
     return (isLoading ? (
         <Spinner />

@@ -119,6 +119,7 @@ export default function Home() {
         setItems([{item: item, checked: false}, ...items]);
         if (user.isLoggedIn) {
             try {
+                const cur_date = new Date(Date.now() / 1000);
                 // Run deleteItem GraphQL mutation
                 console.log(item.exp_date)
                 const addResult = await client.graphql({
@@ -131,6 +132,7 @@ export default function Home() {
                             category: item.category,
                             calories: item.calories,
                             quantity: item.quantity,
+                            added_date: cur_date.getTime()
                         }
                     },
                 })

@@ -12,9 +12,9 @@ export const getUserItems = /* GraphQL */ `
       calories
       img_url
       exp_date
+      added_date
       quantity
       prod_name
-      __typename
     }
   }
 `;
@@ -25,13 +25,30 @@ export const getFridgeUser = /* GraphQL */ `
       username
       email
       name2
-      __typename
     }
   }
 `;
 export const getRecipes = /* GraphQL */ `
   query GetRecipes($input: getRecipesInput!) {
     getRecipes(input: $input) {
+      sk
+      name
+      img
+      steps
+      ingredients {
+        name
+        amt
+        __typename
+      }
+      calories
+      __typename
+    }
+  }
+`;
+export const getUserRecipes = /* GraphQL */ `
+  query GetUserRecipes($pk: String!) {
+    getUserRecipes(pk: $pk) {
+      sk
       name
       img
       steps
@@ -56,8 +73,15 @@ export const getItem = /* GraphQL */ `
       calories
       img_url
       exp_date
+      added_date
       quantity
       prod_name
+      id
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       __typename
     }
   }
@@ -78,8 +102,15 @@ export const listItems = /* GraphQL */ `
         calories
         img_url
         exp_date
+        added_date
         quantity
         prod_name
+        id
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
         __typename
       }
       nextToken
@@ -110,8 +141,15 @@ export const syncItems = /* GraphQL */ `
         calories
         img_url
         exp_date
+        added_date
         quantity
         prod_name
+        id
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
         __typename
       }
       nextToken
@@ -127,6 +165,12 @@ export const getUser = /* GraphQL */ `
       username
       email
       name2
+      id
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       __typename
     }
   }
@@ -143,6 +187,12 @@ export const listUsers = /* GraphQL */ `
         username
         email
         name2
+        id
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
         __typename
       }
       nextToken
@@ -169,6 +219,12 @@ export const syncUsers = /* GraphQL */ `
         username
         email
         name2
+        id
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
         __typename
       }
       nextToken
