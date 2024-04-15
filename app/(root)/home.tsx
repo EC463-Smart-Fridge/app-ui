@@ -35,7 +35,7 @@ enum sort {
 export default function Home() {
     const client = useGraphQLClient();
     const {user, setUser} = useUser();
-    const {refresh, setRefresh} = useRefresh();
+    const {refresh, setRefresh, expRefresh, setExpRefresh} = useRefresh();
 
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
@@ -44,12 +44,15 @@ export default function Home() {
     const [sortType, setSortType] = useState<sort>(sort.default);
     const [ascendingSort, setAscendingSort] = useState(true);
 
-    const [items, setItems] = useState<fridgeItem[]>([]);
+    // const [items, setItems] = useState<fridgeItem[]>([]);
+    // let internalItems: fridgeItem[] = [];
+    const [internalItems, setInternalItems] = useState<fridgeItem[]>([]);
+    const [displayItems, setDisplayItems] = useState<fridgeItem[]>([]);
 
     // Remove item handler that removes item from both memory and from DynamoDB
     const deleteItemHandler = async (index: number) => {
         setSortState(false);
-        const itemToRemove = items[index];
+        const itemToRemove = displayItems[index];
         if (!itemToRemove) return;
         if (!itemToRemove.item.pk || !itemToRemove.item.sk) {
             console.log('Error: No Primary or secondary key');
@@ -69,7 +72,7 @@ export default function Home() {
     
             console.log('Item deleted successfully', deleteResult);
             // Remove the item from the interface
-            setItems(items.filter((_, i) => i !== index));
+            setDisplayItems(displayItems.filter((_, i) => i !== index));
         } catch (error) {
             console.error('Error deleting item', error);
         }
@@ -82,7 +85,7 @@ export default function Home() {
             setLoading(true);
             try {
                 // Get list of selected item's prod_name's
-                const selected_sk = items.filter(item => item.checked).map(
+                const selected_sk = displayItems.filter(item => item.checked).map(
                     item => item.item.sk
                 )
 
@@ -94,7 +97,7 @@ export default function Home() {
 
                     await Promise.all(
                         selected_sk.map((_sk_) => {
-                            const index = items.findIndex(_iter_ => _iter_.item.sk === _sk_);
+                            const index = displayItems.findIndex(_iter_ => _iter_.item.sk === _sk_);
                             console.log("deleting", index, _sk_);
                             return deleteItemHandler(index);
                         })
@@ -116,7 +119,9 @@ export default function Home() {
     const addItemHandler = async (item: Item) => {
         setSortState(false);
 
-        setItems([{item: item, checked: false}, ...items]);
+        // setItems([{item: item, checked: false}, ...items]);
+        // internalItems = [{item: item, checked: false}, ...internalItems];
+        setInternalItems([{item: item, checked: false}, ...internalItems]);
         if (user.isLoggedIn) {
             try {
                 // Run deleteItem GraphQL mutation
@@ -157,7 +162,7 @@ export default function Home() {
     // Edit Item handler that handles modifying an existing item
     const editItemHandler = async (index: number, edits: {name?: string, category?: string, exp_date?: number, quantity?: number, calories?: string}) => {
         setSortState(false);
-        const itemToEdit = items[index];
+        const itemToEdit = displayItems[index];
         if (!itemToEdit) return;
         if (!itemToEdit.item.pk || !itemToEdit.item.sk) {
             console.log('Error: No Primary or secondary key');
@@ -171,9 +176,9 @@ export default function Home() {
         }
 
         // Start appending to the input values
-        var input_values : EditItemInput = {
-            pk: items[Number(index)].item.pk,
-            sk: items[Number(index)].item.sk,
+        var inputValues : EditItemInput = {
+            pk: displayItems[Number(index)].item.pk,
+            sk: displayItems[Number(index)].item.sk,
             ...edits
         };
 
@@ -181,12 +186,12 @@ export default function Home() {
             const editResult = await client.graphql({
                 query: editItem,
                 variables: {
-                    input: input_values
+                    input: inputValues
                 },
             });
             // Modify the item on the interface
             console.log('Item edited successfully', editResult);
-            setItems(items.map((item, i) => i == index ? {item: {...item.item, ...edits}, checked: item.checked} : item));
+            setDisplayItems(displayItems.map((item, i) => i == index ? {item: {...item.item, ...edits}, checked: item.checked} : item));
         }
         catch (error) {
             console.error('Error editing item', error);
@@ -198,9 +203,10 @@ export default function Home() {
         // console.log(items[index].item)
         if (selectState) {
             try {
-                var curItems = [...items]
+                let curItems = [...displayItems]
                 curItems[index].checked = !check;
-                setItems(curItems);
+                setDisplayItems(curItems);
+
             } catch (error) {
                 console.error('Error selecting item', error);
             }
@@ -211,14 +217,8 @@ export default function Home() {
     const selectAllHandler = async() => {
         if (selectState) {
             try {
-                if (!items[0].checked) {
-                    const selectedItems = items.map(item => ({ ...item, checked: true}));
-                    setItems(selectedItems);
-                }
-                else {
-                    const selectedItems = items.map(item => ({ ...item, checked: false}));
-                    setItems(selectedItems);
-                }
+                const selectedItems = displayItems.map(item => ({ ...item, checked: !displayItems[0].checked}));
+                setDisplayItems(selectedItems);
             }
             catch (error) {
                 console.log("Error selecting all items", error);
@@ -229,8 +229,8 @@ export default function Home() {
     // Handler for deselect all
     const deselectAllHandler = async() => {
         try {
-            const deselectedItems = items.map(item => ({ ...item, checked: false}));
-            setItems(deselectedItems);
+            const deselectedItems = displayItems.map(item => ({ ...item, checked: false}));
+            setDisplayItems(deselectedItems);
         }
         catch (error) {
             console.log("Error deselecting all items", error);
@@ -244,8 +244,8 @@ export default function Home() {
         if (user.isLoggedIn) {
             try {
                 // Get list of selected item's prod_name's
-                const selected_ingredients = items.filter(item => item.checked).map(
-                    item=> item.item.prod_name
+                const selected_ingredients = displayItems.filter(item => item.checked).map(
+                    item => item.item.prod_name
                 )
 
                 // <PUT ALERT HERE>: No Items selected
@@ -322,7 +322,7 @@ export default function Home() {
 
     useEffect(() => {
         console.log('Fetching items');
-        const test = async () => {
+        const fetchItems = async () => {
             try {
                 console.log(user)
                 if (user.isLoggedIn) {
@@ -350,7 +350,10 @@ export default function Home() {
                                 checked: false,
                                 handler: () => deleteItemHandler(i)
                             }));
-                        setItems(items);
+                        // setItems(items);
+                        // internalItems = items;
+                        setInternalItems(items);
+                        // setDisplayItems(items);
                     }
                 }
             } catch (error) {
@@ -359,9 +362,18 @@ export default function Home() {
                 setLoading(false);
             }
         };
-        test();
+        fetchItems();
         // getCurrUser();
-    }, [refresh, user, items.length])
+    }, [refresh, user])
+
+    useEffect(() => {
+        setExpRefresh(!expRefresh);
+        setDisplayItems(internalItems.filter((item, _) => search == '' || item.item.name?.toLowerCase().includes(search.toLowerCase())).sort(sortCriteria));
+        console.log('Internal Items:', internalItems)
+        console.log('Display Items:', displayItems[1])
+        console.log('Refreshing display items')
+    }, [internalItems, search, sortType, ascendingSort])
+    // }, [ search, sortType, ascendingSort])
 
     const toggleSelect = () => {
         if (selectState) {
@@ -455,13 +467,15 @@ export default function Home() {
 
                     <Pressable
                         style={{...styles.sortOption, backgroundColor: ascendingSort ? 'paleturquoise' : 'white'}}
-                        onPress={() => {setAscendingSort(true); setRefresh(!refresh)}}
+                        // onPress={() => {setAscendingSort(true); setRefresh(!refresh)}}
+                        onPress={() => setAscendingSort(true)}
                     >
                         <Text>Ascending</Text>
                     </Pressable>
                     <Pressable
                         style={{...styles.sortOption, backgroundColor: !ascendingSort ? 'paleturquoise' : 'white'}}
-                        onPress={() => {setAscendingSort(false); setRefresh(!refresh)}}
+                        // onPress={() => {setAscendingSort(false); setRefresh(!refresh)}}
+                        onPress={() => setAscendingSort(false)}
                     >
                         <Text>Descending</Text>
                     </Pressable>
@@ -470,37 +484,43 @@ export default function Home() {
 
                     <Pressable 
                         style={{...styles.sortOption, backgroundColor: sortType == sort.default ? 'paleturquoise' : 'white'}}
-                        onPress={() => {setSortType(sort.default); setRefresh(!refresh);}}
+                        // onPress={() => {setSortType(sort.default); setRefresh(!refresh);}}
+                        onPress={() => setSortType(sort.default)}
                     >
                         <Text>Default</Text>
                     </Pressable>
                     <Pressable 
                         style={{...styles.sortOption, backgroundColor: sortType == sort.name ? 'paleturquoise' : 'white'}}
-                        onPress={() => {setSortType(sort.name); setRefresh(!refresh);}}
+                        // onPress={() => {setSortType(sort.name); setRefresh(!refresh);}}
+                        onPress={() => setSortType(sort.name)}
                     >
                         <Text>Name</Text>
                     </Pressable>
                     <Pressable 
                         style={{...styles.sortOption, backgroundColor: sortType == sort.exp_date ? 'paleturquoise' : 'white'}}
-                        onPress={() => {setSortType(sort.exp_date); setRefresh(!refresh);}}
+                        // onPress={() => {setSortType(sort.exp_date); setRefresh(!refresh);}}
+                        onPress={() => setSortType(sort.exp_date)}
                     >
                         <Text>Expiration</Text>
                     </Pressable>
                     <Pressable 
                         style={{...styles.sortOption, backgroundColor: sortType == sort.category ? 'paleturquoise' : 'white'}}
-                        onPress={() => {setSortType(sort.category); setRefresh(!refresh);}}
+                        // onPress={() => {setSortType(sort.category); setRefresh(!refresh);}}
+                        onPress={() => setSortType(sort.category)}
                     >
                         <Text>Category</Text>
                     </Pressable>
                     <Pressable 
                         style={{...styles.sortOption, backgroundColor: sortType == sort.calories ? 'paleturquoise' : 'white'}}
-                        onPress={() => {setSortType(sort.calories); setRefresh(!refresh);}}
+                        // onPress={() => {setSortType(sort.calories); setRefresh(!refresh);}}
+                        onPress={() => setSortType(sort.calories)}
                     >
                         <Text>Calories</Text>
                     </Pressable>
                     <Pressable 
                         style={{...styles.sortOption, backgroundColor: sortType == sort.quantity ? 'paleturquoise' : 'white'}}
-                        onPress={() => {setSortType(sort.quantity); setRefresh(!refresh);}}
+                        // onPress={() => {setSortType(sort.quantity); setRefresh(!refresh);}}
+                        onPress={() => setSortType(sort.quantity)}
                     >
                         <Text>Quantity</Text>
                     </Pressable>
@@ -518,23 +538,47 @@ export default function Home() {
             >
                 <View>
                     <>
-                    {items.filter((item, i) => search == '' || item.item.name?.toLowerCase().includes(search.toLowerCase())).sort(sortCriteria).map((item, i) => (
-                        <View key={i}>
-                            <ItemWidget 
-                                __typename="Item"
-                                name={item.item.name} 
-                                exp_date={item.item.exp_date} 
-                                category={item.item.category}
-                                calories={item.item.calories}
-                                quantity={item.item.quantity}
-                                checked={item.checked}
-                                selectMode={selectState}
-                                deleteHandler ={() => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); deleteItemHandler(index)}} 
-                                editHandler = {(edits) => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); editItemHandler(index, edits)}}
-                                selectHandler = {() => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); selectItemHandler(index, item.checked);}}
-                            />
-                        </View>
-                        ))}
+                        {/* {items.filter((item, i) => search == '' || item.item.name?.toLowerCase().includes(search.toLowerCase())).sort(sortCriteria).map((item, i) => (
+                            <View key={i}>
+                                <ItemWidget 
+                                    __typename="Item"
+                                    name={item.item.name} 
+                                    exp_date={item.item.exp_date} 
+                                    category={item.item.category}
+                                    calories={item.item.calories}
+                                    quantity={item.item.quantity}
+                                    checked={item.checked}
+                                    selectMode={selectState}
+                                    deleteHandler ={() => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); deleteItemHandler(index)}} 
+                                    editHandler = {(edits) => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); editItemHandler(index, edits)}}
+                                    selectHandler = {() => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); selectItemHandler(index, item.checked);}}
+                                />
+                            </View>
+                            ))
+                        } */}
+
+                        {
+                            displayItems.map((item, i) => (
+                                <View key={i}>
+                                    <ItemWidget 
+                                        __typename="Item"
+                                        name={item.item.name} 
+                                        exp_date={item.item.exp_date} 
+                                        category={item.item.category}
+                                        calories={item.item.calories}
+                                        quantity={item.item.quantity}
+                                        checked={item.checked}
+                                        selectMode={selectState}
+                                        // deleteHandler ={() => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); deleteItemHandler(index)}} 
+                                        // editHandler = {(edits) => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); editItemHandler(index, edits)}}
+                                        // selectHandler = {() => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); selectItemHandler(index, item.checked);}}
+                                        deleteHandler={deleteItemHandler}
+                                        editHandler={edits => editItemHandler(i, edits)}
+                                        selectHandler={() => selectItemHandler(i, item.checked)}
+                                    />
+                                </View>
+                            ))
+                        }
 
                         {
                             search == '' && !selectState && <NewItemWidget handler={addItemHandler}/>

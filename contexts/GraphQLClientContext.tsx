@@ -68,9 +68,11 @@ export const RefreshContext = createContext<any>(null);
 
 export const RefreshProvider = ({ children }: { children: ReactNode }) => {
   const [refresh, setRefresh] = useState(false);
+  const [expRefresh, setExpRefresh] = useState(false);
 
   return (
-    <RefreshContext.Provider value = {{ refresh, setRefresh}}>
+    // <RefreshContext.Provider value = {{ refresh, setRefresh}}>
+    <RefreshContext.Provider value = {{ refresh, setRefresh, expRefresh, setExpRefresh}}>
       { children }
     </RefreshContext.Provider>
   );
