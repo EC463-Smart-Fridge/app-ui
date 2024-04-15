@@ -119,9 +119,7 @@ export default function Home() {
     const addItemHandler = async (item: Item) => {
         setSortState(false);
 
-        // setItems([{item: item, checked: false}, ...items]);
-        // internalItems = [{item: item, checked: false}, ...internalItems];
-        setInternalItems([{item: item, checked: false}, ...internalItems]);
+        setItems([{item: item, checked: false}, ...items]);
         if (user.isLoggedIn) {
             try {
                 const cur_date = new Date(Date.now() / 1000);
@@ -347,7 +345,8 @@ export default function Home() {
                                     category: cur_item.category,
                                     calories: cur_item.calories,
                                     quantity: cur_item.quantity,
-                                    prod_name: cur_item.prod_name
+                                    prod_name: cur_item.prod_name,
+                                    added_date: cur_item.added_date
                                 },
                                 checked: false,
                                 handler: () => deleteItemHandler(i)
