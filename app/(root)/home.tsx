@@ -205,7 +205,7 @@ export default function Home() {
             try {
                 let curItems = [...displayItems]
                 curItems[index].checked = !check;
-                // setItems(curItems);
+                setDisplayItems(curItems);
 
             } catch (error) {
                 console.error('Error selecting item', error);
