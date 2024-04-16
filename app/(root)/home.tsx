@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { ScrollView, StatusBar, View, RefreshControl, StyleSheet, Pressable, Text, Alert } from "react-native";
-import { getUserItems, getRecipes } from "../../src/graphql/queries";
+import { getUserItems, getRecipes, getUserRecipes } from "../../src/graphql/queries";
 import { removeItem, addItem, editItem } from "../../src/graphql/mutations";
 import { router } from "expo-router";
 
 import { DataStore } from '@aws-amplify/datastore';
 
 import { useGraphQLClient, useRefresh, useUser } from "../../contexts/GraphQLClientContext";
-import { Item, Recipe, ingredient } from '../../src/API';
+import { Item, Recipe, ingredient, storedRecipe } from '../../src/API';
 
 import ItemWidget from "../../components/ItemWidget";
 import NewItemWidget from "../../components/NewItemWidget";
@@ -119,7 +119,7 @@ export default function Home() {
     const addItemHandler = async (item: Item) => {
         setSortState(false);
 
-        setItems([{item: item, checked: false}, ...items]);
+        setInternalItems([{item: item, checked: false}, ...internalItems]);
         if (user.isLoggedIn) {
             try {
                 const cur_date = new Date(Date.now() / 1000);
@@ -266,6 +266,40 @@ export default function Home() {
                 }
                 else {
 
+                    // Get saved recipes using GraphQL
+                    const result2 = await client.graphql({
+                        query: getUserRecipes,
+                        variables: {
+                            pk: user.userId
+                        },
+                    })
+                    // Map the gathered recipe information to the Recipe datatype
+                    if (result2) {
+                        const saved_recipes : storedRecipe[] = result2.data.getUserRecipes.filter((recipe: storedRecipe) => recipe.recipe_name !== null)
+                        const saved_recipes_parsed : Recipe[] = saved_recipes.map(recipe => ({
+                            sk: recipe.sk,
+                            recipe_name: recipe.recipe_name,
+                            ingredients: recipe.ingredient_amts.map((amt, index) : ingredient => ({
+                                amt: amt,
+                                name: recipe.ingredient_names[index]
+                            })),
+                            img: recipe.img,
+                            steps: recipe.steps,
+                            calories: recipe.calories,
+                            saved: true
+                        }));
+                        // Update current user's recipes
+                        setUser({
+                            isLoggedIn: user.isLoggedIn,
+                            userId: user.userId,
+                            username: user.username,
+                            email: user.email,
+                            name: user.name,
+                            recipes: saved_recipes_parsed
+                        });
+                        // console.log(saved_recipes_parsed)
+                    }
+
                     // Get recipes using Lambda function
                     const result = await client.graphql({
                         query: getRecipes,
@@ -275,7 +309,7 @@ export default function Home() {
                             }
                         },
                     })
-                    const fetched_recipes : [Recipe] = result.data.getRecipes;
+                    const fetched_recipes : Recipe[] = result.data.getRecipes;
                     console.log(fetched_recipes)
 
                     if (result) {
@@ -286,8 +320,9 @@ export default function Home() {
                             username: user.username,
                             email: user.email,
                             name: user.name,
-                            recipes: fetched_recipes
+                            recipes: user.recipes ? [...fetched_recipes,...user.recipes] : fetched_recipes
                         });
+                        console.log(user.recipes)
                         router.push('/recipes');
                     }
 
@@ -313,6 +348,7 @@ export default function Home() {
                 console.log('error on fetching recipes', error);
             } finally {
                 setLoading(false);
+                console.log(user.recipes)
             }
         }
         else {

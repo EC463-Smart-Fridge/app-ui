@@ -1,12 +1,15 @@
-import { View, Pressable, Text, StyleSheet, Image } from "react-native";
+import { View, Pressable, Text, StyleSheet, Image, TouchableHighlight } from "react-native";
 import { Recipe, ingredient } from "../src/API";
 import { useState, useEffect } from "react";
+import StarIcon from "../assets/icons/StarIcon";
+import StarFilledIcon from "../assets/icons/StarFilledIcon";
 
 interface Props {
     recipe: Recipe;
+    recipeButtonHandler: () => void;
 }
 
-const RecipeWidget = ({ recipe }: Props) => {
+const RecipeWidget = ({ recipe, recipeButtonHandler}: Props) => {
     const [open, setOpen] = useState<boolean>(false);
 
     useEffect(() => {
@@ -14,18 +17,28 @@ const RecipeWidget = ({ recipe }: Props) => {
         setOpen(false);
     }, [recipe])
 
+
     return (
-        <View style={styles.container}>
-            <Pressable style={styles.preview}
-                onPress={() => setOpen(!open)}>
-                    {/* <View style={styles.img}> */}
-                        <Image defaultSource={require('../assets/icon.png')} source={{ uri: String(recipe.img) ?? ''}} resizeMode="cover" style={styles.img}/>
-                    {/* </View> */}
-                <View style={styles.infoWrapper}>
-                    <Text style={styles.title}>{recipe.name}</Text>
-                    {(recipe.calories != '' && recipe.calories != '0') && <Text style={styles.info}>Calories: {recipe.calories}</Text>}
-                </View> 
-            </Pressable>
+        <View style={styles.recipe_container}>
+            <View style={styles.container}>
+                <Pressable style={styles.preview}
+                    onPress={() => setOpen(!open)}>
+                        {/* <View style={styles.img}> */}
+                            <Image defaultSource={require('../assets/icon.png')} source={{ uri: String(recipe.img) ?? ''}} resizeMode="cover" style={styles.img}/>
+                        {/* </View> */}
+                    <View style={styles.infoWrapper}>
+                        <Text style={styles.title}>{recipe.recipe_name}</Text>
+                        {(recipe.calories != '' && recipe.calories != '0') && <Text style={styles.info}>Calories: {recipe.calories}</Text>}
+                    </View> 
+                </Pressable>
+
+                <View style={styles.buttonsContainer}>
+                    <TouchableHighlight onPress={recipeButtonHandler} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.button}>
+                        {recipe.saved ? 
+                            <StarFilledIcon/> : <StarIcon/>}
+                    </TouchableHighlight>
+                </View>
+            </View>
             {open && (
                 <View style={styles.extend}>
                     <View style={{height: 1, backgroundColor: 'lightgray', marginVertical: 10}}></View>
@@ -64,11 +77,21 @@ const RecipeWidget = ({ recipe }: Props) => {
 export default RecipeWidget;
 
 const styles = StyleSheet.create({
-    container: {
+    recipe_container: {
         backgroundColor: 'white',
         elevation: 2,
         borderRadius: 8,
         padding: 12,
+        marginTop: 5,
+        marginHorizontal: 10,
+    },
+    container: {
+        flex: 1,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     },
     preview: {
         backgroundColor: 'white',
@@ -111,6 +134,22 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         backgroundColor: 'paleturquoise',
         borderRadius: 10,
-    }
+    },
+    buttonsContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        width: 20,
+        marginLeft: 10,
+        // height: '100%',
+        // backgroundColor: 'red',
+    },
+    button: {
+        // backgroundColor: 'lightblue',
+        borderRadius: 10,
+        height: 20,
+        padding: 0,
+        // backgroundColor: 'red'
+    },
 
 });

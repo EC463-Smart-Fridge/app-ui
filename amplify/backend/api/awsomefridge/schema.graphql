@@ -77,10 +77,21 @@ type ingredient {
 
 type Recipe {
 	sk: String!
-	name: String
+	recipe_name: String
 	img: String
 	steps: [String]
 	ingredients: [ingredient]
+	calories: String
+}
+
+type storedRecipe {
+	pk: String!
+	sk: String!
+	recipe_name: String
+	img: String
+	steps: [String]
+	ingredient_names: [String]
+	ingredient_amts: [String]
 	calories: String
 }
 
@@ -114,7 +125,7 @@ type Query {
 	getUserItems(pk: String!): [Item]
 	getFridgeUser(pk: String!): User
 	getRecipes(input: getRecipesInput!): [Recipe]
-	getUserRecipes(pk: String!): [Recipe]
+	getUserRecipes(pk: String!): [storedRecipe]
 }
 
 type Subscription {

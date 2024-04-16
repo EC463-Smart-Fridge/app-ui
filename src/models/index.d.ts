@@ -62,27 +62,51 @@ export declare const ingredient: (new (init: ModelInit<ingredient>) => ingredien
 
 type EagerRecipe = {
   readonly sk: string;
-  readonly name?: string | null;
+  readonly recipe_name?: string | null;
   readonly img?: string | null;
   readonly steps?: (string | null)[] | null;
   readonly ingredients?: (ingredient | null)[] | null;
   readonly calories?: string | null;
-  saved?: bool | null;
 }
 
 type LazyRecipe = {
   readonly sk: string;
-  readonly name?: string | null;
+  readonly recipe_name?: string | null;
   readonly img?: string | null;
   readonly steps?: (string | null)[] | null;
   readonly ingredients?: (ingredient | null)[] | null;
   readonly calories?: string | null;
-  saved?: bool | null;
 }
 
 export declare type Recipe = LazyLoading extends LazyLoadingDisabled ? EagerRecipe : LazyRecipe
 
 export declare const Recipe: (new (init: ModelInit<Recipe>) => Recipe)
+
+type EagerstoredRecipe = {
+  readonly pk: string;
+  readonly sk: string;
+  readonly recipe_name?: string | null;
+  readonly img?: string | null;
+  readonly steps?: (string | null)[] | null;
+  readonly ingredient_names?: (string | null)[] | null;
+  readonly ingredient_amts?: (string | null)[] | null;
+  readonly calories?: string | null;
+}
+
+type LazystoredRecipe = {
+  readonly pk: string;
+  readonly sk: string;
+  readonly recipe_name?: string | null;
+  readonly img?: string | null;
+  readonly steps?: (string | null)[] | null;
+  readonly ingredient_names?: (string | null)[] | null;
+  readonly ingredient_amts?: (string | null)[] | null;
+  readonly calories?: string | null;
+}
+
+export declare type storedRecipe = LazyLoading extends LazyLoadingDisabled ? EagerstoredRecipe : LazystoredRecipe
+
+export declare const storedRecipe: (new (init: ModelInit<storedRecipe>) => storedRecipe)
 
 type EagerItem = {
   readonly [__modelMeta__]: {

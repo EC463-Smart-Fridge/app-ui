@@ -1,11 +1,9 @@
-import { View, Pressable, Text, TextInput, StyleSheet, ScrollView, TouchableHighlight } from "react-native";
+import { View, Pressable, Text, TextInput, StyleSheet, ScrollView } from "react-native";
 import { useUser, useGraphQLClient } from "../../contexts/GraphQLClientContext";
 import { getRecipes } from "../../src/graphql/queries";
 import { Redirect, useRouter } from "expo-router";
-import { Recipe } from '../../src/models';
-import { useState } from "react";
-import DeleteIcon from "../../assets/icons/DeleteIcon";
-import EditIcon from "../../assets/icons/EditIcon";
+import { Recipe, ingredient } from '../../src/API';
+import { useState, useEffect } from "react";
 import RecipeWidget from "../../components/RecipeWidget";
 import { addUserRecipe, removeRecipe } from "../../src/graphql/mutations";
 
@@ -15,62 +13,76 @@ export default function Recipes() {
     const [search, setSearch] = useState('');
     const router = useRouter();
 
-    // Handler for saving a recipe to the user's DynamoDB information
-    const saveRecipeHandler = async (recipe: Recipe) => {
+    useEffect(() => {
+    }, [user.recipes])
+
+    // Handler for saving / deleting an item based on whether or not the current item is saved or not
+    const recipeButtonHandler = async (index: number) => {
         if (user.isLoggedIn) {
-            try {
-                const addResult = await client.graphql({
-                    query: addUserRecipe,
-                    variables: {
-                        input: {
-                            pk: user.userId,
-                            sk: recipe.sk,
-                            recip_name: recipe.name,
-                            img: recipe.img,
-                            steps: recipe.steps,
-                            ingredient_names: recipe.ingredients,
-                            ingredient_amts: recipe.ingredients,
-                            calories: recipe.calories
-                        }
-                    },
-                })
-                console.log('Recipe saved successfully', addResult);
-            } catch (error) {
-                console.error('Error saving recipe', error);
+            const recipe = user.recipes[index];
+            if (!recipe) return;
+            
+            // If the recipe is saved, then delete it
+            if (recipe.saved) {
+                // Check that the recipe has the required keys
+                if (!recipe.pk || !recipe.sk) {
+                    console.log('Error: No Primary or secondary key');
+                    return;
+                }
+
+                try {
+                    // Run deleteItem GraphQL mutation
+                    const deleteResult = await client.graphql({
+                        query: removeRecipe,
+                        variables: {
+                            input: {
+                                pk: recipe.pk,
+                                sk: recipe.sk,
+                            }
+                        },
+                    });
+            
+                    console.log('Recipe deleted successfully', deleteResult);
+                    // Set the recipe to not saved
+                    user.recipes[index].saved = false;
+                    
+        
+                } catch (error) {
+                    console.error('Error deleting recipe', error);
+                }
+            }
+            // If the recipe is not saved, then save it
+            else {
+                const amts = recipe.ingredients.map((ingredient : ingredient) => ingredient.amt);
+                const names = recipe.ingredients.map((ingredient : ingredient) => ingredient.name);
+
+                try {
+                    const addResult = await client.graphql({
+                        query: addUserRecipe,
+                        variables: {
+                            input: {
+                                pk: user.userId,
+                                sk: recipe.sk,
+                                recipe_name: recipe.name,
+                                img: recipe.img,
+                                steps: recipe.steps,
+                                ingredient_names: amts,
+                                ingredient_amts: names,
+                                calories: recipe.calories
+                            }
+                        },
+                    })
+                    user.recipes[index].saved = true;
+                    console.log('Recipe saved successfully', addResult);
+                } catch (error) {
+                    console.error('Error saving recipe', error);
+                }
             }
         }
         else {
             console.log("No user logged in")
         }
     }
-
-    // Remove recipe handler that unsaves the recipe from the user's account
-    const deleteRecipeHandler = async (index: number) => {
-        const recipeToRemove = user.recipes[index];
-        if (!recipeToRemove) return;
-        if (!recipeToRemove.pk || !recipeToRemove.sk) {
-            console.log('Error: No Primary or secondary key');
-            return;
-        }
-        try {
-            // Run deleteItem GraphQL mutation
-            const deleteResult = await client.graphql({
-                query: removeRecipe,
-                variables: {
-                    input: {
-                        pk: recipeToRemove.pk,
-                        sk: recipeToRemove.sk,
-                    }
-                },
-            });
-    
-            console.log('Recipe deleted successfully', deleteResult);
-            // Remove the item from the interface
-            setItems(items.filter((_, i) => i !== index));
-        } catch (error) {
-            console.error('Error deleting recipe', error);
-        }
-    };
 
     return (user.isLoggedIn ?
         <>
@@ -91,13 +103,7 @@ export default function Recipes() {
                 <ScrollView style={styles.recipeList}>
                     {user.recipes.map((recipe: Recipe, i: any) => (
                         <View key={i} style={styles.wrapper}>
-                            
-                            <View style={styles.buttonsContainer}>
-                                <TouchableHighlight onPress={deleteHandler} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.button}>
-                                    <DeleteIcon />
-                                </TouchableHighlight>
-                            </View>
-                            <RecipeWidget recipe={recipe} />
+                            <RecipeWidget recipe={recipe} recipeButtonHandler={() => recipeButtonHandler(i)}/>
                         </View>
                     ))}
                     <View style={{height: 10,}}></View>
@@ -165,5 +171,12 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         // height: '100%',
         // backgroundColor: 'red',
+    },
+    button: {
+        // backgroundColor: 'lightblue',
+        borderRadius: 10,
+        height: 20,
+        padding: 0,
+        // backgroundColor: 'red'
     },
 });

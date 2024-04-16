@@ -25,18 +25,29 @@ export type UpdateFridgebaseInput = {
 };
 
 export type ingredient = {
-  name: string | null,
-  amt: string | null,
+  name: String | null,
+  amt: String | null,
 }
 export type Recipe = {
-	name: String,
+  sk: String,
+	recipe_name: String,
 	img: String | null,
 	steps: String[],
 	ingredients: ingredient[],
 	calories: String | null,
+  saved: boolean | null,
 }
 
-
+export type storedRecipe = {
+	pk: String,
+	sk: String,
+	recipe_name: String,
+	img: String | null,
+	steps: String[],
+	ingredient_names: String[],
+	ingredient_amts: String[],
+	calories: String | null,
+}
 
 export type deleteItemInput = {
   pk: string,

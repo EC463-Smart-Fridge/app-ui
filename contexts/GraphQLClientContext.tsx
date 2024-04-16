@@ -3,7 +3,7 @@ import { generateClient } from 'aws-amplify/api';
 import awsmobile from '../src/aws-exports';
 import { Amplify } from 'aws-amplify';
 import { useState } from 'react';
-import { ingredient, Recipe } from '../src/models';
+import { ingredient, Recipe } from '../src/API';
 
 Amplify.configure(awsmobile);
 

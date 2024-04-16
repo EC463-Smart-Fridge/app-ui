@@ -59,7 +59,7 @@ export const addUserRecipe = /* GraphQL */ `
   mutation AddUserRecipe($input: addUserRecipeInput!) {
     addUserRecipe(input: $input) {
       sk
-      name
+      recipe_name
       img
       steps
       ingredients {
@@ -76,7 +76,7 @@ export const removeRecipe = /* GraphQL */ `
   mutation RemoveRecipe($input: removeRecipeInput!) {
     removeRecipe(input: $input) {
       sk
-      name
+      recipe_name
       img
       steps
       ingredients {

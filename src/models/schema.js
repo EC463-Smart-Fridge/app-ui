@@ -304,8 +304,8 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "name": {
-                    "name": "name",
+                "recipe_name": {
+                    "name": "recipe_name",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
@@ -344,8 +344,72 @@ export const schema = {
                     "attributes": []
                 }
             }
+        },
+        "storedRecipe": {
+            "name": "storedRecipe",
+            "fields": {
+                "pk": {
+                    "name": "pk",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "sk": {
+                    "name": "sk",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "recipe_name": {
+                    "name": "recipe_name",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "img": {
+                    "name": "img",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "steps": {
+                    "name": "steps",
+                    "isArray": true,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
+                "ingredient_names": {
+                    "name": "ingredient_names",
+                    "isArray": true,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
+                "ingredient_amts": {
+                    "name": "ingredient_amts",
+                    "isArray": true,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
+                "calories": {
+                    "name": "calories",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            }
         }
     },
     "codegenVersion": "3.4.4",
-    "version": "05a91a55c28d50f53fc2909f55d7c5d1"
+    "version": "81c695c89be302a4cb5aa0906cd414f8"
 };

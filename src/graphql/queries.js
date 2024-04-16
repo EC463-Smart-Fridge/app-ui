@@ -32,7 +32,7 @@ export const getRecipes = /* GraphQL */ `
   query GetRecipes($input: getRecipesInput!) {
     getRecipes(input: $input) {
       sk
-      name
+      recipe_name
       img
       steps
       ingredients {
@@ -48,15 +48,13 @@ export const getRecipes = /* GraphQL */ `
 export const getUserRecipes = /* GraphQL */ `
   query GetUserRecipes($pk: String!) {
     getUserRecipes(pk: $pk) {
+      pk
       sk
-      name
+      recipe_name
       img
       steps
-      ingredients {
-        name
-        amt
-        __typename
-      }
+      ingredient_names
+      ingredient_amts
       calories
       __typename
     }
