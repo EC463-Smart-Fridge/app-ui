@@ -55,13 +55,13 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   );
 }
 
-export const useUser = () => {
+export const useUser = (): { user: userType; setUser: React.Dispatch<React.SetStateAction<userType>> } => {
   const context = useContext(UserContext);
   if (!context) {
-    throw new Error("That ain't it, chief")
+    throw new Error("useUser must be used within a UserProvider");
   }
   return context;
-}
+};
 
 
 export const RefreshContext = createContext<any>(null);
