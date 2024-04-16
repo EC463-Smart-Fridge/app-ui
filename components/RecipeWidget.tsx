@@ -17,12 +17,10 @@ const RecipeWidget = ({ recipe, recipeButtonHandler}: Props) => {
         setOpen(false);
     }, [recipe])
 
-
     return (
-        <View style={styles.recipe_container}>
-            <View style={styles.container}>
-                <Pressable style={styles.preview}
-                    onPress={() => setOpen(!open)}>
+        <View style={styles.container}>
+            <View style={styles.top}>
+                <Pressable style={styles.preview} onPress={() => setOpen(!open)}>
                         {/* <View style={styles.img}> */}
                             <Image defaultSource={require('../assets/icon.png')} source={{ uri: String(recipe.img) ?? ''}} resizeMode="cover" style={styles.img}/>
                         {/* </View> */}
@@ -34,41 +32,41 @@ const RecipeWidget = ({ recipe, recipeButtonHandler}: Props) => {
 
                 <View style={styles.buttonsContainer}>
                     <TouchableHighlight onPress={recipeButtonHandler} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.button}>
-                        {recipe.saved ? 
-                            <StarFilledIcon/> : <StarIcon/>}
+                        {recipe.saved ? <StarFilledIcon/> : <StarIcon/>}
                     </TouchableHighlight>
                 </View>
             </View>
-            {open && (
-                <View style={styles.extend}>
-                    <View style={{height: 1, backgroundColor: 'lightgray', marginVertical: 10}}></View>
-                    {recipe.ingredients.length !== 0 ? (
-                        <View style={styles.content}>
-                            <Text style={styles.subTitle}>Ingredients</Text>
-                            {recipe.ingredients.map((_ingredient_: ingredient, i) => (
-                                <Text key={i}>
-                                    {_ingredient_.name && _ingredient_.name.charAt(0).toUpperCase() + _ingredient_.name.slice(1)} {(_ingredient_.amt != null && _ingredient_.amt != '0' && "(" + _ingredient_.amt + ")")} 
-                                </Text>
-                            ))}
-                        </View>
-                    ):(
-                        <Text>No Ingredients Found</Text>
-                    )}
-            
-                    {recipe.steps.length !== 0? (
-                        <View style={styles.content}>
-                            <Text numberOfLines={1} style={styles.subTitle}>Directions</Text>
-                            {recipe.steps.map((step, i) => (
-                                <Text key={i}>
-                                    {recipe.steps.length != 1 && ((i + 1).toString() + ". ")}{step}
-                                </Text>
-                            ))}
-                        </View>
-                    ):(
-                        <Text>No Directions Found</Text>
-                    )}
 
-                </View>
+            {open && (
+            <View style={styles.bottom}>
+                <View style={{height: 1, backgroundColor: 'lightgray', marginVertical: 10}}></View>
+                {recipe.ingredients.length !== 0 ? (
+                    <View style={styles.content}>
+                        <Text style={styles.subTitle}>Ingredients</Text>
+                        {recipe.ingredients.map((_ingredient_: ingredient, i) => (
+                            <Text key={i}>
+                                {_ingredient_.name && _ingredient_.name.charAt(0).toUpperCase() + _ingredient_.name.slice(1)} {(_ingredient_.amt != null && _ingredient_.amt != '0' && "(" + _ingredient_.amt + ")")} 
+                            </Text>
+                        ))}
+                    </View>
+                ):(
+                    <Text>No Ingredients Found</Text>
+                )}
+        
+                {recipe.steps.length !== 0? (
+                    <View style={styles.content}>
+                        <Text numberOfLines={1} style={styles.subTitle}>Directions</Text>
+                        {recipe.steps.map((step, i) => (
+                            <Text key={i}>
+                                {recipe.steps.length != 1 && ((i + 1).toString() + ". ")}{step}
+                            </Text>
+                        ))}
+                    </View>
+                ):(
+                    <Text>No Directions Found</Text>
+                )}
+
+            </View>
             )}
         </View>
     )
@@ -77,27 +75,18 @@ const RecipeWidget = ({ recipe, recipeButtonHandler}: Props) => {
 export default RecipeWidget;
 
 const styles = StyleSheet.create({
-    recipe_container: {
+    container: {
         backgroundColor: 'white',
         elevation: 2,
         borderRadius: 8,
         padding: 12,
-        marginTop: 5,
-        marginHorizontal: 10,
-    },
-    container: {
-        flex: 1,
-        backgroundColor: 'white',
-        borderRadius: 10,
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
     },
     preview: {
         backgroundColor: 'white',
         borderRadius: 10,
         flexDirection: 'row',
         columnGap: 12,
+        width: '90%',
     },
     search: {
         backgroundColor: 'white',
@@ -123,7 +112,12 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: 'darkturquoise',
     },
-    extend:{
+    top: {
+        display: 'flex',
+        flexDirection: 'row',
+        // justifyContent: 'space-between',
+    },
+    bottom:{
 
     },
     content: {
@@ -141,15 +135,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         width: 20,
         marginLeft: 10,
-        // height: '100%',
-        // backgroundColor: 'red',
     },
     button: {
-        // backgroundColor: 'lightblue',
         borderRadius: 10,
         height: 20,
         padding: 0,
-        // backgroundColor: 'red'
     },
 
 });
