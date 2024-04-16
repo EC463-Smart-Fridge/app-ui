@@ -11,11 +11,15 @@ interface Props {
 
 const RecipeWidget = ({ recipe, recipeButtonHandler}: Props) => {
     const [open, setOpen] = useState<boolean>(false);
+    const [favorited, setFavorited] = useState<boolean>(recipe.saved ? true : false);
 
     useEffect(() => {
-        // close accordian when new recipes are generated
-        setOpen(false);
-    }, [recipe])
+    }, [recipe, favorited])
+
+    const handleFavorite = () => {
+        recipeButtonHandler();
+        setFavorited(recipe.saved? false : true);
+    }
 
     return (
         <View style={styles.container}>
@@ -31,8 +35,8 @@ const RecipeWidget = ({ recipe, recipeButtonHandler}: Props) => {
                 </Pressable>
 
                 <View style={styles.buttonsContainer}>
-                    <TouchableHighlight onPress={recipeButtonHandler} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.button}>
-                        {recipe.saved ? <StarFilledIcon/> : <StarIcon/>}
+                    <TouchableHighlight onPress={handleFavorite} activeOpacity={0.6} underlayColor="#DDDDDD" style={styles.button}>
+                        {favorited ? <StarFilledIcon/> : <StarIcon/>}
                     </TouchableHighlight>
                 </View>
             </View>

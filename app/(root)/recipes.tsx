@@ -1,8 +1,8 @@
 import { View, Pressable, Text, TextInput, StyleSheet, ScrollView } from "react-native";
 import { useUser, useGraphQLClient } from "../../contexts/GraphQLClientContext";
-import { getRecipes } from "../../src/graphql/queries";
+import { getUserRecipes } from "../../src/graphql/queries";
 import { Redirect, useRouter } from "expo-router";
-import { Recipe, ingredient } from '../../src/API';
+import { Recipe, ingredient, storedRecipe } from '../../src/API';
 import { useState, useEffect } from "react";
 import RecipeWidget from "../../components/RecipeWidget";
 import { addUserRecipe, removeRecipe } from "../../src/graphql/mutations";
@@ -14,6 +14,46 @@ export default function Recipes() {
     const router = useRouter();
 
     useEffect(() => {
+
+        // Get saved recipes using GraphQL
+        const fetchRecipes = async() => {
+            const result2 = await client.graphql({
+                query: getUserRecipes,
+                variables: {
+                    pk: user.userId
+                },
+            })
+            // Map the gathered recipe information to the Recipe datatype
+            if (result2) {
+                const saved_recipes : storedRecipe[] = result2.data.getUserRecipes.filter((recipe: storedRecipe) => recipe.recipe_name !== null)
+                const saved_recipes_parsed : Recipe[] = saved_recipes.map(recipe => ({
+                    sk: recipe.sk,
+                    recipe_name: recipe.recipe_name,
+                    ingredients: recipe.ingredient_amts.map((amt, index) : ingredient => ({
+                        amt: amt,
+                        name: recipe.ingredient_names[index]
+                    })),
+                    img: recipe.img,
+                    steps: recipe.steps,
+                    calories: recipe.calories,
+                    saved: true
+                }));
+                // Update current user's recipes
+                setUser({
+                    isLoggedIn: user.isLoggedIn,
+                    userId: user.userId,
+                    username: user.username,
+                    email: user.email,
+                    name: user.name,
+                    recipes: saved_recipes_parsed
+                });
+                // console.log(saved_recipes_parsed)
+            }
+        }
+
+        if (!user.recipes) {
+            fetchRecipes();
+        }
     }, [user.recipes])
 
     // Handler for saving / deleting an item based on whether or not the current item is saved or not
@@ -25,7 +65,7 @@ export default function Recipes() {
             // If the recipe is saved, then delete it
             if (recipe.saved) {
                 // Check that the recipe has the required keys
-                if (!recipe.pk || !recipe.sk) {
+                if (!user.userId || !recipe.sk) {
                     console.log('Error: No Primary or secondary key');
                     return;
                 }
@@ -36,7 +76,7 @@ export default function Recipes() {
                         query: removeRecipe,
                         variables: {
                             input: {
-                                pk: recipe.pk,
+                                pk: user.userId,
                                 sk: recipe.sk,
                             }
                         },
@@ -63,7 +103,7 @@ export default function Recipes() {
                             input: {
                                 pk: user.userId,
                                 sk: recipe.sk,
-                                recipe_name: recipe.name,
+                                recipe_name: recipe.recipe_name,
                                 img: recipe.img,
                                 steps: recipe.steps,
                                 ingredient_names: amts,

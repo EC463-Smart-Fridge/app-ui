@@ -273,31 +273,43 @@ export default function Home() {
                             pk: user.userId
                         },
                     })
-                    // Map the gathered recipe information to the Recipe datatype
-                    if (result2) {
-                        const saved_recipes : storedRecipe[] = result2.data.getUserRecipes.filter((recipe: storedRecipe) => recipe.recipe_name !== null)
-                        const saved_recipes_parsed : Recipe[] = saved_recipes.map(recipe => ({
-                            sk: recipe.sk,
-                            recipe_name: recipe.recipe_name,
-                            ingredients: recipe.ingredient_amts.map((amt, index) : ingredient => ({
-                                amt: amt,
-                                name: recipe.ingredient_names[index]
-                            })),
-                            img: recipe.img,
-                            steps: recipe.steps,
-                            calories: recipe.calories,
-                            saved: true
-                        }));
-                        // Update current user's recipes
-                        setUser({
-                            isLoggedIn: user.isLoggedIn,
-                            userId: user.userId,
-                            username: user.username,
-                            email: user.email,
-                            name: user.name,
-                            recipes: saved_recipes_parsed
-                        });
-                        // console.log(saved_recipes_parsed)
+                    if (!user.recipes) {
+                        // Map the gathered recipe information to the Recipe datatype
+                        if (result2) {
+                            const saved_recipes : storedRecipe[] = result2.data.getUserRecipes.filter((recipe: storedRecipe) => recipe.recipe_name !== null)
+                            const saved_recipes_parsed : Recipe[] = saved_recipes.map(recipe => ({
+                                sk: recipe.sk,
+                                recipe_name: recipe.recipe_name,
+                                ingredients: recipe.ingredient_amts.map((amt, index) : ingredient => ({
+                                    amt: amt,
+                                    name: recipe.ingredient_names[index]
+                                })),
+                                img: recipe.img,
+                                steps: recipe.steps,
+                                calories: recipe.calories,
+                                saved: true
+                            }));
+                            // Update current user's recipes
+                            setUser({
+                                isLoggedIn: user.isLoggedIn,
+                                userId: user.userId,
+                                username: user.username,
+                                email: user.email,
+                                name: user.name,
+                                recipes: saved_recipes_parsed
+                            });
+                            // console.log(saved_recipes_parsed)
+                        }
+                        else {
+                            setUser({
+                                isLoggedIn: user.isLoggedIn,
+                                userId: user.userId,
+                                username: user.username,
+                                email: user.email,
+                                name: user.name,
+                                recipes: []
+                            })
+                        }
                     }
 
                     // Get recipes using Lambda function
