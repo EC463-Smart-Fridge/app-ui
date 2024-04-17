@@ -324,7 +324,7 @@ export default function Home() {
                     const fetched_recipes : Recipe[] = result.data.getRecipes;
                     console.log(fetched_recipes)
 
-                    if (result) {
+                    if (fetched_recipes.length > 0) {
                         // Update current user's recipes
                         setUser({
                             isLoggedIn: user.isLoggedIn,
@@ -337,8 +337,6 @@ export default function Home() {
                         console.log(user.recipes)
                         router.push('/recipes');
                     }
-
-                    
                     // <PUT ALERT HERE>: No recipes found
                     else {
                         console.log("No Recipes Found")

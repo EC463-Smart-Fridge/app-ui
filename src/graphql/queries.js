@@ -45,6 +45,23 @@ export const getRecipes = /* GraphQL */ `
     }
   }
 `;
+export const searchRecipes = /* GraphQL */ `
+  query SearchRecipes($name: String!) {
+    searchRecipes(name: $name) {
+      sk
+      recipe_name
+      img
+      steps
+      ingredients {
+        name
+        amt
+        __typename
+      }
+      calories
+      __typename
+    }
+  }
+`;
 export const getUserRecipes = /* GraphQL */ `
   query GetUserRecipes($pk: String!) {
     getUserRecipes(pk: $pk) {

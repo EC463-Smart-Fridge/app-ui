@@ -125,6 +125,7 @@ type Query {
 	getUserItems(pk: String!): [Item]
 	getFridgeUser(pk: String!): User
 	getRecipes(input: getRecipesInput!): [Recipe]
+	searchRecipes(name: String!): [Recipe]
 	getUserRecipes(pk: String!): [storedRecipe]
 }
 
