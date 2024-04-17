@@ -275,7 +275,7 @@ export default function Home() {
                     })
                     if (!user.recipes) {
                         // Map the gathered recipe information to the Recipe datatype
-                        if (result2) {
+                        if (result2.data && result2.data.getUserRecipes) {
                             const saved_recipes : storedRecipe[] = result2.data.getUserRecipes.filter((recipe: storedRecipe) => recipe.recipe_name !== null)
                             const saved_recipes_parsed : Recipe[] = saved_recipes.map(recipe => ({
                                 sk: recipe.sk,

@@ -1,6 +1,6 @@
 import { View, Pressable, Text, TextInput, StyleSheet, ScrollView } from "react-native";
-import { useUser, useGraphQLClient } from "../../contexts/GraphQLClientContext";
-import { getUserRecipes } from "../../src/graphql/queries";
+import { useUser, useGraphQLClient, useRefresh } from "../../contexts/GraphQLClientContext";
+import { getUserRecipes, searchRecipes } from "../../src/graphql/queries";
 import { Redirect, useRouter } from "expo-router";
 import { Recipe, ingredient, storedRecipe } from '../../src/API';
 import { useState, useEffect } from "react";
@@ -12,49 +12,91 @@ export default function Recipes() {
     const {user, setUser} = useUser();
     const [search, setSearch] = useState('');
     const router = useRouter();
+    const {refresh, setRefresh, expRefresh, setExpRefresh} = useRefresh();
+
+    // Get saved recipes using GraphQL
+    const fetchRecipes = async() => {
+        const result2 = await client.graphql({
+            query: getUserRecipes,
+            variables: {
+                pk: user.userId
+            },
+        })
+        // Map the gathered recipe information to the Recipe datatype
+        if (result2.data && result2.data.getUserRecipes) {
+            const saved_recipes : storedRecipe[] = result2.data.getUserRecipes.filter((recipe: storedRecipe) => recipe.recipe_name !== null)
+            const saved_recipes_parsed : Recipe[] = saved_recipes.map(recipe => ({
+                sk: recipe.sk,
+                recipe_name: recipe.recipe_name,
+                ingredients: recipe.ingredient_amts.map((amt, index) : ingredient => ({
+                    amt: amt,
+                    name: recipe.ingredient_names[index]
+                })),
+                img: recipe.img,
+                steps: recipe.steps,
+                calories: recipe.calories,
+                saved: true
+            }));
+            // Update current user's recipes
+            setUser({
+                isLoggedIn: user.isLoggedIn,
+                userId: user.userId,
+                username: user.username,
+                email: user.email,
+                name: user.name,
+                recipes: saved_recipes_parsed
+            });
+            // console.log(saved_recipes_parsed)
+        }
+    }
 
     useEffect(() => {
-
-        // Get saved recipes using GraphQL
-        const fetchRecipes = async() => {
-            const result2 = await client.graphql({
-                query: getUserRecipes,
-                variables: {
-                    pk: user.userId
-                },
-            })
-            // Map the gathered recipe information to the Recipe datatype
-            if (result2) {
-                const saved_recipes : storedRecipe[] = result2.data.getUserRecipes.filter((recipe: storedRecipe) => recipe.recipe_name !== null)
-                const saved_recipes_parsed : Recipe[] = saved_recipes.map(recipe => ({
-                    sk: recipe.sk,
-                    recipe_name: recipe.recipe_name,
-                    ingredients: recipe.ingredient_amts.map((amt, index) : ingredient => ({
-                        amt: amt,
-                        name: recipe.ingredient_names[index]
-                    })),
-                    img: recipe.img,
-                    steps: recipe.steps,
-                    calories: recipe.calories,
-                    saved: true
-                }));
-                // Update current user's recipes
-                setUser({
-                    isLoggedIn: user.isLoggedIn,
-                    userId: user.userId,
-                    username: user.username,
-                    email: user.email,
-                    name: user.name,
-                    recipes: saved_recipes_parsed
-                });
-                // console.log(saved_recipes_parsed)
-            }
-        }
-
         if (!user.recipes) {
             fetchRecipes();
         }
-    }, [user.recipes])
+    }, [user.recipes, refresh])
+
+    // Get saved recipes using GraphQL
+    const searchRecipesHandler = async() => {
+        // console.log("here");
+        if (search && search != '') {
+            try {
+                const result2 = await client.graphql({
+                    query: searchRecipes,
+                    variables: {
+                        name: search
+                    },
+                })
+                // console.log(result2);
+                // Map the gathered recipe information to the Recipe datatype
+                if (result2.data && result2.data.searchRecipes) {
+                    const searched_recipes : Recipe[] = result2.data.searchRecipes
+                    // Update current user's recipes
+                    setUser({
+                        isLoggedIn: user.isLoggedIn,
+                        userId: user.userId,
+                        username: user.username,
+                        email: user.email,
+                        name: user.name,
+                        recipes: user.recipes? [...searched_recipes, ...user.recipes] : searched_recipes
+                    });
+                    // console.log(user.recipes);
+                    // console.log(saved_recipes_parsed)
+                    setRefresh(!refresh);
+                }
+            }
+            catch(error) {
+                console.log("Failed to search for user recipe", error);
+            }
+        }
+    }
+
+    // Handler for submitting a search request
+    const searchHandler = async() => {
+        fetchRecipes();
+        searchRecipesHandler();
+        
+    }
 
     // Handler for saving / deleting an item based on whether or not the current item is saved or not
     const recipeButtonHandler = async (index: number) => {
@@ -132,6 +174,7 @@ export default function Recipes() {
                     placeholder="Search"
                     value={search}
                     onChangeText={setSearch}
+                    onSubmitEditing={searchHandler}
                 /> 
             </View>
 
