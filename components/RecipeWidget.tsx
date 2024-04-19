@@ -3,6 +3,7 @@ import { Recipe, ingredient } from "../src/API";
 import { useState, useEffect } from "react";
 import StarIcon from "../assets/icons/StarIcon";
 import StarFilledIcon from "../assets/icons/StarFilledIcon";
+import { useUser } from "../contexts/GraphQLClientContext";
 
 interface Props {
     recipe: Recipe;
@@ -10,13 +11,20 @@ interface Props {
 }
 
 const RecipeWidget = ({ recipe, recipeButtonHandler}: Props) => {
+    const {user, setUser} = useUser();
     const [open, setOpen] = useState<boolean>(false);
+    const [refresh, setRefresh] = useState<boolean>(false);
     const [favorited, setFavorited] = useState<boolean>(recipe.saved ? true : false);
 
     useEffect(() => {
+        setFavorited(recipe.saved? true: false);
+    }, [user.recipes]);
+
+    useEffect(() => {
+        console.log("useEffect3")
     }, [recipe, favorited])
 
-    const handleFavorite = () => {
+    const handleFavorite = async() => {
         recipeButtonHandler();
         setFavorited(recipe.saved? false : true);
     }
@@ -119,7 +127,7 @@ const styles = StyleSheet.create({
     top: {
         display: 'flex',
         flexDirection: 'row',
-        // justifyContent: 'space-between',
+        justifyContent: 'space-between',
     },
     bottom:{
 

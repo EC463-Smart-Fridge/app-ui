@@ -6,6 +6,7 @@ import { Recipe, ingredient, storedRecipe } from '../../src/API';
 import { useState, useEffect } from "react";
 import RecipeWidget from "../../components/RecipeWidget";
 import { addUserRecipe, removeRecipe } from "../../src/graphql/mutations";
+import Spinner from "../../components/Spinner";
 
 export default function Recipes() {
     const client = useGraphQLClient();
@@ -13,53 +14,65 @@ export default function Recipes() {
     const [search, setSearch] = useState('');
     const router = useRouter();
     const {refresh, setRefresh, expRefresh, setExpRefresh} = useRefresh();
+    const [loading, setLoading] = useState(false);
 
     // Get saved recipes using GraphQL
     const fetchRecipes = async() => {
-        const result2 = await client.graphql({
-            query: getUserRecipes,
-            variables: {
-                pk: user.userId
-            },
-        })
-        // Map the gathered recipe information to the Recipe datatype
-        if (result2.data && result2.data.getUserRecipes) {
-            const saved_recipes : storedRecipe[] = result2.data.getUserRecipes.filter((recipe: storedRecipe) => recipe.recipe_name !== null)
-            const saved_recipes_parsed : Recipe[] = saved_recipes.map(recipe => ({
-                sk: recipe.sk,
-                recipe_name: recipe.recipe_name,
-                ingredients: recipe.ingredient_amts.map((amt, index) : ingredient => ({
-                    amt: amt,
-                    name: recipe.ingredient_names[index]
-                })),
-                img: recipe.img,
-                steps: recipe.steps,
-                calories: recipe.calories,
-                saved: true
-            }));
-            // Update current user's recipes
-            setUser({
-                isLoggedIn: user.isLoggedIn,
-                userId: user.userId,
-                username: user.username,
-                email: user.email,
-                name: user.name,
-                recipes: saved_recipes_parsed
-            });
-            // console.log(saved_recipes_parsed)
+        setLoading(true);
+        try {
+            const result2 = await client.graphql({
+                query: getUserRecipes,
+                variables: {
+                    pk: user.userId
+                },
+            })
+            // Map the gathered recipe information to the Recipe datatype
+            if (result2.data && result2.data.getUserRecipes) {
+                const saved_recipes : storedRecipe[] = result2.data.getUserRecipes.filter((recipe: storedRecipe) => recipe.recipe_name !== null)
+                const saved_recipes_parsed : Recipe[] = saved_recipes.map(recipe => ({
+                    sk: recipe.sk,
+                    recipe_name: recipe.recipe_name,
+                    ingredients: recipe.ingredient_amts.map((amt, index) : ingredient => ({
+                        amt: amt,
+                        name: recipe.ingredient_names[index]
+                    })),
+                    img: recipe.img,
+                    steps: recipe.steps,
+                    calories: recipe.calories,
+                    saved: true
+                }));
+                // Update current user's recipes
+                setUser({
+                    isLoggedIn: user.isLoggedIn,
+                    userId: user.userId,
+                    username: user.username,
+                    email: user.email,
+                    name: user.name,
+                    recipes: saved_recipes_parsed
+                });
+                // console.log(saved_recipes_parsed)
+            }
+        }
+        catch (error) {
+            console.log("Failed to fetch user recipes:", error);
+        }
+        finally {
+            setLoading(false);
         }
     }
 
     useEffect(() => {
-        if (!user.recipes) {
+        if (user.recipes === undefined || user.recipes.length == 0) {
             fetchRecipes();
         }
-    }, [user.recipes, refresh])
+    }, [user.recipes, refresh, loading])
 
     // Get saved recipes using GraphQL
     const searchRecipesHandler = async() => {
+        
         // console.log("here");
         if (search && search != '') {
+            setLoading(true);
             try {
                 const result2 = await client.graphql({
                     query: searchRecipes,
@@ -71,6 +84,7 @@ export default function Recipes() {
                 // Map the gathered recipe information to the Recipe datatype
                 if (result2.data && result2.data.searchRecipes) {
                     const searched_recipes : Recipe[] = result2.data.searchRecipes
+                    console.log(searched_recipes)
                     // Update current user's recipes
                     setUser({
                         isLoggedIn: user.isLoggedIn,
@@ -87,6 +101,9 @@ export default function Recipes() {
             }
             catch(error) {
                 console.log("Failed to search for user recipe", error);
+            }
+            finally {
+                setLoading(false);
             }
         }
     }
@@ -166,31 +183,38 @@ export default function Recipes() {
         }
     }
 
-    return (user.isLoggedIn ?
+    return (
+        user.isLoggedIn ?
         <>
-            <View style={styles.search}>
-                <TextInput 
-                    style={styles.searchInput}
-                    placeholder="Search"
-                    value={search}
-                    onChangeText={setSearch}
-                    onSubmitEditing={searchHandler}
-                /> 
-            </View>
-
-            {(user.recipes === undefined || user.recipes.length == 0)? (
-                <View style={styles.container}>
-                    <Pressable onPress={() => router.push('/home')} style={({pressed}) => [{backgroundColor: pressed ? 'lightgray' : 'white', }, styles.homeButton,]}><Text>Generate from Ingredients</Text></Pressable>
+            {!loading? (
+                <>
+                <View style={styles.search}>
+                    <TextInput 
+                        style={styles.searchInput}
+                        placeholder="Search"
+                        value={search}
+                        onChangeText={setSearch}
+                        onSubmitEditing={searchHandler}
+                    /> 
                 </View>
-            ):(
-                <ScrollView style={styles.recipeList}>
-                    {user.recipes.map((recipe: Recipe, i: any) => (
-                        <View key={i} style={styles.wrapper}>
-                            <RecipeWidget recipe={recipe} recipeButtonHandler={() => recipeButtonHandler(i)}/>
-                        </View>
-                    ))}
-                    <View style={{height: 10,}}></View>
-                </ScrollView>
+
+                {(user.recipes === undefined || user.recipes.length == 0)? (
+                    <View style={styles.container}>
+                        <Pressable onPress={() => router.push('/home')} style={({pressed}) => [{backgroundColor: pressed ? 'lightgray' : 'white', }, styles.homeButton,]}><Text>Generate from Ingredients</Text></Pressable>
+                    </View>
+                ):(
+                    <ScrollView style={styles.recipeList}>
+                        {user.recipes.map((recipe: Recipe, i: any) => (
+                            <View key={i} style={styles.wrapper}>
+                                <RecipeWidget recipe={recipe} recipeButtonHandler={() => recipeButtonHandler(i)}/>
+                            </View>
+                        ))}
+                        <View style={{height: 10,}}></View>
+                    </ScrollView>
+                )}
+                </>
+            ) : (
+                <Spinner/>
             )}
             
         </>
