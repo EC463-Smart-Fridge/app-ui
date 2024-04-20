@@ -74,6 +74,43 @@ export default function Recipes() {
         if (search && search != '') {
             setLoading(true);
             try {
+                // Get user recipes
+                const result = await client.graphql({
+                    query: getUserRecipes,
+                    variables: {
+                        pk: user.userId
+                    },
+                })
+                // Map the gathered recipe information to the Recipe datatype
+                if (result.data && result.data.getUserRecipes) {
+                    const saved_recipes : storedRecipe[] = result.data.getUserRecipes.filter((recipe: storedRecipe) => recipe.recipe_name !== null)
+                    const saved_recipes_parsed : Recipe[] = saved_recipes.map(recipe => ({
+                        sk: recipe.sk,
+                        recipe_name: recipe.recipe_name,
+                        ingredients: recipe.ingredient_amts.map((amt, index) : ingredient => ({
+                            amt: amt,
+                            name: recipe.ingredient_names[index]
+                        })),
+                        img: recipe.img,
+                        steps: recipe.steps,
+                        calories: recipe.calories,
+                        saved: true
+                    }));
+                    // Update current user's recipes
+                    user.recipes = saved_recipes_parsed;
+                    // console.log(saved_recipes_parsed)
+                }
+                else {
+                    user.recipes = [];
+                }
+            }
+            catch (error) {
+                console.log("Failed to fetch user recipes");
+                setLoading(false);
+            }
+            console.log(user.recipes);
+
+            try {
                 const result2 = await client.graphql({
                     query: searchRecipes,
                     variables: {
@@ -86,14 +123,7 @@ export default function Recipes() {
                     const searched_recipes : Recipe[] = result2.data.searchRecipes
                     console.log(searched_recipes)
                     // Update current user's recipes
-                    setUser({
-                        isLoggedIn: user.isLoggedIn,
-                        userId: user.userId,
-                        username: user.username,
-                        email: user.email,
-                        name: user.name,
-                        recipes: user.recipes? [...searched_recipes, ...user.recipes] : searched_recipes
-                    });
+                    user.recipes = user.recipes? [...searched_recipes, ...user.recipes] : searched_recipes
                     // console.log(user.recipes);
                     // console.log(saved_recipes_parsed)
                     setRefresh(!refresh);
@@ -104,16 +134,11 @@ export default function Recipes() {
             }
             finally {
                 setLoading(false);
+                setSearch('');
             }
         }
     }
 
-    // Handler for submitting a search request
-    const searchHandler = async() => {
-        fetchRecipes();
-        searchRecipesHandler();
-        
-    }
 
     // Handler for saving / deleting an item based on whether or not the current item is saved or not
     const recipeButtonHandler = async (index: number) => {
@@ -186,17 +211,17 @@ export default function Recipes() {
     return (
         user.isLoggedIn ?
         <>
+            <View style={styles.search}>
+                <TextInput 
+                    style={styles.searchInput}
+                    placeholder="Search"
+                    value={search}
+                    onChangeText={setSearch}
+                    onSubmitEditing={searchRecipesHandler}
+                /> 
+            </View>
             {!loading? (
                 <>
-                <View style={styles.search}>
-                    <TextInput 
-                        style={styles.searchInput}
-                        placeholder="Search"
-                        value={search}
-                        onChangeText={setSearch}
-                        onSubmitEditing={searchHandler}
-                    /> 
-                </View>
 
                 {(user.recipes === undefined || user.recipes.length == 0)? (
                     <View style={styles.container}>

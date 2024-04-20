@@ -290,25 +290,10 @@ export default function Home() {
                             saved: true
                         }));
                         // Update current user's recipes
-                        setUser({
-                            isLoggedIn: user.isLoggedIn,
-                            userId: user.userId,
-                            username: user.username,
-                            email: user.email,
-                            name: user.name,
-                            recipes: saved_recipes_parsed
-                        });
-                        // console.log(saved_recipes_parsed)
+                        user.recipes = saved_recipes_parsed;
                     }
                     else {
-                        setUser({
-                            isLoggedIn: user.isLoggedIn,
-                            userId: user.userId,
-                            username: user.username,
-                            email: user.email,
-                            name: user.name,
-                            recipes: []
-                        })
+                        user.recipes = [];
                     }
 
                     // Get recipes using Lambda function
@@ -325,14 +310,7 @@ export default function Home() {
 
                     if (fetched_recipes.length > 0) {
                         // Update current user's recipes
-                        setUser({
-                            isLoggedIn: user.isLoggedIn,
-                            userId: user.userId,
-                            username: user.username,
-                            email: user.email,
-                            name: user.name,
-                            recipes: user.recipes ? [...fetched_recipes,...user.recipes] : fetched_recipes
-                        });
+                        user.recipes = user.recipes ? [...fetched_recipes,...user.recipes] : fetched_recipes
                         console.log(user.recipes)
                         router.push('/recipes');
                     }
