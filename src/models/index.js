@@ -4,7 +4,7 @@ import { schema } from './schema';
 
 
 
-const { Item, User, Fridgebase, FridgebaseConnection, Items, ingredient, Recipe, storedRecipe } = initSchema(schema);
+const { Item, User, Fridgebase, FridgebaseConnection, Items, ingredient, Recipe, Prediction, storedRecipe } = initSchema(schema);
 
 export {
   Item,
@@ -14,5 +14,6 @@ export {
   Items,
   ingredient,
   Recipe,
+  Prediction,
   storedRecipe
 };

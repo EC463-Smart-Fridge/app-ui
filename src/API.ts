@@ -49,6 +49,11 @@ export type storedRecipe = {
 	calories: String | null,
 }
 
+export type Prediction = {
+  name: String,
+  accuracy: String,
+}
+
 export type deleteItemInput = {
   pk: string,
   sk: string,

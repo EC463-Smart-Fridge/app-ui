@@ -13,7 +13,6 @@ interface Props {
 const RecipeWidget = ({ recipe, recipeButtonHandler}: Props) => {
     const {user, setUser} = useUser();
     const [open, setOpen] = useState<boolean>(false);
-    const [refresh, setRefresh] = useState<boolean>(false);
     const [favorited, setFavorited] = useState<boolean>(recipe.saved ? true : false);
 
     useEffect(() => {

@@ -84,6 +84,11 @@ type Recipe {
 	calories: String
 }
 
+type Prediction {
+	name: String
+	accuracy: String
+}
+
 type storedRecipe {
 	pk: String!
 	sk: String!
@@ -127,6 +132,7 @@ type Query {
 	getRecipes(input: getRecipesInput!): [Recipe]
 	searchRecipes(name: String!): [Recipe]
 	getUserRecipes(pk: String!): [storedRecipe]
+	getItemPredictions(image: String!): [Prediction]
 }
 
 type Subscription {

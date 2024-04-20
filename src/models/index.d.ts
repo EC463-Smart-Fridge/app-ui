@@ -82,6 +82,20 @@ export declare type Recipe = LazyLoading extends LazyLoadingDisabled ? EagerReci
 
 export declare const Recipe: (new (init: ModelInit<Recipe>) => Recipe)
 
+type EagerPrediction = {
+  readonly name?: string | null;
+  readonly accuracy?: string | null;
+}
+
+type LazyPrediction = {
+  readonly name?: string | null;
+  readonly accuracy?: string | null;
+}
+
+export declare type Prediction = LazyLoading extends LazyLoadingDisabled ? EagerPrediction : LazyPrediction
+
+export declare const Prediction: (new (init: ModelInit<Prediction>) => Prediction)
+
 type EagerstoredRecipe = {
   readonly pk: string;
   readonly sk: string;

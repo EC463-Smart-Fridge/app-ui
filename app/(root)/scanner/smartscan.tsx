@@ -4,7 +4,9 @@ import { Text, View } from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import { useFocusEffect } from '@react-navigation/native';
 import { addItemByUPC } from "../../../src/graphql/mutations";
+import { getItemPredictions } from '../../../src/graphql/queries';
 import { useGraphQLClient, useUser } from "../../../contexts/GraphQLClientContext";
+import { Prediction } from '../../../src/API';
 import { Modal } from 'react-native';
 import SwapIcon from '../../../assets/icons/SwapIcon';
 import AddIcon from '../../../assets/icons/AddIcon';
@@ -41,80 +43,64 @@ export default function SmartScan() {
       // console.log('Photo captured:', photo);
   
       // Prepare the image data to pass to the Clarifai API
-      const imageBase64 = photo.base64;
-      const clarifaiRequestBody = JSON.stringify({
-        "inputs": [
-          {
-            "data": {
-              "image": {
-                "base64": imageBase64
+      const imageBase64 = photo.base64 ? photo.base64 : '';
+
+      if (imageBase64 == '') {
+        console.log('Failed to capture item image');
+      }
+      else {
+        // Make the API request to Clarifai
+
+        if (user.isLoggedIn) {
+          setLoading(true);
+
+          try {
+            // Run the GraphQL query for item predictions using Clarifai
+            const result = await client.graphql({
+              query: getItemPredictions,
+              variables: {
+                image: imageBase64,
               }
+            })
+
+            if (result.data && result.data.getItemPredictions) {
+              // Extract prediction data from the response
+              const outputs : Prediction[] = result.result.data.getItemPredictions;
+              if (outputs && outputs.length > 0) {
+                setItems(outputs.map((concept: any) => String(concept.name)).slice(0, 5))
+                setIsModalVisible(true)
+              } else {
+                console.log('No prediction outputs found.');
+                Alert.alert(  
+                  'Sorry :(',  
+                  'No results found. Please try again.',  
+                  [  
+                      {  
+                          text: 'OK',  
+                          onPress: () => console.log('Cancel Pressed'),  
+                          style: 'cancel',  
+                      }
+                  ],
+                  {cancelable: true}
+                  );  
+                }
+            }
+            else {
+              console.log("No item predictions found");
             }
           }
-        ]
-      });
-  
-      // Make the API request to Clarifai
-      fetchClarifaiAPI(clarifaiRequestBody);
-    }
-  };
-  
-  const fetchClarifaiAPI = (requestData: string) => {
-    setLoading(true)
-    const PAT = 'a82e73fa495c4c44942f78de03e45945'; // Replace with Clarifai PAT
-    const MODEL_ID = 'food-item-recognition'; //'ocr-scene-english-paddleocr'; // Replace with Clarifai model ID
-    const MODEL_VERSION_ID = '1d5fd481e0cf4826aa72ec3ff049e044'; //'46e99516c2d94f58baf2bcaf5a6a53a9'; // Replace with Clarifai model version ID
-  
-    if (user.isLoggedIn) {
-      const requestOptions = {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Key ' + PAT
-        },
-        body: requestData
-      };
-    
-      /*fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/versions/" + MODEL_VERSION_ID + "/outputs", requestOptions)
-      .then(response => response.text())
-      .then(result => console.log(result))
-      .catch(error => console.log('error', error));
-      */
-     try {
-      fetch(`https://api.clarifai.com/v2/models/${MODEL_ID}/versions/${MODEL_VERSION_ID}/outputs`, requestOptions)
-      .then(response => response.json())
-      .then( async(result) => {
-        // Extract prediction data from the response
-        const outputs = result.outputs;
-        if (outputs && outputs.length > 0) {
-          const prediction = outputs[0]; // Assuming there's only one prediction
-          const data = prediction.data;
-          setItems(data.concepts.map((concept: any) => String(concept.name)).slice(0, 5))
-          setIsModalVisible(true)
-        } else {
-          console.log('No prediction outputs found.');
-          Alert.alert(  
-            'Sorry :(',  
-            'No results found. Please try again.',  
-            [  
-                {  
-                    text: 'OK',  
-                    onPress: () => console.log('Cancel Pressed'),  
-                    style: 'cancel',  
-                }
-            ],
-            {cancelable: true}
-            );  
+          catch (error) {
+            console.log("Failed to get item predictions", error);
           }
-        })
-      } catch (error) {
-        console.error('Error fetching from Clarifai API', error);
-      } finally {
-        setLoading(false)
+          finally {
+            setLoading(false);
+          }
+        }
+        else {
+          console.log("Error: No user logged in");
+        }
+
       }
-    }
-    else {
-      console.log("No user logged in")
     }
   };
 

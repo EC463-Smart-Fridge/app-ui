@@ -77,6 +77,15 @@ export const getUserRecipes = /* GraphQL */ `
     }
   }
 `;
+export const getItemPredictions = /* GraphQL */ `
+  query GetItemPredictions($image: String!) {
+    getItemPredictions(image: $image) {
+      name
+      accuracy
+      __typename
+    }
+  }
+`;
 export const getItem = /* GraphQL */ `
   query GetItem($id: ID!) {
     getItem(id: $id) {

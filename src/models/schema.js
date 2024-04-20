@@ -345,6 +345,25 @@ export const schema = {
                 }
             }
         },
+        "Prediction": {
+            "name": "Prediction",
+            "fields": {
+                "name": {
+                    "name": "name",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "accuracy": {
+                    "name": "accuracy",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            }
+        },
         "storedRecipe": {
             "name": "storedRecipe",
             "fields": {
@@ -411,5 +430,5 @@ export const schema = {
         }
     },
     "codegenVersion": "3.4.4",
-    "version": "81c695c89be302a4cb5aa0906cd414f8"
+    "version": "85836a8dbb9d99bb22199d4c35ceeaec"
 };
