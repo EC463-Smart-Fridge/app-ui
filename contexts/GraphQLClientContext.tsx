@@ -40,9 +40,6 @@ const initState: userType = {
   recipes: []
 }
 
-
-
-
 export const UserContext = createContext<any>(null);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
