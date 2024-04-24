@@ -1,3 +1,18 @@
+# Software Documentation
+The following is documentation on the code used within the Fridge Buddy application, organized by the pages on the application with descriptions of the modules, APIs, and cloud services used.
+
+## Cloud Backend (Amazon Web Services)
+
+
+
+## Home Page
+
+## Scanner Page
+
+## Recipes Page
+
+## Settings Page / User Authentication Page
+
 Software Report (10000+ characters) – README_SOFTWARE.md (or GitHub Wiki)
 
 You need to provide clear and concise documentation for all the code that you have written. It simply
