@@ -76,18 +76,59 @@ The GraphQL schema defines all of the datatypes (such as the entities mentioned 
 The GraphQL schema used for this project can be found [here]([url](https://github.com/Fridge-Buddy/ui/blob/main/amplify/backend/api/awsomefridge/schema.graphql)).
 
 ### Cognito
-Cognito is AWS's identity management platform. Fridge Buddy utilizes Cognito through Amplify Auth, 
+Cognito is AWS's identity management platform. Fridge Buddy utilizes Cognito for user authentication, confirmation, sign-up, sign-in, and logout. Cognito was configured for Fridge Buddy using the Amplify CLI tools using Amplify Auth:
+
+<img width="1176" alt="Screen Shot 2024-03-17 at 4 07 51 PM" src="https://github.com/Fridge-Buddy/ui/assets/98369076/24c9c0f5-4638-495f-b52e-a9245009e8fe">
+
+_Figure 3: Configuration settings for Amplify Auth_
 
 ### Lambda
-Lambda is AWS’s computing platform that allows users to execute specified code as containerized workloads. Lambda was selected because of its lightweight nature, only using computational resources when a function is called. Fridge Buddy is using the service for querying 3rd party APIs that are called by and connected to the React Native frontend application using AWS Amplify. The Lambda functions Fridge Buddy uses include querying the FoodCentral API for item information and inserting the item into DynamoDB for users, as well as querying the Spoonacular API with user items to get suggested recipes and recipe nutritional information.
+Lambda is AWS’s computing platform that allows users to execute specified code as containerized workloads. Lambda was selected because of its lightweight nature, only using computational resources when a function is called. Fridge Buddy is using the service for querying 3rd party APIs that are called by and connected to the React Native frontend application using AWS Amplify. The Lambda functions Fridge Buddy uses include querying the FoodCentral API for item information and inserting the item into DynamoDB for users, querying the Spoonacular API with user items to get suggested recipes and recipe nutritional information, querying the Spoonacular API with a recipe name to get suggested recipes and recipe nutritional information, and querying the Clarifai API for getting the item predictions given an image.
+
+#### Third-Party APIs Used
+Fridge Buddy incorporates multiple external APIs and libraries for functionalities such as querying for item information and object recognition. The external APIs used by the application are:
+
+- **FoodCentral**: United States Department of Agriculture (USDA)’s official API and database for storing food product information such as Universal Product Code (UPC) and nutrition information. This API is called using an AWS Lambda function when users add items using UPC barcodes or object recognition. When users add an item in those ways, Fridge Buddy sends the barcode or item name retrieved from object recognition to FoodCentral to query item information including item name, category, and calorie count. This API was chosen because of its large size, breadth of information, and its credibility from being created by the USDA.
+- **Spoonacular**: An online API with a large breadth of capabilities including getting a list of recipes using given product names and retrieving recipe nutritional information. Spoonacular was selected because of its generous API free tier for prototyping, as well as its capabilities for gathering recipe information. Although Spoonacular includes barcode lookup functions, its limited database made FoodCentral the better option.
+- **Clarifai**: An online API that uses a pre-trained model to classify food items in an inputted image. This API can recognize multiple food items within a single image and returns a list of all possible food names and their corresponding accuracy percent. Fridge Buddy uses this API with its smart scanner to use object recognition for inputting user items. This API was also selected because its multi-item output allows users to input multiple items with a single image.
 
 #### upc_api_call (Get item information from barcode or name)
+This Lambda function is used to get item information (product name, item name, calorie count, predicted expiration date, and food category), and insert the item into the user's items. The function takes the user ID and either a barcode or item name as input, and is used for adding items from the barcode scanner and smart scanner. The functionality of the function is as follows:
+- The function queries **FoodCentral** using the inputted UPC code / item name for getting item information (calories, food category, and item name if sent UPC code).
+- If the input was a UPC code (not an item name), query **Spoonacular** to get the generic product name from the branded product name gotten from FoodCentral. If the input was just an item name (in the case of smart scanner), then just use the item name as the generic product name.
+- Using the generic product name, query the **FoodKeeper** database stored locally within the Lambda function to search for expiration date prediction information. If an item's expected freshness period is found, then store the expiration date based on the current date.
+- Insert the item information gathered into the DynamoDB table under the current user.
+
+Labeled as and ran as the "addItemByUPC" mutation in the GraphQL schema.
 
 #### search_recipe (Get recipe information by name)
+This Lambda function is used for querying **Spoonacular** for recipe information (recipe name, calorie count, list of steps, image URL, and list of ingredients) given a recipe name. This functionality is called from Fridge Buddy for being able to search for recipes using the Search bar on the **Recipes** page. The functionality of the function is as follows:
+- Query **Spoonacular** API **complexSearch** gateway to get a list of recipe IDs using the inputted recipe name.
+- For the top 5 recipe IDs found:
+    - Query **analyzedInstructions** under the recipe ID to get instruction information for current recipe.
+    - Query **nutritionWidget.json** under the recipe ID to get the calorie information for current recipe.
+    - Query **information** under the recipe ID to get the list of ingredients and ingredient amounts
+ - Return the list of recipes with all of the relevant recipe fields.
+
+Labeled as and ran as the "searchRecipes" query in the GraphQL schema.
 
 #### get_recipes (Get recipe information by ingredients)
+This Lambda function is used for querying **Spoonacular** for recipe information (recipe name, calorie count, list of steps, image URL, and list of ingredients) given a list of ingredients. This functionality is called from Fridge Buddy for being able to search for recipes using the Search bar on the **Recipes** page. The functionality of the function is as follows:
+- Query **Spoonacular** API **findByIngredients** gateway to get a list of recipe IDs using the inputted ingredients, querying to make the use of as many ingredients as possible.
+- For the top 5 recipe IDs found:
+    - Query **analyzedInstructions** under the recipe ID to get instruction information for current recipe.
+    - Query **nutritionWidget.json** under the recipe ID to get the calorie information for current recipe.
+    - Query **information** under the recipe ID to get the list of ingredients and ingredient amounts
+ - Return the list of recipes with all of the relevant recipe fields.
+
+Labeled as and ran as the "getRecipes" query in the GraphQL schema.
 
 #### get_smartscan_info (Get item predictions from image)
+This Lambda function is used for querying **Clarifai** for item prediction (list of item names and list of prediction accuracy probabilities) given a base64-encoded image string. This functionality is called from Fridge Buddy's smart scanner to get the list of predictions based on object recognition. The functionality of the function is as follows:
+- Query **Clarifai** API using the **food-item-recognition** model to get predictions based on the inputted item.
+- Return the list of predictions and accuracy amounts.
+
+Labeled as and ran as the "getItemPredictions" query in the GraphQL schema.
 
 ## Home Page (React Native)
 
