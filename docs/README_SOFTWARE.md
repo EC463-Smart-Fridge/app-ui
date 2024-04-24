@@ -3,6 +3,15 @@ The following is documentation on the code used within the Fridge Buddy applicat
 
 ## Table of Contents
 1. [Project Overview](#project-overview)
+2. [Cloud Backend](#cloud-backend-amazon-web-services)
+    - [DynamoDB](#dynamodb)
+    - [Amplify / AppSync](#amplify--appsync)
+    - [Cognito](#cognito)
+    - [Lambda](#lambda)
+3. [Home Page](#home-page-react-native)
+4. [Scanner Page](#scanner-page-react-native)
+5. [Recipes Page](#recipes-page-react-native)
+6. [Settings Page](#settings-page--user-authentication-page-react-native)
 
 ## Project Overview
 The frontend of the mobile application and touchscreen interface is developed using the React Native framework and TypeScript. React Native was chosen for Fridge Buddy because of its cross-platform capabilities for iOS and Android, code reusability between platforms, native performance resulting in a smooth user experience, and large developer community. Thanks to the cross-platform functionality of React Native, we are also able to use the same application for both the mobile application and touchscreen interface. Fridge Buddy incorporates Amazon Web Services (AWS) as its cloud backend for data storage and synchronization, computation of 3rd-Party API calls (e.g. FoodCentral and Spoonacular), and user authentication. AWS was selected as the cloud service provider because of its widely-used services like DynamoDB and Lambda that fulfill Fridge Buddy’s storage and computational needs, as well as its service Amplify which can connect React Native applications to AWS services (which is important for connecting the frontend application with the cloud backend).
