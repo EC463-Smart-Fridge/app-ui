@@ -1,17 +1,48 @@
 # Software Documentation
 The following is documentation on the code used within the Fridge Buddy application, organized by the pages on the application with descriptions of the modules, APIs, and cloud services used.
 
+## Table of Contents
+1. [Project Overview](#project-overview)
+
+## Project Overview
+The frontend of the mobile application and touchscreen interface is developed using the React Native framework and TypeScript. React Native was chosen for Fridge Buddy because of its cross-platform capabilities for iOS and Android, code reusability between platforms, native performance resulting in a smooth user experience, and large developer community. Thanks to the cross-platform functionality of React Native, we are also able to use the same application for both the mobile application and touchscreen interface. Fridge Buddy incorporates Amazon Web Services (AWS) as its cloud backend for data storage and synchronization, computation of 3rd-Party API calls (e.g. FoodCentral and Spoonacular), and user authentication. AWS was selected as the cloud service provider because of its widely-used services like DynamoDB and Lambda that fulfill Fridge Buddy’s storage and computational needs, as well as its service Amplify which can connect React Native applications to AWS services (which is important for connecting the frontend application with the cloud backend).
+
+<img width="1398" alt="Screen Shot 2024-04-24 at 3 36 54 PM" src="https://github.com/Fridge-Buddy/ui/assets/98369076/5e2ba4a5-eb27-4aa9-bdb2-4b47c0da2a7e">
+
+_Figure 1: Fridge Buddy System Block Diagram_
+
 ## Cloud Backend (Amazon Web Services)
+The application's storage and computational backend is powered by Amazon Web Services. The services used in the AWS backend are DynamoDB (AWS’s distributed NoSQL database service, used for storing user, item, and recipe information), Lambda (AWS’s computing platform that allows users to execute specified code as containerized workloads, used for running calls to 3rd party APIs), and Cognito (AWS's identity platform, used for user authentication). The frontend and backend are connected using the AWS Amplify toolkit and React Native library that enable users to connect frontend applications to backend AWS services. Fridge Buddy uses AppSync GraphQL as the middleware by creating a GraphQL schema and resolvers that define how the React Native application can access and call upon the DynamoDB and Lambda backend services. The following is a more in-depth explanation of the configuration and software used in Amazon Web Services.
 
+### DynamoDB
 
+#### Items
 
-## Home Page
+#### Users
 
-## Scanner Page
+#### Recipes
 
-## Recipes Page
+### Amplify / AppSync
 
-## Settings Page / User Authentication Page
+### Cognito
+
+### Lambda
+
+#### upc_api_call (Get item information from barcode or name)
+
+#### search_recipe (Get recipe information by name)
+
+#### get_recipes (Get recipe information by ingredients)
+
+#### get_smartscan_info (Get item predictions from image)
+
+## Home Page (React Native)
+
+## Scanner Page (React Native)
+
+## Recipes Page (React Native)
+
+## Settings Page / User Authentication Page (React Native)
 
 Software Report (10000+ characters) – README_SOFTWARE.md (or GitHub Wiki)
 
