@@ -170,7 +170,7 @@ The following are descriptions of the components of the Home Page when a user is
 7. **Add Item**: The last item displayed on the user's Home page is the [NewItemWidget](https://github.com/Fridge-Buddy/ui/blob/main/components/NewItemWidget.tsx). Instead of a normal item widget, this allows users to input the item name (required), calories, quantity, expiration date, and category fields. Entering the expiration date prompts the user with a calendar prompt for selecting a date, but all of the other fields take in text. When the user hits the '+' button, as long as there is an item name inputted, the code will call the addItemHandler defined in home.tsx. This handler adds the item to the DynamoDB table using the addItem GraphQL mutation, and adds the item to the current Items array so that it will display.
 8. **Select / Deselect Item**: When in 'Select' mode, the user is able to select / deselect items by tapping on the individual ItemWidget. These selected items will be highlighted green, and sets a value inside of the Item value called 'checked' to true (with the value being stored in the Item array for each item).
 9. **Select / Deselect All**: This button is at the top left of the screen when entering the 'Select' mode. Pressing the button toggles selecting / deselecting all items.
-10. **Generate Recipes**: This button is at the top of the screen when entering the 'Select' mode. Pressing the button will cause the code to run the recipeHandler which gathers all currently saved recipes in the user's account and then generates recipes based on the product name of all of the selected items. While generating recipes, the code will display a loading logo, and once it has finished, it will automatically redirect the user to the **Recipes** Page.
+10. **Generate Recipes**: This button is at the top of the screen when entering the 'Select' mode. Pressing the button will cause the code to run the recipeHandler which gathers all currently saved recipes in the user's account and then generates recipes based on the product name of all of the selected items. While generating recipes, the code will display a loading logo, and once it has finished, it will automatically add these recipes to the global user context's "recipes" array and redirect the user to the **Recipes** Page.
 11. **Delete Selected Items**: This button is at the top right of the screen when entering the 'Select' mode. Pressing this button will run the deleteItemHandler on all of the currently selected items and remove them from the user's account.
 
 ## Scanner Page (React Native)
@@ -178,6 +178,26 @@ The following are descriptions of the components of the Home Page when a user is
 ## Recipes Page (React Native)
 
 ## Settings Page / User Authentication Page (React Native)
+These are the pages used for displaying / handling user authentication information.
+
+### User Authentication Page
+The User Authentication page handles user sign-up, sign-in, and confirmation. These functions are connected to Cognito using the Amplify Auth library in handlers such as signInHandler and signUpHandler. The user authentication code is located within [Index.tsx](https://github.com/Fridge-Buddy/ui/blob/main/app/(root)/index.tsx). The functionality is as follows:
+1. **Sign Up**: For signing up a new user, it requires that the user inputs a username, email, password, and name (1 lowercase, 1 uppercase, 1 number, 1 special character, minimum 8 characters). If a user with the username already exists or an improper password, it will display an error. When the user hits the 'Sign Up' button and it succeeds, it creates a user in Cognito, which generates a user ID and sends a confirmation email to the user's inputted email. This part of the code also inserts the user into DynamoDB using the 'createUser' GraphQL mutation. This adds the user's email, name, and username to the table with the key being the newly generated userID.
+2. **Confirm User**: When the user successfully goes through the Sign Up process, they are sent an email with a 6-digit verification code. They are taken to a new prompt that asks them for this code, and once they enter the code successfully, it will successfully activate the user within Cognito (meaning the user will have been successfully activated / created).
+3. **Sign In**: For signing in an existing user, it requires that the user inputs the correct username and password pair. If this is unsuccessful, then it displays an error. If successful, the user is logged into their account, with their user information being stored within a global User context that stores information about the currently logged in user (which is used for interacting with the user's items and recipes).
+
+<img width="556" alt="Screen Shot 2024-04-24 at 9 54 17 PM" src="https://github.com/Fridge-Buddy/ui/assets/98369076/4b2c1f92-212b-467c-b289-4191f059d5c2">
+<img width="535" alt="Screen Shot 2024-04-24 at 9 54 29 PM" src="https://github.com/Fridge-Buddy/ui/assets/98369076/71bc0e78-1808-4b70-8a4d-2ee95651bca2">
+
+_Figure 9: Images of the user interface for user authentication_
+
+### Settings Page
+
+The Settings page displays the currently logged in user's information (username, name, email, and userID). It also includes a button for 'logout' for allowing currently logged in users to log out of their account.
+
+<img width="655" alt="Screen Shot 2024-04-24 at 9 44 51 PM" src="https://github.com/Fridge-Buddy/ui/assets/98369076/8ae73c2d-08fe-47fa-a525-513f6058033b">
+
+_Figure 10: Settings Page_
 
 Software Report (10000+ characters) – README_SOFTWARE.md (or GitHub Wiki)
 
