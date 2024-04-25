@@ -65,7 +65,7 @@ export default function SmartScan() {
 
             if (result.data && result.data.getItemPredictions) {
               // Extract prediction data from the response
-              const outputs : Prediction[] = result.result.data.getItemPredictions;
+              const outputs : Prediction[] = result.data.getItemPredictions;
               if (outputs && outputs.length > 0) {
 
                 setItems(outputs.map((item => String(item.name))))
