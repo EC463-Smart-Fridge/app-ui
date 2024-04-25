@@ -9,7 +9,7 @@ The following is documentation on the code used within the Fridge Buddy applicat
     - [Cognito](#cognito)
     - [Lambda](#lambda)
 3. [Home Page](#home-page-react-native)
-4. [Scanner Page](#scanner-page-react-native)
+4. [Scanner Page](#scan-page-react-native)
 5. [Recipes Page](#recipes-page-react-native)
 6. [Settings Page](#settings-page--user-authentication-page-react-native)
 
@@ -33,7 +33,13 @@ To install a development build of Fridge Buddy to an Android device, the followi
 7. Once that is done, run `npx expo run:android` to create the development build. This will take some time.
 8. The development build will be installed to the connected Android device.
 
-**?? steps on setting up amplify and stuff ?? idk this part**
+### Setting up AWS 
+For getting started, any new team would have to set up their own AWS account. This would require creating an AWS account, setting up a new Amplify project and environment for connecting the React Native application to the backend, and setting up the Cognito, Lambda, DynamoDB, and AppSync services.
+- **GraphQL**: The GraphQL schema used for connecting to AppSync can be found within this repo in the schema.graphql file, then you just have to set up resolvers for all of the mutations and queries defined in the schema.
+- **Amplify**: Getting started with setting up the Amplify CLI and connecting a project to AWS can be found here.
+- **DynamoDB**: DynamoDB itself doesn't require much setup because the schema for the items is not defined in the table itself. Instead, you just have to create a DynamoDB table, as well as setting it up as a data source within the AppSync Schema that will be connected to the resolvers for GraphQL.
+- **Lambda**: The code and packages used for the Lambda function handlers can be found in this repository we created.
+- **Cognito**: We set up Cognito using the Amplify CLI tools for Amplify Auth, which can be found here.
 
 ## Cloud Backend (Amazon Web Services)
 The application's storage and computational backend is powered by Amazon Web Services. The services used in the AWS backend are DynamoDB (AWS’s distributed NoSQL database service, used for storing user, item, and recipe information), Lambda (AWS’s computing platform that allows users to execute specified code as containerized workloads, used for running calls to 3rd party APIs), and Cognito (AWS's identity platform, used for user authentication). The frontend and backend are connected using the AWS Amplify toolkit and React Native library that enable users to connect frontend applications to backend AWS services. Fridge Buddy uses AppSync GraphQL as the middleware by creating a GraphQL schema and resolvers that define how the React Native application can access and call upon the DynamoDB and Lambda backend services. The following is a more in-depth explanation of the configuration and software used in Amazon Web Services.
