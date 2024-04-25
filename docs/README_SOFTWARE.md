@@ -173,7 +173,24 @@ The following are descriptions of the components of the Home Page when a user is
 10. **Generate Recipes**: This button is at the top of the screen when entering the 'Select' mode. Pressing the button will cause the code to run the recipeHandler which gathers all currently saved recipes in the user's account and then generates recipes based on the product name of all of the selected items. While generating recipes, the code will display a loading logo, and once it has finished, it will automatically add these recipes to the global user context's "recipes" array and redirect the user to the **Recipes** Page.
 11. **Delete Selected Items**: This button is at the top right of the screen when entering the 'Select' mode. Pressing this button will run the deleteItemHandler on all of the currently selected items and remove them from the user's account.
 
-## Scanner Page (React Native)
+## Scan Page (React Native)
+
+The Scan page displays a camera view using the device's front or back camera and offers two modes of usage: Barcode scanning and Smart scanning.
+The following controls are displayed in the Scan page for user operation:
+• **Barcode Scanner / Smart Scanner** toggle at the top of the page - allows the user to switch between the two modes of scanning.
+• **Camera Toggle** button at the bottom of the page - allows the user to switch between the front and back camera of their device.
+
+### Barcode Scanning
+The Barcode scan mode allows the user to add an item to their inventory by scanning its barcode. It employs the react-native-vision-camera library to display a camera view, and the codeScanner prop to detect barcodes and retrieve the UPC-A code. Upon scanning a barcode, the user is alerted that the item has been scanned, and the addItemByUPC GraphQL mutation is invoked with the retrieved UPC-A code and the user's userID in order to retrieve the item information from FoodCentral and add it to the user's inventory.
+
+The following is the order of operations for a user to add an item using the Barcode scanner:
+1. Hold a food item within the camera view so that the barcode is clearly visible.
+2. Upon detection, the barcode is immediately scanned and an alert is displayed.
+3. Press "OK" within the alert to confirm the successful scan.
+4. The food item is added to your inventory and can be viewed within the **Items** page.
+
+### Smart Scanning
+
 
 ## Recipes Page (React Native)
 
