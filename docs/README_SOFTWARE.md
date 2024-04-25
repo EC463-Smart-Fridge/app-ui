@@ -190,7 +190,19 @@ The following is the order of operations for a user to add an item using the Bar
 4. The food item is added to your inventory and can be viewed within the **Items** page.
 
 ### Smart Scanning
+The Smart scan mode employs the **Clarifai API** and the **food-item-recognition** pre-trained model so that the user can add food items to their inventory using item recognition. A camera view is displayed using the expo-camera library along with a **Capture** button (circular button) at the bottom of the screen which the user can press to almost instantly receive predictions of which food items are within camera view. The top five predictions are presented in a pop-up from which the user can select 0 or more to add to the inventory. If none of the predictions are correct, the user can select none of them and no item will be added. If a single item was scanned and one of the predictions is correct, the user can select that correct prediction and the item will be added to the inventory. If multiple items were scanned at once and multiple predictions are correct, the user can select all of the correct predictions and they will all be added to the inventory at once.
 
+The following is the order of operations for a user to add items using the Smart scanner:
+1. Hold one or more food items within the camera view so that they are fully visible and as clear as possible.
+2. Press the **Capture** button.
+3. Predictions of items scanned are displayed in a pop-up; select the correct prediction(s).
+4. The food item(s) is added to your inventory and can be viewed within the **Items** page.
+
+The following processes occur when adding items using the Smart scanner:
+1. Upong pressing the **Capture** button, a still image is captured from the camera view and converted to Base64.
+2. The getItemPredictions Lambda function is called with the Base64-formatted image; this function queries **Clarifai** with the Base64-formatted image, specifying to use the **food-item-recognition** model to generate predictions.
+3. Predictions are returned from **Clarifai** and the top **five** predictions are displayed within a checkbox-select pop-up in the app.
+4. When the user confirms their selected predictions, the addItemByUPC GraphQL mutation is invoked for each of the selections, using the item name instead of a UPC code; this retrieved item information from FoodCentral for each of the selections and adds them to the user's inventory.
 
 ## Recipes Page (React Native)
 
