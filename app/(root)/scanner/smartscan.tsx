@@ -67,7 +67,8 @@ export default function SmartScan() {
               // Extract prediction data from the response
               const outputs : Prediction[] = result.result.data.getItemPredictions;
               if (outputs && outputs.length > 0) {
-                setItems(outputs.map((concept: any) => String(concept.name)).slice(0, 5))
+
+                setItems(outputs.map((item => String(item.name))))
                 setIsModalVisible(true)
               } else {
                 console.log('No prediction outputs found.');
