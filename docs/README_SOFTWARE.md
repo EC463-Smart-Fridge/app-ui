@@ -20,6 +20,21 @@ The frontend of the mobile application and touchscreen interface is developed us
 
 _Figure 1: Fridge Buddy System Block Diagram_
 
+## Installation Steps
+Andres work on this please please please please please
+
+From grading rubric: "
+- How to install the project software stack from scratch (a blank hard drive / cloud instance) Please
+provide concise documentation on what installation software is needed, and how to build from
+source to binary as applicable.
+Example:
+- Debian Linux 9.1 into embedded system, with kernel patch to enable the USB controller
+- how to use CMake to cross-compile code, how to transfer binary into the target, how target
+autoruns binary, etc.
+- How to setup/startup cloud instance that collects and processes data from the embedded
+system
+"
+
 ## Cloud Backend (Amazon Web Services)
 The application's storage and computational backend is powered by Amazon Web Services. The services used in the AWS backend are DynamoDB (AWS’s distributed NoSQL database service, used for storing user, item, and recipe information), Lambda (AWS’s computing platform that allows users to execute specified code as containerized workloads, used for running calls to 3rd party APIs), and Cognito (AWS's identity platform, used for user authentication). The frontend and backend are connected using the AWS Amplify toolkit and React Native library that enable users to connect frontend applications to backend AWS services. Fridge Buddy uses AppSync GraphQL as the middleware by creating a GraphQL schema and resolvers that define how the React Native application can access and call upon the DynamoDB and Lambda backend services. The following is a more in-depth explanation of the configuration and software used in Amazon Web Services.
 
@@ -131,6 +146,32 @@ This Lambda function is used for querying **Clarifai** for item prediction (list
 Labeled as and ran as the "getItemPredictions" query in the GraphQL schema.
 
 ## Home Page (React Native)
+![unnamed](https://github.com/Fridge-Buddy/ui/assets/98369076/aa0c9128-4d02-4d11-a0c7-309ffc8103ab)
+![unnamed2](https://github.com/Fridge-Buddy/ui/assets/98369076/b2a9dcbb-e75c-4786-b149-37889cb0b8dc)
+
+_Figure 3: Picture of Fridge Buddy UI Home Page and Search Function_
+
+The Home Page is the main page for displaying and managing user item inventory. This page uses the information of the currently logged-in user to query and mutate the list of items belonging to the user. The code for the Home Page is located in the [home.tsx](https://github.com/Fridge-Buddy/ui/blob/main/app/(root)/home.tsx) file. Because this is a user application / item management system, in lieu of a flow chart for the functionality of the Home Page, below is a diagram of the Home Page's functionalities, as well as a description of how the components connect to the backend / other code.
+
+![IMG_0785](https://github.com/Fridge-Buddy/ui/assets/98369076/ada65d92-edb6-40f2-9e26-0b7e5c162644)
+![IMG_0786](https://github.com/Fridge-Buddy/ui/assets/98369076/318b057b-429e-4ef9-be2f-82c2995341f6)
+
+_Figure 4: Functionality Diagram of Home Page_
+
+### Software Module / Component Description
+The following are descriptions of the components of the Home Page when a user is logged in. When a user is not logged in, they are unable to view the Home Page.
+
+1. **Query and Display User Items**: Whenever the page is rendered or refreshed, the application runs the GraphQL query "getUserItems" to fetch all items under the currently logged-in user in the DynamoDB table. These items are then stored within a useState array of Items (with this and other custom datatypes being defined in [API.ts](https://github.com/Fridge-Buddy/ui/blob/main/src/API.ts)). Within the page, all of the items within this array are rendered as [ItemWidgets](https://github.com/Fridge-Buddy/ui/blob/main/components/ItemWidget.tsx), which handle displaying the item information (name, category, calories, quantity, expiration date), as well as handling calling the edit and delete handlers. The ItemWidget also handles displaying visually which items are soon to expire. For items that are going to expire within 5 days, it will display red text next to the expiration date saying "Expires in X days," and if the item is already expired, the whole item container will display as red.
+2. **Search**: The Search bar allows users to search for specific item names within their item inventory. The code handles this by having a state of what is currently stored in the search bar, with a function running to search through the array of Items to find items that match the current search value.
+3. **Select Mode**: The check button is the select mode handler. Within home.tsx, there is a state called "selectState" that depicts whether or not the home page is currently in the select mode. Pressing this button toggles the selectState, which enables users to be able to user to interact with the home page like in the second image in _Figure 4_ for performing functions 8-11.
+4. **Sort**: The Sort button ("...") allows users to sort their items in ascending or descending order based on the name, category, calories, quantity, or expiration date fields stored within each item.
+5. **Delete Item**: The 'X' button on the individual ItemWidgets is connected to the deleteItemHandler defined in home.tsx and sent to each ItemWidget. This handler is activated upon the user pressing on the 'X' button for the ItemWidget, which deletes the item from the backend using the GraphQL mutation "removeItem" and then removes the item from the Items array (so that it will no longer be displayed on the page).
+6. **Edit Item**: The edit button on the individual ItemWidgets is connected to the editItemHandler defined in home.tsx and sent to each ItemWidget. Selecting on the edit button for a given item enters it into the 'Edit' mode. In this mode, it displays the item's name, expiration date, and quantity, with the user being able to modify these values (with the expiration date giving a calendar prompt for the user to select the new date). The user can then hit the 'Cancel' button which will exit the 'Edit' mode and ignore all of the changes made, or the 'Save' button which will invoke the editItemHandler to save the changes made to DynamoDB.
+7. **Add Item**: The last item displayed on the user's Home page is the [NewItemWidget](https://github.com/Fridge-Buddy/ui/blob/main/components/NewItemWidget.tsx). Instead of a normal item widget, this allows users to input the item name (required), calories, quantity, expiration date, and category fields. Entering the expiration date prompts the user with a calendar prompt for selecting a date, but all of the other fields take in text. When the user hits the '+' button, as long as there is an item name inputted, the code will call the addItemHandler defined in home.tsx. This handler adds the item to the DynamoDB table using the addItem GraphQL mutation, and adds the item to the current Items array so that it will display.
+8. **Select / Deselect Item**: When in 'Select' mode, the user is able to select / deselect items by tapping on the individual ItemWidget. These selected items will be highlighted green, and sets a value inside of the Item value called 'checked' to true (with the value being stored in the Item array for each item).
+9. **Select / Deselect All**: This button is at the top left of the screen when entering the 'Select' mode. Pressing the button toggles selecting / deselecting all items.
+10. **Generate Recipes**: This button is at the top of the screen when entering the 'Select' mode. Pressing the button will cause the code to run the recipeHandler which gathers all currently saved recipes in the user's account and then generates recipes based on the product name of all of the selected items. While generating recipes, the code will display a loading logo, and once it has finished, it will automatically redirect the user to the **Recipes** Page.
+11. **Delete Selected Items**: This button is at the top right of the screen when entering the 'Select' mode. Pressing this button will run the deleteItemHandler on all of the currently selected items and remove them from the user's account.
 
 ## Scanner Page (React Native)
 
@@ -148,12 +189,4 @@ Please provide the following:
 main.py and LCD.py, you need to show that LCD.py is a module used by main.py.
 • Dev/build tool information: Package name and version info. For example, OpenCV 4.0.3 with
 Python 3.8.1, using CUDA Toolbox 10.0 and GCC 9.1 and CMake 3.14.2
-• How to install the project software stack from scratch (a blank hard drive / cloud instance) Please
-provide concise documentation on what installation software is needed, and how to build from
-source to binary as applicable.
-Example:
-• Debian Linux 9.1 into embedded system, with kernel patch to enable the USB controller
-• how to use CMake to cross-compile code, how to transfer binary into the target, how target
-autoruns binary, etc.
-• How to setup/startup cloud instance that collects and processes data from the embedded
-system
+
