@@ -177,8 +177,8 @@ The following are descriptions of the components of the Home Page when a user is
 
 The Scan page displays a camera view using the device's front or back camera and offers two modes of usage: Barcode scanning and Smart scanning.
 The following controls are displayed in the Scan page for user operation:
-• **Barcode Scanner / Smart Scanner** toggle at the top of the page - allows the user to switch between the two modes of scanning.
-• **Camera Toggle** button at the bottom of the page - allows the user to switch between the front and back camera of their device.
+    • **Barcode Scanner / Smart Scanner** toggle at the top of the page - allows the user to switch between the two modes of scanning.
+    • **Camera Toggle** button at the bottom of the page - allows the user to switch between the front and back camera of their device.
 
 ### Barcode Scanning
 The Barcode scan mode allows the user to add an item to their inventory by scanning its barcode. It employs the react-native-vision-camera library to display a camera view, and the codeScanner prop to detect barcodes and retrieve the UPC-A code. Upon scanning a barcode, the user is alerted that the item has been scanned, and the addItemByUPC GraphQL mutation is invoked with the retrieved UPC-A code and the user's userID in order to retrieve the item information from FoodCentral and add it to the user's inventory.
