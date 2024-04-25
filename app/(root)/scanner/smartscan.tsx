@@ -33,6 +33,7 @@ export default function SmartScan() {
 
       requestCameraPermission();
       setLoading(false)
+      console.log('Camera permission requested');
       return () => setHasPermission(null); // cleanup function
     }, [])
   );

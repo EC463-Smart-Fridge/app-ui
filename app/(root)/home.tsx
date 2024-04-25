@@ -70,7 +70,7 @@ export default function Home() {
                 },
             });
     
-            console.log('Item deleted successfully', deleteResult);
+            console.log('Item deleted successfully', !itemToRemove.item.pk, deleteResult);
             // Remove the item from the interface
             setDisplayItems(displayItems.filter((_, i) => i !== index));
         } catch (error) {
@@ -109,6 +109,7 @@ export default function Home() {
                 console.log('error on fetching recipes', error);
             } finally {
                 setLoading(false);
+                setRefresh(!refresh);
             }
         }
         else {
