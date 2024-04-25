@@ -21,19 +21,10 @@ The frontend of the mobile application and touchscreen interface is developed us
 _Figure 1: Fridge Buddy System Block Diagram_
 
 ## Installation Steps
-Andres work on this please please please please please
 
-From grading rubric: "
-- How to install the project software stack from scratch (a blank hard drive / cloud instance) Please
-provide concise documentation on what installation software is needed, and how to build from
-source to binary as applicable.
-Example:
-- Debian Linux 9.1 into embedded system, with kernel patch to enable the USB controller
-- how to use CMake to cross-compile code, how to transfer binary into the target, how target
-autoruns binary, etc.
-- How to setup/startup cloud instance that collects and processes data from the embedded
-system
-"
+To install a development build of Fridge Buddy to an Android phone, the following should be taken:
+1. Clone the Fridge-Buddy/ui repository
+2. run `npm i` 
 
 ## Cloud Backend (Amazon Web Services)
 The application's storage and computational backend is powered by Amazon Web Services. The services used in the AWS backend are DynamoDB (AWS’s distributed NoSQL database service, used for storing user, item, and recipe information), Lambda (AWS’s computing platform that allows users to execute specified code as containerized workloads, used for running calls to 3rd party APIs), and Cognito (AWS's identity platform, used for user authentication). The frontend and backend are connected using the AWS Amplify toolkit and React Native library that enable users to connect frontend applications to backend AWS services. Fridge Buddy uses AppSync GraphQL as the middleware by creating a GraphQL schema and resolvers that define how the React Native application can access and call upon the DynamoDB and Lambda backend services. The following is a more in-depth explanation of the configuration and software used in Amazon Web Services.
