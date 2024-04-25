@@ -22,15 +22,18 @@ _Figure 1: Fridge Buddy System Block Diagram_
 
 ## Installation Steps
 
-To install a development build of Fridge Buddy to an Android phone, the following should be taken:
+To install a development build of Fridge Buddy to an Android device, the following should be taken:
 1. Clone the Fridge-Buddy/ui repository.
 2. Set the cloned repository as the current working directory.
 3. Run `npm i` to install all dependencies.
-4. Connect an Android phone to your computer, ensuring that USB debugging is enabled.
-   a. USB Debugging can be enabled in the phone's developer settings.
-   b. sdfsdf
+4. Connect an Android device to your computer, ensuring that USB debugging is enabled.
+   1. USB Debugging can be enabled in the device's developer settings.
+   2. When the device is connected to your computer, you will be prompted to allow USB Debugging. Press "Allow".
 6. Run `npx expo prebuild` to run the prebuild processes.
-7. Once that is done, run `npx expo run:android`
+7. Once that is done, run `npx expo run:android` to create the development build. This will take some time.
+8. The development build will be installed to the connected Android device.
+
+**?? steps on setting up amplify and stuff ?? idk this part**
 
 ## Cloud Backend (Amazon Web Services)
 The application's storage and computational backend is powered by Amazon Web Services. The services used in the AWS backend are DynamoDB (AWS’s distributed NoSQL database service, used for storing user, item, and recipe information), Lambda (AWS’s computing platform that allows users to execute specified code as containerized workloads, used for running calls to 3rd party APIs), and Cognito (AWS's identity platform, used for user authentication). The frontend and backend are connected using the AWS Amplify toolkit and React Native library that enable users to connect frontend applications to backend AWS services. Fridge Buddy uses AppSync GraphQL as the middleware by creating a GraphQL schema and resolvers that define how the React Native application can access and call upon the DynamoDB and Lambda backend services. The following is a more in-depth explanation of the configuration and software used in Amazon Web Services.
