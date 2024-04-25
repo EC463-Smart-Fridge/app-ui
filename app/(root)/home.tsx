@@ -596,7 +596,7 @@ export default function Home() {
                                         // deleteHandler ={() => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); deleteItemHandler(index)}} 
                                         // editHandler = {(edits) => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); editItemHandler(index, edits)}}
                                         // selectHandler = {() => {const index = items.findIndex(iter => iter.item.sk === item.item.sk); selectItemHandler(index, item.checked);}}
-                                        deleteHandler={deleteItemHandler}
+                                        deleteHandler={() => deleteItemHandler(i)}
                                         editHandler={edits => editItemHandler(i, edits)}
                                         selectHandler={() => selectItemHandler(i, item.checked)}
                                     />
