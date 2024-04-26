@@ -112,6 +112,7 @@ export default function SmartScan() {
     }
     try {
       const addResult = async () => {
+        setLoading(true);
         try {
           const promises = selectedItems.map(async (item) => {
             console.log('Adding item', item);
@@ -131,6 +132,8 @@ export default function SmartScan() {
           await Promise.all(promises);
         } catch (error) {
           console.error('Error adding items:', error);
+        } finally {
+          setLoading(false);
         }
       };
       
