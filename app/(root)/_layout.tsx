@@ -31,7 +31,8 @@ export default function Layout() {
                             userId: userId,
                             username: result.data.getFridgeUser.username,
                             email: result.data.getFridgeUser.email,
-                            name: result.data.getFridgeUser.name2
+                            name: result.data.getFridgeUser.name2,
+                            recipes: result.data.getFridgeUser.recipes.items
                         })
                     }
                     else {
@@ -51,7 +52,8 @@ export default function Layout() {
                         userId: '',
                         username: '',
                         email: '',
-                        name: ''
+                        name: '',
+                        recipes: []
                     })
                 }
             } finally {
