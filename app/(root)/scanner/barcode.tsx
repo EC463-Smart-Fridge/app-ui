@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { StyleSheet, Button, Alert, View, Pressable, Text } from 'react-native';
 import { Code, Camera, useCameraDevice } from 'react-native-vision-camera'; // Import useCameraDevice
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { addItemByUPC } from '../../../src/graphql/mutations'; 
 import { useGraphQLClient } from '../../../contexts/GraphQLClientContext';
 import { useUser } from '../../../contexts/UserContext';
@@ -13,8 +13,8 @@ export default function BarcodeScanner() {
   const [torch, setTorch] = useState<boolean>(false);
   const [isShowingAlert, setIsShowingAlert] = useState<boolean>(false);
   
+  const isFocused = useIsFocused();
   // Retrieve camera device
-  //const device = useCameraDevice('back'); // Use 'back' as the default camera device
   const [device, setDevice] = useState('back'); // Use 'back' as the default camera device
   const toggleCamera = () => setDevice(device === 'back' ? 'front' : 'back');
   const frontCamera = useCameraDevice('front');
@@ -36,7 +36,7 @@ export default function BarcodeScanner() {
         handleBarcodeData(String(codes[0].value));
       }
     }
-  }, [isShowingAlert, user]);
+  }, [isShowingAlert, user.isLoggedIn]);
 
   // Function to handle barcode data (GraphQL mutation)
   const handleBarcodeData = async (barcodeData: string) => {
@@ -67,6 +67,10 @@ export default function BarcodeScanner() {
     return <View />; // Return null or any fallback UI if camera device is not available
   }
 
+  if (!isFocused) {
+    return <></>; // Return null or any fallback UI if loading or not focused
+  }
+
   return (
     <View style={styles.container}>
     {
@@ -74,7 +78,7 @@ export default function BarcodeScanner() {
       <Camera
         style={styles.camera}
         device={backCamera}
-        isActive={true} // Always active
+        isActive={isFocused} // Always active
         codeScanner={{ onCodeScanned, codeTypes: ['upc-a'] }}
         torch={torch ? 'on' : 'off'}
         enableZoomGesture={true}
@@ -83,7 +87,7 @@ export default function BarcodeScanner() {
       <Camera
         style={styles.camera}
         device={frontCamera}
-        isActive={true} // Always active
+        isActive={isFocused} // Always active
         codeScanner={{ onCodeScanned, codeTypes: ['upc-a'] }}
         torch={torch ? 'on' : 'off'}
         enableZoomGesture={true}
