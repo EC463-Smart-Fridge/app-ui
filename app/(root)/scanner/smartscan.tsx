@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { StyleSheet, Pressable, Alert } from 'react-native';
 import { Text, View } from 'react-native';
-import { Camera, CameraType } from 'expo-camera';
-import { useFocusEffect } from '@react-navigation/native';
+import { Code, Camera, useCameraDevice } from 'react-native-vision-camera'; // Import useCameraDevice
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { addItemByUPC } from "../../../src/graphql/mutations";
 import { getItemPredictions } from '../../../src/graphql/queries';
 import { useGraphQLClient } from "../../../contexts/GraphQLClientContext";
@@ -15,47 +15,64 @@ import DeleteIcon from '../../../assets/icons/DeleteIcon';
 import Spinner from '../../../components/Spinner';
 
 export default function SmartScan() {
+  // const client = useGraphQLClient();
+  // const {user} = useUser();
+  // const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+  // const cameraRef = useRef<Camera>(null);
+  // const [isFrontCamera, setIsFrontCamera] = useState<boolean>(true);
   const client = useGraphQLClient();
-  const {user} = useUser();
-  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
-  const cameraRef = useRef<Camera>(null);
-  const [isFrontCamera, setIsFrontCamera] = useState<boolean>(true);
+  const { user } = useUser();
+  const [torch, setTorch] = useState<boolean>(false);
+  const cameraRef = useRef<Camera>(null)
+  const isFocused = useIsFocused();
+  const [device, setDevice] = useState('back'); // Use 'back' as the default camera device
+  const toggleCamera = () => setDevice(device === 'back' ? 'front' : 'back');
+  const frontCamera = useCameraDevice('front');
+  const backCamera = useCameraDevice('back');
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [items, setItems] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const requestCameraPermission = async () => {
-        const { status } = await Camera.requestCameraPermissionsAsync();
-        setHasPermission(status === 'granted');
-      };
+  useEffect(() => {
+    async function getPermission() {
+      const newCameraPermission = await Camera.requestCameraPermission();
+      console.log(newCameraPermission);
+    }
+    getPermission();
+  }, []);
 
-      requestCameraPermission();
-      setLoading(false)
-      console.log('Camera permission requested');
-      return () => setHasPermission(null); // cleanup function
-    }, [])
-  );
+  const handleCapture = async() => {
+    try {
+      setLoading(true);
+      const file = await cameraRef.current!.takePhoto({enableShutterSound: false});
+      const result = await fetch(`file://${file.path}`)
+      const data = await result.blob();
+      console.log(data)
+    } catch (error) {
+      console.error('Failed to capture photo', error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
-  const handleCapture = async () => {
+  const handleCapture2 = async () => {
     if (cameraRef.current) {
-      let photo = await cameraRef.current.takePictureAsync({ base64: true, quality: 0.5 }); // adjust quality for efficiency
-      // console.log('Photo captured:', photo);
-  
+      let photo = await cameraRef.current.takePhoto()
+      console.log(photo)
       // Prepare the image data to pass to the Clarifai API
-      const imageBase64 = photo.base64 ? photo.base64 : '';
+      // const imageBase64 = photo.base64 ? photo.base64 : '';
+      const imageBase64 = photo ? photo : '';
 
       if (imageBase64 == '') {
         console.log('Failed to capture item image');
-      }
-      else {
+      } else {
         // Make the API request to Clarifai
 
         if (user.isLoggedIn) {
           setLoading(true);
-
+          
           try {
             // Run the GraphQL query for item predictions using Clarifai
             const result = await client.graphql({
@@ -155,7 +172,7 @@ export default function SmartScan() {
     </View>
   }
 
-  if (loading || hasPermission === null || hasPermission === false) {
+  if (loading || !isFocused) {
     return (
       <View style={styles.modalBackground}>
         <Spinner />
@@ -206,11 +223,32 @@ export default function SmartScan() {
           <Pressable onPress={() => {setIsModalVisible(false); setSelectedItems([])}} style={styles.modalBackground}></Pressable>
           </Modal>
       }
-      <Camera style={styles.camera} ref={cameraRef} type={isFrontCamera ? CameraType.front : CameraType.back} />
-        <View style={styles.captureContainer}>
-          <Pressable onPress={handleCapture} style={({pressed}) => [{backgroundColor: pressed ? 'darkturquoise' : 'transparent', },styles.capture]}></Pressable>
-        </View>
-      <Pressable onPress={() => setIsFrontCamera(!isFrontCamera)} style={styles.swap}><SwapIcon fill={"darkturquoise"}/></Pressable>
+    {device === 'back' && backCamera != null ?
+    <Camera
+      style={styles.camera}
+      device={backCamera}
+      isActive={isFocused}
+      torch={torch ? 'on' : 'off'}
+      enableZoomGesture={true}
+      photo={true}
+      ref={cameraRef}
+    />
+    : device === 'front' && frontCamera != null ?
+    <Camera
+      style={styles.camera}
+      device={frontCamera}
+      isActive={isFocused}
+      torch={torch ? 'on' : 'off'}
+      enableZoomGesture={true}
+      photo={true}
+      ref={cameraRef}
+    />
+    :
+    <></>
+
+    }
+    <Pressable onPress={handleCapture} style={({pressed}) => [{backgroundColor: pressed ? 'darkturquoise' : 'transparent', },styles.capture]}></Pressable>
+    <Pressable onPress={toggleCamera} style={styles.swap}><SwapIcon fill='darkturquoise'/></Pressable>
     </View>
   );
 }
@@ -303,11 +341,13 @@ const styles = StyleSheet.create({
     zIndex: 200,
   },
   capture: {
+    position: 'absolute',
     borderWidth: 2,
     borderColor: 'darkturquoise',
     padding: 10,
     borderRadius: 20,
     height: 40,
     aspectRatio: 1,
+    bottom: 10,
   }
 });
