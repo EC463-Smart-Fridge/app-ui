@@ -10,7 +10,7 @@ import CategoryIcon from '../assets/icons/CategoryIcon';
 import CaloriesIcon from '../assets/icons/CaloriesIcon';
 import QuantityIcon from '../assets/icons/QuantityIcon';
 import ExpirationIcon from '../assets/icons/ExpirationIcon';
-import { useRefresh } from "../contexts/GraphQLClientContext";
+import { useRefresh } from "../contexts/RefreshContext";
 
 interface Props extends Item {
     checked: boolean;

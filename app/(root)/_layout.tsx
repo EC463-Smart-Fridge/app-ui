@@ -1,6 +1,7 @@
 import { Tabs, Stack} from "expo-router";
 import Spinner from "../../components/Spinner";
-import { useUser, useGraphQLClient} from "../../contexts/GraphQLClientContext";
+import { useGraphQLClient} from "../../contexts/GraphQLClientContext";
+import { useUser } from "../../contexts/UserContext";
 import { getCurrentUser, } from "aws-amplify/auth";
 import { getFridgeUser } from "../../src/graphql/queries";
 import HomeIcon from "../../assets/icons/HomeIcon";

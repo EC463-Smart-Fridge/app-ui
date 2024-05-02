@@ -1,7 +1,7 @@
 import { Link, Redirect, Stack } from "expo-router";
 import { View, StyleSheet } from "react-native";
 import { usePathname } from 'expo-router';
-import { useUser} from "../../../contexts/GraphQLClientContext";
+import { useUser} from "../../../contexts/UserContext";
 
 export default function Layout() {
     let path = usePathname();

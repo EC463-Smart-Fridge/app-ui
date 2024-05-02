@@ -1,5 +1,5 @@
 import { View, Pressable, Text, StyleSheet } from "react-native";
-import { useUser } from "../../contexts/GraphQLClientContext";
+import { useUser } from "../../contexts/UserContext";
 import { Redirect, useRouter } from "expo-router";
 import RightIcon from "../../assets/icons/RightIcon";
 

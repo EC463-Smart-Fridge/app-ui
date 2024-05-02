@@ -1,5 +1,7 @@
 import { View, Pressable, Text, TextInput, StyleSheet, ScrollView } from "react-native";
-import { useUser, useGraphQLClient, useRefresh } from "../../contexts/GraphQLClientContext";
+import { useUser } from "../../contexts/UserContext";
+import { useGraphQLClient } from "../../contexts/GraphQLClientContext";
+import { useRefresh } from "../../contexts/RefreshContext";
 import { getUserRecipes, searchRecipes } from "../../src/graphql/queries";
 import { Redirect, useRouter } from "expo-router";
 import { Recipe, ingredient, storedRecipe } from '../../src/API';

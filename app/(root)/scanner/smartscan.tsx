@@ -1,11 +1,12 @@
 import React, { useState, useRef } from 'react';
-import { StyleSheet, Pressable, Switch, Alert } from 'react-native';
+import { StyleSheet, Pressable, Alert } from 'react-native';
 import { Text, View } from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import { useFocusEffect } from '@react-navigation/native';
 import { addItemByUPC } from "../../../src/graphql/mutations";
 import { getItemPredictions } from '../../../src/graphql/queries';
-import { useGraphQLClient, useUser } from "../../../contexts/GraphQLClientContext";
+import { useGraphQLClient } from "../../../contexts/GraphQLClientContext";
+import { useUser } from "../../../contexts/UserContext";
 import { Prediction } from '../../../src/API';
 import { Modal } from 'react-native';
 import SwapIcon from '../../../assets/icons/SwapIcon';

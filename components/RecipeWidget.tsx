@@ -3,7 +3,7 @@ import { Recipe, ingredient } from "../src/API";
 import { useState, useEffect } from "react";
 import StarIcon from "../assets/icons/StarIcon";
 import StarFilledIcon from "../assets/icons/StarFilledIcon";
-import { useUser } from "../contexts/GraphQLClientContext";
+import { useUser } from "../contexts/UserContext";
 
 interface Props {
     recipe: Recipe;

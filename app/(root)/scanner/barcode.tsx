@@ -3,7 +3,8 @@ import { StyleSheet, Button, Alert, View, Pressable, Text } from 'react-native';
 import { Code, Camera, useCameraDevice } from 'react-native-vision-camera'; // Import useCameraDevice
 import { useFocusEffect } from '@react-navigation/native';
 import { addItemByUPC } from '../../../src/graphql/mutations'; 
-import { useGraphQLClient, useUser } from '../../../contexts/GraphQLClientContext';
+import { useGraphQLClient } from '../../../contexts/GraphQLClientContext';
+import { useUser } from '../../../contexts/UserContext';
 import SwapIcon from '../../../assets/icons/SwapIcon';
 
 export default function BarcodeScanner() {

@@ -1,7 +1,8 @@
 import { View, Pressable, TextInput, Text, StyleSheet, } from "react-native";
 import { signInWithRedirect, AuthUser, signUp, confirmSignUp, type ConfirmSignUpInput, autoSignIn, signIn, type SignInInput, getCurrentUser, signOut } from "aws-amplify/auth";
 import { getFridgeUser } from "../../src/graphql/queries";
-import { useGraphQLClient, useUser } from "../../contexts/GraphQLClientContext";
+import { useGraphQLClient } from "../../contexts/GraphQLClientContext";
+import { useUser } from "../../contexts/UserContext";
 import React, { useEffect, useState } from "react";
 import { Hub } from "aws-amplify/utils";
 import { addUser } from "../../src/graphql/mutations";

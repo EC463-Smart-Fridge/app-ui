@@ -1,6 +1,8 @@
 import { Stack } from "expo-router";
 import { View } from "react-native";
-import { GraphQLClientProvider, RefreshProvider, UserProvider} from "../contexts/GraphQLClientContext";
+import { GraphQLClientProvider} from "../contexts/GraphQLClientContext";
+import { UserProvider } from "../contexts/UserContext";
+import { RefreshProvider } from "../contexts/RefreshContext";
 
 export default function Layout() {
     return (
