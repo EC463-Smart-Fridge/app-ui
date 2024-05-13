@@ -68,7 +68,25 @@ The user can select a recipe to view its full list of recipe names, ingredients,
 Fridge Buddy incorporates AWS Cognito to implement user authentication. The user authentication process is prompted upon the application started with no logged-in user, with user information being displayed on the **Settings** page. User information stored includes the user email, name, password (protected by Cognito), and username. When a user is created, the user's email will be sent a confirmation email before activating the user account.
 
 ## Installation Instructions
-Andres do this part
+To install a development build of Fridge Buddy to an Android device, the following should be taken:
+1. Clone the Fridge-Buddy/ui repository.
+2. Set the cloned repository as the current working directory.
+3. Run `npm i` to install all dependencies.
+4. Connect an Android device to your computer, ensuring that USB debugging is enabled.
+   1. USB Debugging can be enabled in the device's developer settings.
+   2. When the device is connected to your computer, you will be prompted to allow USB Debugging. Press "Allow".
+6. Run `npx expo prebuild` to run the prebuild processes.
+7. Once that is done, run `npx expo run:android` to create the development build. This will take some time.
+8. The development build will be installed to the connected Android device.
+
+### Setting up AWS 
+For getting started, any new team would have to set up their own AWS account. This would require creating an AWS account, setting up a new Amplify project and environment for connecting the React Native application to the backend, and setting up the Cognito, Lambda, DynamoDB, and AppSync services.
+- **GraphQL**: The GraphQL schema used for connecting to AppSync can be found within this repo in the schema.graphql file, then you just have to set up resolvers for all of the mutations and queries defined in the schema.
+- **Amplify**: Getting started with setting up the Amplify CLI and connecting a project to AWS can be found here.
+- **DynamoDB**: DynamoDB itself doesn't require much setup because the schema for the items is not defined in the table itself. Instead, you just have to create a DynamoDB table, as well as setting it up as a data source within the AppSync Schema that will be connected to the resolvers for GraphQL.
+- **Lambda**: The code and packages used for the Lambda function handlers can be found in this repository we created.
+- **Cognito**: We set up Cognito using the Amplify CLI tools for Amplify Auth, which can be found here.
+
 
 ## Project State
 Although we would add on more features if we had more time to work on the project, Fridge Buddy is largely in a completed state. We managed to complete the minimum viable product that we had intended, with reach goals such as creating a custom tablet, local storage of item information using AWS DataStore, voice activation, and implementing receipt scanning ultimately becoming out of scope of the project timeline. Of course, though, there's always room for polishing.
